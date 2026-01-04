@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 space-y-12">
+    
+    <!-- Header -->
+    <header class="text-center space-y-4">
+        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
+            Who We<br>
+            <span class="text-white bg-roots-black px-4 transform -rotate-2 inline-block shadow-[8px_8px_0px_0px_#E60000]">Are</span>
+        </h1>
+        <p class="text-2xl font-bold uppercase border-t-4 border-b-4 border-roots-black py-4 inline-block">
+            The Party of the Future
+        </p>
+    </header>
+
+    <!-- Mission -->
+    <section class="border-4 border-roots-black p-6 bg-roots-red text-white shadow-[12px_12px_0px_0px_#1a1a1a]">
+        <h2 class="text-4xl font-black uppercase mb-4 text-roots-black bg-white inline-block px-2 transform -rotate-1">Our Mission</h2>
+        <p class="text-xl font-bold leading-relaxed uppercase">
+            To liberate the economy through the legalization of marijuana, snake farming, and potential hyena meat export. We stand for the downtrodden, the youth, and the dreamers. We are not just a party; we are a movement.
+        </p>
+    </section>
+
+    <!-- Leaders Grid -->
+    <section>
+        <h2 class="text-4xl font-black uppercase mb-8 text-center decoration-4 underline decoration-roots-red underline-offset-8">Party Leadership</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for leader in leaders %}
+            <a href="/leader/{{ leader.slug }}/" class="block group">
+                <div class="border-4 border-roots-black bg-white p-4 items-center flex flex-col text-center hover:bg-roots-black hover:text-white transition-colors">
+                    <div class="w-48 h-48 rounded-full border-4 border-roots-black overflow-hidden mb-4 bg-gray-200 flex items-center justify-center group-hover:border-white relative">
+                        {% if leader.image %}
+                        <img src="{{ leader.image.url }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <span class="text-6xl">👤</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="text-3xl font-black uppercase mb-2">{{ leader.name }}</h3>
+                    <p class="text-roots-red font-bold uppercase text-lg bg-roots-black text-white px-2 group-hover:bg-roots-red group-hover:text-white">{{ leader.role }}</p>
+                    {% if leader.nickname %}
+                    <div class="mt-4 font-bold border-t-2 border-roots-black w-full pt-4 group-hover:border-white">
+                        "{{ leader.nickname }}"
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-2 text-center py-8 border-4 border-dashed border-roots-black">
+                <p class="font-bold uppercase text-xl text-gray-500">No leaders found. Admin, wake up!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Key Issues -->
+    <section class="space-y-6">
+        <h2 class="text-4xl font-black uppercase mb-8 text-center">Core Agenda</h2>
+
+        <div class="space-y-4">
+            <details class="group border-4 border-roots-black bg-white open:shadow-[8px_8px_0px_0px_#1a1a1a]">
+                <summary class="flex justify-between items-center cursor-pointer p-4 font-black uppercase text-2xl list-none group-hover:bg-gray-100">
+                    <span>💨 Legalization</span>
+                    <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div class="p-4 border-t-4 border-roots-black font-bold">
+                    We will legalize marijuana for industrial and medicinal use. This will pay off our national debt and create millions of jobs.
+                </div>
+            </details>
+
+            <details class="group border-4 border-roots-black bg-white open:shadow-[8px_8px_0px_0px_#1a1a1a]">
+                <summary class="flex justify-between items-center cursor-pointer p-4 font-black uppercase text-2xl list-none group-hover:bg-gray-100">
+                    <span>🐍 Snake Farming</span>
+                    <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div class="p-4 border-t-4 border-roots-black font-bold">
+                    Anti-venom is expensive. We will farm snakes, extract venom, and sell it to pharmaceutical companies abroad.
+                </div>
+            </details>
+
+            <details class="group border-4 border-roots-black bg-white open:shadow-[8px_8px_0px_0px_#1a1a1a]">
+                <summary class="flex justify-between items-center cursor-pointer p-4 font-black uppercase text-2xl list-none group-hover:bg-gray-100">
+                    <span>💼 4-Day Work Week</span>
+                    <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div class="p-4 border-t-4 border-roots-black font-bold">
+                    Friday is for prayer and rest. Kenyans work too hard for too little. 24-hour economy, 4 days a week.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Visual Divider -->
+    <div class="h-8 bg-[repeating-linear-gradient(45deg,#000,#000_10px,#fff_10px,#fff_20px)] border-4 border-roots-black"></div>
+
+    <div class="text-center">
+        <a href="/join/" class="brutal-btn inline-block text-2xl animate-pulse">
+            Join The Movement
+        </a>
+    </div>
+
+</div>
+{% endblock %}

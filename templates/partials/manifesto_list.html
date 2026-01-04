@@ -1,0 +1,12 @@
+<div class="space-y-4">
+    {% for cmd in commandments %}
+    <div class="flex items-start group cursor-none">
+        <div class="bg-roots-black text-white p-2 font-black text-xl border-l-4 border-t-4 border-b-4 border-roots-black h-full flex items-center group-hover:bg-roots-red transition-colors">
+            #{{ forloop.counter }}
+        </div>
+        <div class="flex-1 p-2 border-4 border-roots-black font-bold text-lg uppercase bg-white group-hover:bg-roots-black group-hover:text-white transition-colors">
+            {{ cmd }}
+        </div>
+    </div>
+    {% endfor %}
+</div>

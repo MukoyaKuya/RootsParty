@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-2xl mx-auto">
+    
+    <!-- Breadcrumb -->
+    <a href="/manifesto/" class="inline-flex items-center font-bold uppercase mb-8 hover:text-roots-red">
+        <span class="mr-2">←</span> Back to Truths
+    </a>
+
+    <!-- Header -->
+    <header class="border-b-8 border-roots-black pb-8 mb-8">
+        <div class="flex items-center justify-center w-24 h-24 bg-roots-black text-white text-6xl rounded-full border-4 border-roots-red mb-6 mx-auto shadow-[8px_8px_0px_0px_#E60000]">
+            {{ item.icon }}
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-center leading-none">
+            {{ item.title }}
+        </h1>
+    </header>
+
+    <!-- Main Description -->
+    <div class="mb-12 text-xl font-bold leading-relaxed border-l-8 border-roots-black pl-6">
+        {{ item.description }}
+    </div>
+
+    <!-- Case Studies -->
+    {% if item.evidence.exists %}
+    <section class="mb-12">
+        <h2 class="text-3xl font-black uppercase mb-6 bg-roots-black text-white inline-block px-2 transform -rotate-1">
+            Global Evidence
+        </h2>
+        <div class="space-y-4">
+            {% for proof in item.evidence.all %}
+            <div class="border-4 border-roots-black p-4 bg-gray-50 shadow-[4px_4px_0px_0px_#1a1a1a]">
+                <h3 class="font-black uppercase text-xl mb-1 text-roots-red">{{ proof.country }}</h3>
+                <p class="font-bold border-t-2 border-roots-black pt-2">{{ proof.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Local Impact -->
+    {% if item.local_impact %}
+    <section class="bg-roots-red text-white p-6 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a]">
+        <h2 class="text-3xl font-black uppercase mb-4 border-b-4 border-white pb-2">
+            Kenyan Impact
+        </h2>
+        <p class="text-xl font-bold uppercase">
+            {{ item.local_impact }}
+        </p>
+    </section>
+    {% endif %}
+    
+    <!-- Next Steps -->
+    <div class="mt-12 text-center">
+         <a href="/join/" class="brutal-btn inline-block text-xl">
+            Support This Policy
+        </a>
+    </div>
+
+</div>
+{% endblock %}

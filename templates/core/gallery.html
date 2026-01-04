@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-4xl mx-auto">
+    
+    <header class="text-center mb-12">
+        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-4">
+            Roots <span class="text-white bg-roots-black px-4 transform -rotate-1 inline-block">Tuko Ground</span>
+        </h1>
+    </header>
+
+    {% if posts %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for post in posts %}
+        <div class="border-4 border-roots-black p-2 bg-white shadow-[8px_8px_0px_0px_#1a1a1a]">
+            
+            <!-- Carousel Container -->
+            <div class="relative group bg-gray-100 border-4 border-roots-black mb-4">
+                <!-- Images Slider -->
+                <div class="carousel flex overflow-x-auto snap-x snap-mandatory scrollbar-hide h-[400px]" id="carousel-{{ post.id }}">
+                    {% for img in post.images.all %}
+                    <div class="snap-center flex-shrink-0 w-full h-full relative flex items-center justify-center bg-black/5">
+                        <img src="{{ img.image.url }}" alt="{{ post.title }}" class="max-h-full max-w-full object-contain">
+                         <div class="absolute bottom-2 right-2 bg-black text-white text-xs font-bold px-2 py-1 z-10">
+                            {{ forloop.counter }}/{{ post.images.count }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="flex items-center justify-center w-full h-full bg-gray-200 text-gray-400 font-bold uppercase">
+                        No Images
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Controls -->
+                {% if post.images.count > 1 %}
+                <button onclick="document.getElementById('carousel-{{ post.id }}').scrollBy({left: -300, behavior: 'smooth'})" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-roots-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    ←
+                </button>
+                <button onclick="document.getElementById('carousel-{{ post.id }}').scrollBy({left: 300, behavior: 'smooth'})" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-roots-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                </button>
+                {% endif %}
+            </div>
+
+            <h3 class="font-black uppercase text-2xl mb-2 leading-none mt-4">{{ post.title }}</h3>
+            {% if post.caption %}
+            <p class="font-bold text-sm border-t-4 border-roots-black pt-2">
+                {{ post.caption }}
+            </p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 border-4 border-dashed border-roots-black">
+        <div class="text-6xl mb-4">📸</div>
+        <h2 class="text-3xl font-black uppercase mb-2">No Images Yet</h2>
+        <p class="font-bold text-xl">The revolution is waiting for its paparazzi.</p>
+    </div>
+    {% endif %}
+
+    <div class="mt-12 text-center">
+        <a href="/" class="brutal-btn inline-block text-xl">
+            ← Back Home
+        </a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24">
+    <h1 class="text-4xl font-bold uppercase mb-6 border-b-4 border-roots-black inline-block">Join Roots Party</h1>
+    
+    <div class="p-6 border-4 border-roots-black bg-roots-white shadow-[8px_8px_0px_0px_rgba(26,26,26,1)]">
+        <form hx-post="/join/" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block font-bold uppercase mb-2 text-lg">Official Names</label>
+                <input type="text" 
+                       name="full_name" 
+                       required
+                       class="w-full p-4 border-4 border-roots-black font-bold text-xl rounded-none focus:outline-none focus:bg-gray-100 focus:border-roots-red transition-colors placeholder-gray-500"
+                       placeholder="KAMAU OTIENO">
+            </div>
+
+            <div>
+                <label class="block font-bold uppercase mb-2 text-lg">National ID Number</label>
+                <input type="text" 
+                       name="id_number" 
+                       required
+                       class="w-full p-4 border-4 border-roots-black font-bold text-xl rounded-none focus:outline-none focus:bg-gray-100 focus:border-roots-red transition-colors placeholder-gray-500"
+                       placeholder="12345678"
+                       hx-get="/check-id/" 
+                       hx-trigger="keyup changed delay:500ms" 
+                       hx-target="#id-error">
+                <div id="id-error"></div>
+            </div>
+
+            <div>
+                <label class="block font-bold uppercase mb-2 text-lg">M-PESA Phone Number</label>
+                <input type="tel" 
+                       name="phone" 
+                       required
+                       class="w-full p-4 border-4 border-roots-black font-bold text-xl rounded-none focus:outline-none focus:bg-gray-100 focus:border-roots-red transition-colors placeholder-gray-500"
+                       placeholder="0712 345 678">
+            </div>
+
+            <button type="submit" class="brutal-btn w-full text-2xl mt-8">
+                Submit Application
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

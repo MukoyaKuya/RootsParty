@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-4xl mx-auto">
+
+    <!-- Breadcrumb -->
+    <a href="/about/" class="inline-flex items-center font-bold uppercase mb-8 hover:text-roots-red">
+        <span class="mr-2">←</span> Back to Leadership
+    </a>
+
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row gap-12 items-center md:items-start mb-16">
+        <!-- Profile Image -->
+        <div class="relative w-64 h-64 flex-shrink-0">
+            <div class="absolute inset-0 border-4 border-roots-black transform rotate-6 bg-roots-black"></div>
+            <div class="absolute inset-0 border-4 border-roots-black bg-white overflow-hidden">
+                <img src="{{ leader.image.url }}" alt="{{ leader.name }}" class="w-full h-full object-cover">
+            </div>
+        </div>
+        
+        <!-- Info -->
+        <div class="text-center md:text-left flex-grow">
+            <h1 class="text-5xl font-black uppercase tracking-tighter leading-none mb-2">
+                {{ leader.name }}
+            </h1>
+            <p class="text-xl font-bold uppercase text-roots-red mb-4">
+                {{ leader.role }}
+            </p>
+            {% if leader.nickname %}
+            <span class="inline-block bg-roots-black text-white px-3 py-1 font-bold uppercase transform -rotate-2 mb-6 shadow-[4px_4px_0px_0px_#E60000]">
+                "{{ leader.nickname }}"
+            </span>
+            {% endif %}
+            
+            <div class="text-lg leading-relaxed font-bold border-l-4 border-roots-black pl-4">
+                {{ leader.bio|linebreaks }}
+            </div>
+            
+            {% if leader.twitter_handle %}
+            <div class="mt-6">
+                <a href="https://twitter.com/{{ leader.twitter_handle|slice:'1:' }}" target="_blank" class="inline-flex items-center font-black uppercase text-xl hover:text-roots-red">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                    {{ leader.twitter_handle }}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    {% if leader.gallery.exists %}
+    <section class="border-t-8 border-roots-black pt-12">
+        <h2 class="text-4xl font-black uppercase mb-8 text-center bg-gray-100 inline-block px-4 py-2 border-4 border-roots-black transform -rotate-1">
+            Files & Evidence
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for item in leader.gallery.all %}
+            <div class="border-4 border-roots-black p-2 bg-white shadow-[8px_8px_0px_0px_#1a1a1a]">
+                <div class="aspect-w-4 aspect-h-3 border-4 border-roots-black mb-2 overflow-hidden">
+                    <img src="{{ item.image.url }}" alt="{{ item.caption }}" class="object-cover w-full h-full hover:scale-110 transition-transform duration-500">
+                </div>
+                {% if item.caption %}
+                <p class="font-bold uppercase text-center text-sm py-2">
+                    {{ item.caption }}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}

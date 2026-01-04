@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-lg mx-auto">
+    <header class="text-center mb-8">
+        <h1 class="text-5xl font-black uppercase tracking-tighter mb-2">
+            Support The <span class="text-white bg-roots-red px-2 inline-block transform -rotate-2">Revolution</span>
+        </h1>
+        <p class="font-bold uppercase text-xl">Na M-PESA</p>
+    </header>
+
+    <div class="border-4 border-roots-black bg-white p-6 shadow-[12px_12px_0px_0px_#1a1a1a] relative">
+        <!-- Secure Badge -->
+        <div class="absolute -top-6 -right-6 bg-roots-black text-white p-2 rounded-full h-16 w-16 flex items-center justify-center font-black text-xs uppercase border-4 border-white shadow-lg z-10 animate-pulse">
+            Secure<br>Pay
+        </div>
+
+        <form hx-post="/donate/" hx-swap="outerHTML" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Amount Grid -->
+            <div>
+                <label class="block font-black uppercase mb-4 text-xl border-b-4 border-roots-black inline-block">Select Amount</label>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amount" value="50" class="peer sr-only" required>
+                        <div class="border-4 border-roots-black p-4 text-center font-bold text-xl peer-checked:bg-roots-red peer-checked:text-white peer-checked:translate-x-1 peer-checked:translate-y-1 peer-checked:shadow-none shadow-[4px_4px_0px_0px_#1a1a1a] transition-all bg-gray-50 hover:bg-gray-100">
+                            50
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amount" value="100" class="peer sr-only">
+                        <div class="border-4 border-roots-black p-4 text-center font-bold text-xl peer-checked:bg-roots-red peer-checked:text-white peer-checked:translate-x-1 peer-checked:translate-y-1 peer-checked:shadow-none shadow-[4px_4px_0px_0px_#1a1a1a] transition-all bg-gray-50 hover:bg-gray-100">
+                            100
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="amount" value="500" class="peer sr-only" checked>
+                        <div class="border-4 border-roots-black p-4 text-center font-bold text-xl peer-checked:bg-roots-red peer-checked:text-white peer-checked:translate-x-1 peer-checked:translate-y-1 peer-checked:shadow-none shadow-[4px_4px_0px_0px_#1a1a1a] transition-all bg-gray-50 hover:bg-gray-100">
+                            500
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 font-black text-xl">KES</span>
+                    <input type="number" 
+                           name="custom_amount" 
+                           class="w-full p-4 pl-16 border-4 border-roots-black font-bold text-xl rounded-none focus:outline-none focus:bg-gray-100 focus:border-roots-red transition-colors placeholder-gray-500"
+                           placeholder="Other Amount">
+                </div>
+            </div>
+
+            <!-- Phone Input -->
+            <div>
+                <label class="block font-black uppercase mb-2 text-xl">Enter your M-PESA Number</label>
+                <div class="relative">
+                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" />
+                            <path fill-rule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3H9.75v.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V3h1.125c.621 0 1.125.504 1.125 1.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="tel" 
+                           name="phone" 
+                           required
+                           pattern="^0(7|1)[0-9]{8}$"
+                           class="w-full p-4 pl-14 border-4 border-roots-black font-bold text-xl rounded-none focus:outline-none focus:bg-gray-100 focus:border-roots-red transition-colors placeholder-gray-500"
+                           placeholder="0712 345 678">
+                </div>
+                <p class="text-xs font-bold mt-2 text-gray-500 uppercase">We will send a payment prompt to your phone.</p>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="brutal-btn w-full text-2xl flex items-center justify-center group overflow-hidden relative">
+                <span class="relative z-10 group-hover:hidden">Proceed to Pay</span>
+                <span class="relative z-10 hidden group-hover:inline-block animate-pulse">💸 SEND IT 💸</span>
+                <div class="absolute inset-0 bg-roots-black transform translate-y-full group-hover:translate-y-0 transition-transform z-0"></div>
+            </button>
+            
+            <div class="text-center">
+                <p class="text-xs font-bold uppercase text-gray-400">Secured by Daraja API</p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

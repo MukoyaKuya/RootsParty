@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Roots Party - TINGIZA MTI{% endblock %}</title>
+    
+    <!-- Google Fonts: Oswald -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+    <!-- Tailwind CSS (CDN for Dev) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        roots: {
+                            black: '#1a1a1a',
+                            red: '#E60000',
+                            white: '#FFFFFF',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Oswald', 'system-ui', 'sans-serif'],
+                        display: ['Oswald', 'system-ui', 'sans-serif'],
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                        '4': '4px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFFFF;
+            color: #1a1a1a;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .htmx-indicator {
+            display: none;
+        }
+        .htmx-request .htmx-indicator {
+            display: inline-block;
+        }
+        .htmx-request.htmx-indicator {
+            display: inline-block;
+        }
+
+        /* Brutalist Utilities */
+        .brutal-border {
+            border: 4px solid #1a1a1a;
+        }
+        .brutal-btn {
+            background-color: #E60000;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border: 4px solid #1a1a1a;
+            box-shadow: 4px 4px 0px #1a1a1a;
+            transition: all 0.1s;
+        }
+        .brutal-btn:active {
+            box-shadow: 0px 0px 0px #1a1a1a;
+            transform: translate(4px, 4px);
+        }
+    </style>
+</head>
+<body class="bg-roots-white text-roots-black min-h-screen mb-24 grid-bg" hx-boost="true">
+
+    <!-- Global Loader -->
+    <div id="global-loader" class="htmx-indicator fixed top-4 right-4 z-[60]">
+        <div class="animate-spin h-10 w-10 border-8 border-roots-black border-t-roots-red"></div>
+    </div>
+
+    <!-- Marquee Ticker -->
+    <div class="bg-roots-black text-roots-white overflow-hidden py-2 border-b-4 border-roots-black fixed top-0 w-full z-50">
+        <div class="whitespace-nowrap animate-marquee font-bold uppercase tracking-widest text-sm">
+            🚨 BREAKING: WEED IS ECONOMIC FREEDOM // 🚨 HANG THE CORRUPT // 🐍 TINGIZA MTI // 🚨 EXPORT HYENA MEAT // 🐍 JAH RASTAFARI // 🚨 4-DAY WORK WEEK IS COMING
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-md mx-auto p-4 mt-12 md:max-w-none md:ml-64 md:mt-20 md:p-12 md:mr-0 transition-all">
+        {% if messages %}
+        <div class="mb-8 space-y-4">
+            {% for message in messages %}
+            <div class="p-4 border-4 border-roots-black bg-roots-red text-white font-bold uppercase shadow-[8px_8px_0px_0px_rgba(26,26,26,1)]">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Desktop Sidebar (Visible on md+) -->
+    <nav class="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 bg-roots-black border-r-4 border-roots-black z-[60] pt-20">
+        <div class="px-6 pb-6">
+            <h2 class="text-white font-black uppercase text-3xl tracking-tighter leading-none">
+                Roots<br><span class="text-roots-red">Party</span>
+            </h2>
+        </div>
+        
+        <div class="flex-1 flex flex-col w-full">
+            <a href="/" class="group flex items-center px-6 py-4 text-white hover:bg-white hover:text-roots-black transition-all border-b border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+                <span class="font-bold uppercase tracking-widest text-lg">Home</span>
+            </a>
+            
+            <a href="/about/" class="group flex items-center px-6 py-4 text-white hover:bg-white hover:text-roots-black transition-all border-b border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                </svg>
+                <span class="font-bold uppercase tracking-widest text-lg">About</span>
+            </a>
+
+            <a href="/manifesto/" class="group flex items-center px-6 py-4 text-white hover:bg-white hover:text-roots-black transition-all border-b border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+                <span class="font-bold uppercase tracking-widest text-lg">Truths</span>
+            </a>
+            
+            <a href="/donate/" class="group flex items-center px-6 py-4 text-white hover:bg-white hover:text-roots-black transition-all border-b border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                </svg>
+                <span class="font-bold uppercase tracking-widest text-lg">Fund</span>
+            </a>
+
+            <a href="/join/" class="group flex items-center px-6 py-4 text-roots-red hover:bg-roots-red hover:text-white transition-all border-b border-gray-800 mt-auto mb-8 border-t-4 border-t-roots-red">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-1-6h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Z" />
+                </svg>
+                <span class="font-bold uppercase tracking-widest text-lg">Join</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Sticky Bottom Navigation (Visible on < md) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-roots-white border-t-4 border-roots-black z-40">
+        <div class="grid grid-cols-5 h-20 w-full">
+            <a href="/" class="group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-1 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">Home</span>
+            </a>
+            <a href="/about/" class="group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-1 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                </svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">About</span>
+            </a>
+            <a href="/manifesto/" class="group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-1 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">Truths</span>
+            </a>
+            <a href="/donate/" class="group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-1 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                </svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">Fund</span>
+            </a>
+            <a href="/join/" class="group flex flex-col items-center justify-center hover:bg-roots-red hover:text-white transition-all duration-0">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-1 group-hover:scale-110 transition-transform">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-1-6h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Z" />
+                </svg>
+                <span class="text-[10px] font-black uppercase tracking-widest">Join</span>
+            </a>
+        </div>
+    </nav>
+
+    <style>
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(26, 26, 26, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(26, 26, 26, 0.1) 1px, transparent 1px);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+    </style>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mx-auto max-w-sm">
+    <!-- ID Card Stye -->
+    <div class="border-4 border-roots-black bg-roots-white relative overflow-hidden">
+        <!-- Header -->
+        <div class="bg-roots-black text-white p-4 text-center border-b-4 border-roots-black">
+            <h1 class="text-3xl font-black uppercase tracking-widest">OFFICIAL MEMBER</h1>
+            <p class="text-xs font-bold uppercase tracking-widest">Roots Party of Kenya</p>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 text-center space-y-4 relative z-10">
+            <div class="w-24 h-24 mx-auto border-4 border-roots-black rounded-full overflow-hidden bg-white flex items-center justify-center p-1">
+                <img src="/static/images/logo.png" alt="Logo" class="w-full h-full object-contain">
+            </div>
+            
+            <div class="space-y-1">
+                <p class="text-xs font-bold uppercase text-gray-500">Status</p>
+                <div class="text-2xl font-black uppercase bg-roots-red text-white inline-block px-2 transform -rotate-2">
+                    APPROVED
+                </div>
+            </div>
+
+            <div class="border-2 border-dashed border-roots-black p-4 mt-4">
+                <p class="font-bold uppercase text-xl">WELCOME COMRADE.</p>
+                <p class="text-sm font-bold mt-2">WAIT FOR THE SIGNAL.</p>
+            </div>
+        </div>
+
+        <!-- Decorative bg pattern -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none z-0" 
+             style="background-image: repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), repeating-linear-gradient(45deg, #000 25%, #fff 25%, #fff 75%, #000 75%, #000); background-position: 0 0, 10px 10px; background-size: 20px 20px;">
+        </div>
+    </div>
+
+    <div class="mt-8 text-center">
+        <a href="/" class="brutal-btn block w-full text-xl hover:bg-roots-black hover:text-white transition-colors">
+            Return to HQ
+        </a>
+    </div>
+</div>
+{% endblock %}
