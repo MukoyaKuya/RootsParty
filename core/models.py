@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Leader(models.Model):
     name = models.CharField(max_length=100)
@@ -71,3 +72,65 @@ class PostImage(models.Model):
     
     def __str__(self):
         return f"Image for {self.post.title}"
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    location = models.CharField(max_length=200)
+    date = models.DateTimeField()
+    image = models.ImageField(upload_to='events/', blank=True, null=True)
+    description = models.TextField(blank=True)
+    is_completed = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-date']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.title} - {self.location}"
+
+    @property
+    def is_upcoming(self):
+        return self.date > timezone.now()
+
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    image = models.ImageField(upload_to='products/')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True)
+    is_available = models.BooleanField(default=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.name
+
+class Resource(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, help_text="Brief description of the document")
+    file = models.FileField(upload_to='resources/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    is_public = models.BooleanField(default=True)
+    
+    def get_file_type(self):
+        ext = self.file.name.split('.')[-1].lower()
+        if ext in ['pdf']: return 'PDF'
+        if ext in ['doc', 'docx']: return 'DOC'
+        if ext in ['png', 'jpg', 'jpeg']: return 'IMG'
+        return 'FILE'
+
+    def __str__(self):
+        return self.title
+        
+    class Meta:
+        ordering = ['-uploaded_at']

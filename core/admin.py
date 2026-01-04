@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -20,8 +20,6 @@ class ManifestoAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     inlines = [EvidenceInline]
 
-from .models import GalleryPost, PostImage
-
 class PostImageInline(admin.TabularInline):
     model = PostImage
     extra = 1
@@ -31,3 +29,23 @@ class PostImageInline(admin.TabularInline):
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     inlines = [PostImageInline]
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'location', 'date', 'is_completed')
+    list_filter = ('is_completed', 'date')
+    search_fields = ('title', 'location')
+    prepopulated_fields = {'slug': ('title',)}
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'is_available')
+    list_filter = ('is_available',)
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'uploaded_at', 'is_public')
+    list_filter = ('is_public', 'uploaded_at')
+    search_fields = ('title', 'description')

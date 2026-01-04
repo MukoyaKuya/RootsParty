@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-6xl mx-auto">
+    
+    <header class="text-center mb-12">
+        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-4">
+            Party <span class="text-roots-red bg-white border-4 border-roots-black px-4 transform rotate-1 inline-block shadow-[8px_8px_0px_0px_#1a1a1a]">Shop</span>
+        </h1>
+        <p class="font-bold text-xl uppercase">Wear the revolution.</p>
+    </header>
+
+    {% if products %}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for product in products %}
+        <div class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+            
+            <div class="h-64 border-b-4 border-roots-black overflow-hidden relative">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                {% else %}
+                <div class="w-full h-full bg-gray-200 flex items-center justify-center font-black uppercase text-gray-400 text-2xl group-hover:scale-110 transition-transform duration-500">
+                    No Image
+                </div>
+                {% endif %}
+                <div class="absolute top-2 right-2 bg-roots-red text-white font-black text-xl px-2 py-1 border-2 border-roots-black rotate-3">
+                    KES {{ product.price|floatformat:0 }}
+                </div>
+            </div>
+            
+            <div class="p-6 flex-grow flex flex-col">
+                <h3 class="text-3xl font-black uppercase leading-none mb-2">{{ product.name }}</h3>
+                <p class="text-sm font-bold opacity-80 mb-4 flex-grow">{{ product.description|truncatewords:20 }}</p>
+                
+                <a href="https://wa.me/254700000000?text=I%20am%20interested%20in%20buying%20{{ product.name|urlencode }}%20for%20KES%20{{ product.price }}" target="_blank" class="brutal-btn w-full text-center flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-8.683-2.031-9.672-.272-.099-.47-.149-.669-.149-.198 0-.42.001-.643.001-.223 0-.585.085-.89.42-.305.334-1.171 1.143-1.171 2.788 0 1.649 1.201 3.243 1.368 3.468.166.223 2.364 3.612 5.728 5.066 2.399 1.034 2.888.828 3.408.778.52-.05 1.758-.718 2.006-1.411.248-.693.248-1.288.173-1.412-.074-.124-.272-.199-.57-.347z"/>
+                    </svg>
+                    Buy via WhatsApp
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 border-4 border-dashed border-roots-black">
+        <h2 class="text-3xl font-black uppercase mb-2">Shop Coming Soon</h2>
+        <p class="font-bold text-xl">We are printing the shirts. Stay tuned.</p>
+    </div>
+    {% endif %}
+
+    <div class="mt-12 text-center">
+        <a href="/" class="brutal-btn inline-block text-xl">
+            ← Back Home
+        </a>
+    </div>
+
+</div>
+{% endblock %}

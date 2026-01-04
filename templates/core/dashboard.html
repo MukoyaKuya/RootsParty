@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-7xl mx-auto">
+    
+    <header class="flex justify-between items-center mb-12 border-b-8 border-roots-black pb-4">
+        <div>
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+                War Room <span class="bg-roots-red text-white px-2">Analytics</span>
+            </h1>
+            <p class="font-bold text-lg uppercase opacity-70">Internal Only // Confidential</p>
+        </div>
+        <div class="flex gap-4">
+            <a href="/admin/" class="brutal-btn bg-roots-black text-white hover:bg-white hover:text-roots-black">
+                Manage Content
+            </a>
+            <a href="/admin/logout/" class="brutal-btn bg-white text-roots-black">
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <!-- Members -->
+        <div class="border-4 border-roots-black bg-white p-6 shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-1 hover:-translate-y-1 transition-transform">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-black uppercase">Members</h3>
+                <span class="text-4xl">👥</span>
+            </div>
+            <p class="text-6xl font-black text-roots-red">{{ total_members }}</p>
+            <p class="font-bold text-sm uppercase mt-2">Registered Comrades</p>
+        </div>
+
+        <!-- Money -->
+        <div class="border-4 border-roots-black bg-roots-black text-white p-6 shadow-[8px_8px_0px_0px_#E60000] hover:translate-x-1 hover:-translate-y-1 transition-transform">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-black uppercase">War Chest</h3>
+                <span class="text-4xl">💰</span>
+            </div>
+            <p class="text-5xl font-black text-roots-red">KES {{ total_donations_amount|floatformat:0 }}</p>
+            <p class="font-bold text-sm uppercase mt-2">Total Raised (Pending)</p>
+        </div>
+
+        <!-- Rallies -->
+        <div class="border-4 border-roots-black bg-white p-6 shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-1 hover:-translate-y-1 transition-transform">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-black uppercase">Rallies</h3>
+                <span class="text-4xl">📣</span>
+            </div>
+            <p class="text-6xl font-black">{{ upcoming_events_count }}</p>
+            <p class="font-bold text-sm uppercase mt-2">Upcoming Events</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Recent Members -->
+        <div class="border-4 border-roots-black bg-white p-6">
+            <h3 class="text-2xl font-black uppercase mb-6 border-b-4 border-roots-black inline-block">Fresh Recruits</h3>
+            {% if recent_members %}
+            <div class="space-y-4">
+                {% for member in recent_members %}
+                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-2">
+                    <div>
+                        <p class="font-bold uppercase">{{ member.full_name }}</p>
+                        <p class="text-xs font-mono text-gray-500">{{ member.created_at|date:"d M Y H:i" }}</p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-black uppercase px-2 py-1 border border-green-800">New</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No recruits yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Donations -->
+        <div class="border-4 border-roots-black bg-white p-6">
+            <h3 class="text-2xl font-black uppercase mb-6 border-b-4 border-roots-black inline-block">Recent Funding</h3>
+            {% if recent_donations %}
+            <div class="space-y-4">
+                {% for donation in recent_donations %}
+                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-2">
+                    <div>
+                        <p class="font-bold text-roots-red">KES {{ donation.amount|floatformat:0 }}</p>
+                        <p class="text-xs font-mono text-gray-500">{{ donation.created_at|date:"d M Y H:i" }}</p>
+                        <p class="text-xs text-gray-400">{{ donation.phone_number }}</p>
+                    </div>
+                    <span class="bg-gray-100 text-gray-800 text-xs font-black uppercase px-2 py-1 border border-gray-800">{{ donation.status }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No donations yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

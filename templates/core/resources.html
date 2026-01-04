@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-5xl mx-auto px-4">
+    
+    <header class="text-center mb-16">
+        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-4">
+            Party <span class="text-white bg-roots-black px-4 transform -rotate-1 inline-block border-4 border-roots-red shadow-[8px_8px_0px_0px_#1a1a1a]">Archives</span>
+        </h1>
+        <p class="font-bold text-xl uppercase max-w-2xl mx-auto">
+            Knowledge is power. Download the manifesto, constitution, and propaganda.
+        </p>
+    </header>
+
+    {% if docs %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for doc in docs %}
+        <div class="bg-white border-4 border-roots-black p-6 shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_#E60000] transition-all flex flex-col h-full group">
+            
+            <div class="flex items-start justify-between mb-4">
+                <div class="w-16 h-16 bg-gray-100 border-4 border-roots-black flex items-center justify-center text-2xl font-black uppercase">
+                    {{ doc.get_file_type }}
+                </div>
+                <span class="text-xs font-bold uppercase bg-gray-200 px-2 py-1">
+                    {{ doc.uploaded_at|date:"d M Y" }}
+                </span>
+            </div>
+            
+            <h3 class="text-2xl font-black uppercase leading-none mb-3 group-hover:text-roots-red transition-colors">
+                {{ doc.title }}
+            </h3>
+            
+            {% if doc.description %}
+            <p class="font-bold text-sm text-gray-600 mb-6 flex-grow border-l-4 border-gray-300 pl-3">
+                {{ doc.description }}
+            </p>
+            {% else %}
+            <div class="flex-grow"></div>
+            {% endif %}
+            
+            <div class="flex flex-col gap-2 mt-auto" hx-boost="false">
+                {% if doc.get_file_type == 'PDF' or doc.get_file_type == 'IMG' %}
+                <button onclick="openViewer('{{ doc.file.url }}', '{{ doc.get_file_type }}')" class="brutal-btn w-full text-center flex items-center justify-center gap-2 text-sm bg-white text-roots-black hover:bg-roots-black hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                    View
+                </button>
+                {% endif %}
+                
+                <a href="{{ doc.file.url }}" download class="brutal-btn w-full text-center flex items-center justify-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Download
+                </a>
+            </div>
+            
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 border-4 border-dashed border-roots-black bg-gray-50">
+        <div class="text-6xl mb-4">📂</div>
+        <h3 class="text-3xl font-black uppercase mb-2">Classified</h3>
+        <p class="font-bold text-xl">The archives are currently empty. Check back later.</p>
+    </div>
+    {% endif %}
+    
+    <div class="mt-16 text-center">
+        <a href="/" class="brutal-btn inline-block text-xl bg-white text-roots-black hover:bg-roots-black hover:text-white">
+            ← Back Home
+        </a>
+    </div>
+
+</div>
+
+<!-- Viewer Modal -->
+<div id="file-viewer" class="hidden fixed inset-0 z-[80] items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+    <div class="relative w-full max-w-6xl h-[90vh] flex flex-col">
+        <!-- Close Button -->
+        <button onclick="closeViewer()" class="absolute -top-12 right-0 md:-right-12 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-50">
+            X
+        </button>
+        
+        <div class="bg-white border-4 border-roots-black h-full w-full p-2 md:p-4 shadow-[8px_8px_0px_0px_#1a1a1a] relative">
+            <embed id="viewer-embed" type="application/pdf" src="" class="w-full h-full border-2 border-roots-black bg-gray-100 hidden">
+            <img id="viewer-image" src="" class="hidden w-full h-full object-contain">
+            <div id="viewer-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-white z-10">
+                 <p class="text-xl font-bold">Preview not available. <a id="fallback-link" href="#" class="text-roots-red underline">Download file</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openViewer(url, type) {
+        const modal = document.getElementById('file-viewer');
+        const embed = document.getElementById('viewer-embed');
+        const img = document.getElementById('viewer-image');
+        const fallback = document.getElementById('viewer-fallback');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Reset
+        embed.classList.add('hidden');
+        img.classList.add('hidden');
+        fallback.classList.add('hidden');
+        
+        if (type === 'IMG') {
+            img.classList.remove('hidden');
+            img.src = url;
+        } else if (type === 'PDF') {
+            embed.classList.remove('hidden');
+            embed.src = url;
+        } else {
+             // Fallback for others if logic expands
+             fallback.classList.remove('hidden');
+             document.getElementById('fallback-link').href = url;
+        }
+    }
+    
+    function closeViewer() {
+        const modal = document.getElementById('file-viewer');
+        const embed = document.getElementById('viewer-embed');
+        const img = document.getElementById('viewer-image');
+        
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        embed.src = '';
+        img.src = '';
+    }
+</script>
+{% endblock %}

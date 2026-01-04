@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-5xl mx-auto px-4">
+    
+    <!-- Hero Header -->
+    <header class="text-center mb-16 relative">
+        <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85] mb-6 relative z-10">
+            People's <br>
+            <span class="text-white bg-roots-red px-6 py-2 transform -rotate-2 inline-block border-4 border-roots-black shadow-[12px_12px_0px_0px_#1a1a1a] hover:rotate-0 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#1a1a1a] transition-all duration-300">
+                Rallies
+            </span>
+        </h1>
+        <p class="font-bold text-2xl md:text-3xl uppercase max-w-2xl mx-auto leading-tight bg-white border-4 border-roots-black p-4 shadow-[8px_8px_0px_0px_#1a1a1a] transform rotate-1">
+            📢 Where we make the noise. <br> Where we shake the tree.
+        </p>
+        
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 hidden md:block animate-bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-roots-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+    </header>
+
+    <!-- Upcoming Events Section -->
+    <div class="mb-24 relative">
+        <!-- Section Title Badge -->
+        <div class="absolute -top-6 left-0 md:-left-8 z-20">
+            <span class="bg-roots-black text-white text-2xl font-black uppercase px-6 py-2 border-4 border-roots-red shadow-[4px_4px_0px_0px_#1a1a1a] transform -rotate-3">
+                Next Stops
+            </span>
+        </div>
+
+        {% if upcoming_events %}
+        <div class="space-y-12 pt-8">
+            {% for event in upcoming_events %}
+            <div class="group relative bg-white border-4 border-roots-black p-0 shadow-[16px_16px_0px_0px_#1a1a1a] hover:shadow-[8px_8px_0px_0px_#E60000] hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+                
+                <div class="flex flex-col md:flex-row h-full">
+                    <!-- Date Column -->
+                    <div class="w-full md:w-48 bg-roots-black text-white flex flex-col items-center justify-center p-6 border-b-4 md:border-b-0 md:border-r-4 border-roots-black sticky top-0">
+                        <span class="text-7xl font-black leading-none mb-2 text-roots-red">{{ event.date|date:"d" }}</span>
+                        <span class="text-3xl font-bold uppercase tracking-widest">{{ event.date|date:"M" }}</span>
+                        <span class="text-xl font-mono mt-2 opacity-70">{{ event.date|date:"Y" }}</span>
+                        <span class="mt-4 px-3 py-1 border-2 border-white text-xs font-bold uppercase rounded-full">
+                            {{ event.date|date:"l" }}
+                        </span>
+                    </div>
+
+                    <!-- Content Column -->
+                    <div class="flex-grow p-6 md:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-3 mb-4">
+                                <span class="bg-roots-red text-white text-sm font-black uppercase px-3 py-1 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a]">
+                                    📍 {{ event.location }}
+                                </span>
+                                <span class="bg-yellow-300 text-roots-black text-sm font-black uppercase px-3 py-1 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a]">
+                                    ⏰ {{ event.date|date:"H:i" }}
+                                </span>
+                            </div>
+                            
+                            <h3 class="text-4xl md:text-5xl font-black uppercase leading-[0.9] mb-6 group-hover:text-roots-red transition-colors">
+                                {{ event.title }}
+                            </h3>
+                            
+                            {% if event.description %}
+                            <p class="font-bold text-lg md:text-xl leading-snug border-l-8 border-gray-200 pl-6 mb-8 text-gray-800">
+                                "{{ event.description|linebreaksbr }}"
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="flex flex-col sm:flex-row gap-4 mt-auto border-t-4 border-dashed border-gray-300 pt-6">
+                            <button class="brutal-btn flex-grow text-center text-lg hover:bg-roots-black hover:text-white transition-all transform active:scale-95">
+                                COUNT ME IN ✊
+                            </button>
+                            <button class="brutal-btn bg-white text-roots-black flex-grow text-center text-lg hover:bg-green-500 hover:text-white transition-all transform active:scale-95">
+                                SHARE ON WHATSAPP 📲
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Column (Hidden on mobile) -->
+                    {% if event.image %}
+                    <div class="hidden lg:block w-64 border-l-4 border-roots-black overflow-hidden relative group-hover:grayscale-0 grayscale transition-all duration-500">
+                        <img src="{{ event.image.url }}" class="w-full h-full object-cover absolute inset-0 transform scale-100 group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-roots-red mix-blend-multiply opacity-20 group-hover:opacity-0 transition-opacity"></div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="mt-8 border-4 border-dashed border-roots-black bg-gray-50 p-12 text-center transform rotate-1">
+            <h3 class="text-4xl font-black uppercase mb-4">No rallies scheduled right now.</h3>
+            <p class="font-bold text-xl mb-6">The Generals are in the War Room. Stay tuned.</p>
+            <div class="animate-pulse text-6xl">🤫</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Past Events Section -->
+    {% if past_events %}
+    <div class="relative py-12 border-t-8 border-roots-black">
+        <h2 class="text-4xl font-black uppercase mb-12 text-center opacity-50 hover:opacity-100 transition-opacity">
+            <span class="bg-gray-200 px-4 py-2 border-4 border-gray-400">History Books</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 opacity-75 hover:opacity-100 transition-opacity duration-500">
+            {% for event in past_events %}
+            <div class="bg-gray-100 border-4 border-gray-400 p-6 flex gap-6 hover:bg-white hover:border-roots-black hover:shadow-[8px_8px_0px_0px_#1a1a1a] transition-all group">
+                <div class="flex-shrink-0 text-center border-r-4 border-gray-300 pr-6 group-hover:border-roots-black">
+                    <span class="block text-4xl font-black text-gray-500 group-hover:text-roots-red">{{ event.date|date:"d" }}</span>
+                    <span class="block text-lg font-bold uppercase text-gray-500 group-hover:text-roots-black">{{ event.date|date:"M" }}</span>
+                </div>
+                <div>
+                    <h4 class="font-black uppercase text-2xl leading-none mb-2 line-through decoration-roots-red decoration-4 group-hover:no-underline">{{ event.title }}</h4>
+                    <span class="text-sm font-bold uppercase bg-gray-300 px-2 py-1 group-hover:bg-roots-red group-hover:text-white transition-colors">
+                        📍 {{ event.location }}
+                    </span>
+                    <span class="block text-xs font-bold text-gray-500 mt-2 uppercase">Completed</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-16 text-center">
+        <a href="/" class="brutal-btn inline-block text-xl bg-white text-roots-black hover:bg-roots-black hover:text-white">
+            ← Back to HQ
+        </a>
+    </div>
+
+</div>
+{% endblock %}

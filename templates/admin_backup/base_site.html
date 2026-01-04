@@ -1,0 +1,195 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Roots Party Command Center{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; font-size: 24px; color: #E60000; background: #fff; padding: 4px 8px; border: 2px solid #000; box-shadow: 2px 2px 0 #000;">
+            ROOTS PARTY ADMIN
+        </span>
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1a1a1a;
+        --secondary: #2d2d2d;
+        --accent: #E60000;
+        --bg: #f8f8f8;
+        --sidebar: #121212;
+        --text: #1a1a1a;
+        --text-light: #f8f8f8;
+        --link: #ca0000;
+        --border: #1a1a1a;
+    }
+    
+    body {
+        font-family: 'Oswald', sans-serif !important;
+        background-color: var(--bg);
+        color: var(--text);
+    }
+    
+    #header {
+        background: var(--primary);
+        color: #fff;
+        border-bottom: 5px solid var(--accent);
+        padding: 15px 40px;
+    }
+    
+    #branding h1 {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    
+    /* Breadcrumbs */
+    div.breadcrumbs {
+        background: #fff;
+        border-bottom: 2px solid var(--border);
+        color: var(--text);
+        padding: 15px 40px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+    div.breadcrumbs a {
+        color: var(--accent);
+        font-weight: 700;
+    }
+    
+    /* Module/App Headers */
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--primary);
+        color: #fff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 12px 16px;
+        font-size: 16px;
+    }
+    
+    .module {
+        background: #fff;
+        border: 2px solid var(--border);
+        box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    /* Links */
+    a:link, a:visited {
+        color: var(--link);
+    }
+    
+    a.section:link, a.section:visited {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    
+    /* Tables */
+    div.results table thead th {
+        background: var(--primary);
+        color: #fff;
+        text-transform: uppercase;
+        padding: 10px;
+        font-size: 13px;
+        border-right: 1px solid #333;
+    }
+    div.results table thead th a {
+        color: #fff !important;
+    }
+    
+    tr.row1, tr.row2 {
+        background: #fff;
+    }
+    tr:hover td {
+        background: #fff5f5 !important;
+    }
+    
+    /* Buttons */
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--accent);
+        color: white;
+        text-transform: uppercase;
+        font-weight: 700;
+        border: 2px solid var(--primary);
+        box-shadow: 4px 4px 0 var(--primary);
+        transition: all 0.2s;
+        padding: 10px 20px;
+        border-radius: 0;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover {
+        background: var(--primary);
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--accent);
+    }
+    
+    .dashboard .module table th a {
+        color: var(--text);
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    /* Form rows */
+    .form-row {
+        border-bottom: 1px solid #eee;
+        padding: 12px 14px;
+        color: var(--text);
+    }
+    
+    .form-row img {
+        border: 2px solid #000;
+        padding: 2px;
+    }
+    
+    /* Dashboard Specific */
+    #content-main {
+        padding: 20px 40px;
+    }
+    
+    /* Sidebar (if recent actions exists) */
+    #content-related {
+        background: #fff;
+        border: 2px solid var(--primary);
+        margin-right: 40px;
+    }
+    #content-related h3 {
+        color: var(--text);
+        font-weight: 700;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent);
+    }
+    
+    /* Inputs */
+    input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], textarea, select {
+        border: 2px solid #ccc;
+        padding: 8px;
+        font-family: inherit;
+        color: #1a1a1a;
+        background: #fff;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--accent);
+        outline: none;
+    }
+</style>
+{{ block.super }}
+{% endblock %}
+
+{% block nav-global %}
+<div style="float: right; padding: 10px;">
+    <a href="/analytics/" style="background: #fff; color: #E60000; font-weight: bold; padding: 5px 10px; border: 2px solid #000; text-decoration: none; text-transform: uppercase; margin-right: 18px;">
+        📊 View Analytics Dashboard
+    </a>
+</div>
+{% endblock %}

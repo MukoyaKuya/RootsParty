@@ -1,63 +1,98 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="mt-8 mb-24 max-w-2xl mx-auto">
+<div class="mt-8 mb-24 max-w-6xl mx-auto px-4">
     
-    <!-- Breadcrumb -->
-    <a href="/manifesto/" class="inline-flex items-center font-bold uppercase mb-8 hover:text-roots-red">
-        <span class="mr-2">←</span> Back to Truths
+    <!-- Navigation -->
+    <a href="/manifesto/" class="inline-flex items-center text-lg font-bold uppercase mb-8 hover:text-roots-red border-b-2 border-transparent hover:border-roots-red transition-all">
+        <span class="mr-2 text-2xl">←</span> Back to The 10 Commandments
     </a>
 
-    <!-- Header -->
-    <header class="border-b-8 border-roots-black pb-8 mb-8">
-        <div class="flex items-center justify-center w-24 h-24 bg-roots-black text-white text-6xl rounded-full border-4 border-roots-red mb-6 mx-auto shadow-[8px_8px_0px_0px_#E60000]">
-            {{ item.icon }}
-        </div>
-        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-center leading-none">
-            {{ item.title }}
-        </h1>
-    </header>
-
-    <!-- Main Description -->
-    <div class="mb-12 text-xl font-bold leading-relaxed border-l-8 border-roots-black pl-6">
-        {{ item.description }}
-    </div>
-
-    <!-- Case Studies -->
-    {% if item.evidence.exists %}
-    <section class="mb-12">
-        <h2 class="text-3xl font-black uppercase mb-6 bg-roots-black text-white inline-block px-2 transform -rotate-1">
-            Global Evidence
-        </h2>
-        <div class="space-y-4">
-            {% for proof in item.evidence.all %}
-            <div class="border-4 border-roots-black p-4 bg-gray-50 shadow-[4px_4px_0px_0px_#1a1a1a]">
-                <h3 class="font-black uppercase text-xl mb-1 text-roots-red">{{ proof.country }}</h3>
-                <p class="font-bold border-t-2 border-roots-black pt-2">{{ proof.description }}</p>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Sidebar / Icon -->
+        <div class="lg:col-span-4 text-center lg:text-left">
+            <div class="sticky top-24">
+                <div class="inline-flex items-center justify-center w-48 h-48 md:w-64 md:h-64 bg-roots-black text-white text-8xl md:text-9xl rounded-full border-8 border-roots-red shadow-[16px_16px_0px_0px_#E60000] mb-8 animate-bounce-slow">
+                    {{ item.icon }}
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.85] mb-6 transform -rotate-1">
+                    {{ item.title }}
+                </h1>
+                
+                {% if item.target_revenue %}
+                <div class="bg-green-100 border-4 border-roots-black p-4 transform rotate-1 shadow-[8px_8px_0px_0px_#1a1a1a] mb-8">
+                    <p class="font-bold text-sm uppercase text-gray-600 mb-1">Target Revenue</p>
+                    <p class="font-black text-3xl text-green-700">{{ item.target_revenue }}</p>
+                </div>
+                {% endif %}
             </div>
-            {% endfor %}
         </div>
-    </section>
-    {% endif %}
 
-    <!-- Local Impact -->
-    {% if item.local_impact %}
-    <section class="bg-roots-red text-white p-6 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a]">
-        <h2 class="text-3xl font-black uppercase mb-4 border-b-4 border-white pb-2">
-            Kenyan Impact
-        </h2>
-        <p class="text-xl font-bold uppercase">
-            {{ item.local_impact }}
-        </p>
-    </section>
-    {% endif %}
-    
-    <!-- Next Steps -->
-    <div class="mt-12 text-center">
-         <a href="/join/" class="brutal-btn inline-block text-xl">
-            Support This Policy
-        </a>
+        <!-- Main Content -->
+        <div class="lg:col-span-8">
+            
+            <!-- Summary Card -->
+            <div class="bg-white border-4 border-roots-black p-8 shadow-[12px_12px_0px_0px_#1a1a1a] mb-12 relative overflow-hidden group">
+                <div class="absolute -right-12 -top-12 opacity-10 transform rotate-12 group-hover:rotate-45 transition-transform duration-700">
+                     <span class="text-[200px]">{{ item.icon }}</span>
+                </div>
+                <h2 class="text-3xl font-black uppercase mb-6 border-b-4 border-roots-black inline-block">The Vision</h2>
+                <div class="text-xl md:text-2xl font-bold leading-relaxed text-gray-800">
+                    {{ item.description|linebreaksbr }}
+                </div>
+            </div>
+
+            <!-- Evidence Section -->
+            {% if item.evidence.exists %}
+            <div class="mb-12">
+                <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+                    <span class="bg-roots-black text-white px-4 py-1 transform -rotate-2 border-4 border-roots-red">Global Proof</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for proof in item.evidence.all %}
+                    <div class="bg-gray-50 border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#E60000] hover:-translate-y-1 transition-all">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">🌍</span>
+                            <h3 class="font-black uppercase text-2xl text-roots-red border-b-2 border-roots-red leading-none">{{ proof.country }}</h3>
+                        </div>
+                        <p class="font-bold text-gray-700 border-l-4 border-roots-black pl-4">
+                            {{ proof.description }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Local Impact -->
+            {% if item.local_impact %}
+            <div class="bg-roots-red text-white p-8 border-4 border-roots-black shadow-[16px_16px_0px_0px_#1a1a1a] relative mb-12">
+                <div class="absolute -top-6 -left-6 bg-white text-roots-black border-4 border-roots-black px-4 py-2 font-black uppercase transform -rotate-6 shadow-[4px_4px_0px_0px_#1a1a1a]">
+                    Kenyan Impact
+                </div>
+                <div class="mt-4 text-xl md:text-2xl font-bold uppercase leading-relaxed font-mono">
+                    > {{ item.local_impact }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- CTA -->
+            <div class="bg-gray-100 border-4 border-dashed border-roots-black p-8 text-center">
+                <h3 class="font-black uppercase text-3xl mb-4">Agree with this policy?</h3>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/join/" class="brutal-btn text-xl">
+                        Become a Member 🪪
+                    </a>
+                    <a href="/donate/" class="brutal-btn bg-white text-roots-black hover:bg-green-600 hover:text-white transition-colors text-xl">
+                        Donate to Cause 💰
+                    </a>
+                </div>
+            </div>
+
+        </div>
     </div>
-
 </div>
 {% endblock %}

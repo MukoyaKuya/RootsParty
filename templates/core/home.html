@@ -109,10 +109,10 @@
     }
 </style>
 <!-- Welcome Modal -->
-<div id="welcome-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+<div id="welcome-modal" class="hidden fixed inset-0 z-[70] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
     <div class="bg-white border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] p-6 max-w-lg w-full relative transform scale-100 transition-transform animate-[bounce_0.5s_ease-out]">
         <!-- Close Button (X) -->
-        <button onclick="document.getElementById('welcome-modal').remove()" class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-20">
+        <button onclick="closeWelcomeModal()" class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-20">
             X
         </button>
         
@@ -136,10 +136,26 @@
             </ul>
         </div>
         
-        <button onclick="document.getElementById('welcome-modal').remove()" class="brutal-btn w-full text-xl hover:bg-roots-black hover:text-white transition-colors">
+        <button onclick="closeWelcomeModal()" class="brutal-btn w-full text-xl hover:bg-roots-black hover:text-white transition-colors">
             TINGIZA MTI🌿
         </button>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!localStorage.getItem('roots_visited')) {
+            const modal = document.getElementById('welcome-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    });
+
+    function closeWelcomeModal() {
+        document.getElementById('welcome-modal').classList.add('hidden');
+        document.getElementById('welcome-modal').classList.remove('flex');
+        localStorage.setItem('roots_visited', 'true');
+    }
+</script>
 
 {% endblock %}

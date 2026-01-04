@@ -40,6 +40,10 @@ urlpatterns = [
     path('manifesto/<str:slug>/', core_views.manifesto_detail, name='manifesto_detail'),
     path('gallery/', core_views.gallery, name='gallery'),
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
+    path('events/', core_views.events, name='events'),
+    path('shop/', core_views.shop, name='shop'),
+    path('resources/', core_views.resources, name='resources'),
+    path('analytics/', core_views.dashboard, name='dashboard'),
 ]
 
 from django.conf import settings
