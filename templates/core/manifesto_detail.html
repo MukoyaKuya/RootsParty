@@ -1,13 +1,605 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="mt-8 mb-24 max-w-6xl mx-auto px-4">
+<div class="mt-8 mb-24 max-w-7xl mx-auto px-4">
     
     <!-- Navigation -->
-    <a href="/manifesto/" class="inline-flex items-center text-lg font-bold uppercase mb-8 hover:text-roots-red border-b-2 border-transparent hover:border-roots-red transition-all">
-        <span class="mr-2 text-2xl">←</span> Back to The 10 Commandments
+    <a href="/manifesto/" class="inline-flex items-center text-lg font-bold uppercase mb-8 hover:text-roots-red border-b-2 border-transparent hover:border-roots-red transition-all group">
+        <span class="mr-2 text-2xl group-hover:-translate-x-1 transition-transform">←</span> Back to The 10 Commandments
     </a>
 
+    {% if item.slug == 'marijuana' or item.slug == 'hemp' or item.slug == 'legalize-marijuana' %}
+    <!-- SPECIAL MARIJUANA PAGE LAYOUT -->
+    
+    <!-- Hero Section -->
+    <div class="relative bg-gradient-to-br from-roots-black via-gray-900 to-roots-black border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] mb-12 overflow-hidden">
+        <!-- Animated Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L30 25 M30 25 C25 20, 20 18, 15 20 M30 25 C35 20, 40 18, 45 20 M30 25 C28 28, 25 32, 22 35 M30 25 C32 28, 35 32, 38 35' stroke='%23E60000' fill='none' stroke-width='1'/%3E%3C/svg%3E&quot;); background-size: 60px 60px;"></div>
+        </div>
+        
+        <div class="relative z-10 p-8 md:p-12 lg:p-16">
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                <!-- Animated Icon -->
+                <div class="relative">
+                    <div class="w-40 h-40 md:w-56 md:h-56 bg-roots-black rounded-full border-8 border-roots-red shadow-[0_0_60px_rgba(230,0,0,0.5)] flex items-center justify-center animate-pulse-slow">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-28 h-28 md:w-40 md:h-40 animate-sway">
+                            <path d="M50 95 L50 55" stroke="#E60000" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M50 55 C50 45, 50 35, 50 15 C55 25, 58 35, 58 45 C58 35, 62 25, 68 18 C65 30, 60 40, 58 48 C62 42, 70 35, 80 32 C70 42, 62 48, 58 52 C62 50, 72 48, 85 50 C72 55, 62 55, 58 55 C62 58, 70 65, 80 72 C68 68, 60 62, 56 58 L50 55 C44 58, 40 62, 32 68 C30 65, 38 58, 42 55 C38 55, 28 55, 15 50 C28 48, 38 50, 42 52 C38 48, 30 42, 20 32 C30 35, 38 42, 42 48 C40 40, 35 30, 32 18 C38 25, 42 35, 42 45 C42 35, 45 25, 50 15" fill="#E60000"/>
+                            <path d="M42 60 C35 58, 25 52, 12 55 C25 60, 32 62, 38 65" fill="#cc0000"/>
+                            <path d="M38 68 C30 70, 18 80, 15 90 C25 82, 32 75, 42 72" fill="#cc0000"/>
+                            <path d="M58 60 C65 58, 75 52, 88 55 C75 60, 68 62, 62 65" fill="#cc0000"/>
+                            <path d="M62 68 C70 70, 82 80, 85 90 C75 82, 68 75, 58 72" fill="#cc0000"/>
+                        </svg>
+                    </div>
+                    <!-- Glowing ring -->
+                    <div class="absolute inset-0 rounded-full border-4 border-roots-red opacity-50 animate-ping-slow"></div>
+                </div>
+                
+                <!-- Title & Revenue -->
+                <div class="text-center lg:text-left flex-1">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] text-white mb-6">
+                        {{ item.title }}
+                    </h1>
+                    <p class="text-xl md:text-2xl text-red-300 font-bold uppercase tracking-widest mb-8">
+                        "Weed is Economy" — Prof. Wajackoyah
+                    </p>
+                    {% if item.target_revenue %}
+                    <div class="inline-block bg-roots-red text-white border-4 border-white px-6 py-4 transform -rotate-1 shadow-[8px_8px_0px_0px_#1a1a1a]">
+                        <p class="font-bold text-sm uppercase opacity-80 mb-1">Projected Annual Revenue</p>
+                        <p class="font-black text-3xl md:text-4xl">{{ item.target_revenue }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <div class="bg-red-50 border-4 border-roots-black p-4 text-center hover:shadow-[6px_6px_0px_0px_#E60000] transition-all">
+            <p class="text-4xl font-black text-roots-red">800K+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Jobs will be Created</p>
+        </div>
+        <div class="bg-red-50 border-4 border-roots-black p-4 text-center hover:shadow-[6px_6px_0px_0px_#E60000] transition-all">
+            <p class="text-4xl font-black text-roots-red">30%</p>
+            <p class="font-bold uppercase text-sm text-gray-700">35% of Debt Cleared</p>
+        </div>
+        <div class="bg-red-50 border-4 border-roots-black p-4 text-center hover:shadow-[6px_6px_0px_0px_#E60000] transition-all">
+            <p class="text-4xl font-black text-roots-red">1000+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Schools will be Built/Year</p>
+        </div>
+        <div class="bg-red-50 border-4 border-roots-black p-4 text-center hover:shadow-[6px_6px_0px_0px_#E60000] transition-all">
+            <p class="text-4xl font-black text-roots-red">21+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Age Restriction</p>
+        </div>
+    </div>
+
+    <!-- Policy Pillars Section -->
+    <div class="mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+            <span class="bg-roots-red text-white px-4 py-2 transform -rotate-2 border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a]">The Policy</span>
+        </h2>
+        
+        <!-- Industrial Hemp -->
+        <div class="bg-white border-4 border-roots-black p-8 mb-6 relative overflow-hidden group hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+            <div class="absolute top-0 right-0 bg-roots-red text-white px-4 py-2 font-black uppercase text-sm border-l-4 border-b-4 border-roots-black">
+                Pillar 1
+            </div>
+            <h3 class="text-3xl font-black uppercase text-roots-red mb-4 flex items-center gap-3">
+                <span class="w-12 h-12 bg-red-100 border-4 border-roots-black flex items-center justify-center text-2xl">🏭</span>
+                Industrial Hemp Revolution
+            </h3>
+            <p class="text-lg font-bold text-gray-700 leading-relaxed mb-4">
+                Hemp fiber is stronger than steel, more sustainable than cotton, and can be used to produce paper, textiles, bioplastics, construction materials, and biofuels.
+            </p>
+            <div class="bg-red-50 border-l-4 border-roots-red p-4 font-bold text-red-900">
+                 One acre of hemp produces more paper than 4 acres of trees. This alone can save our forests while creating a new export commodity.
+            </div>
+        </div>
+
+        <!-- Medicinal Cannabis -->
+        <div class="bg-white border-4 border-roots-black p-8 mb-6 relative overflow-hidden group hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+            <div class="absolute top-0 right-0 bg-roots-red text-white px-4 py-2 font-black uppercase text-sm border-l-4 border-b-4 border-roots-black">
+                Pillar 2
+            </div>
+            <h3 class="text-3xl font-black uppercase text-roots-red mb-4 flex items-center gap-3">
+                <span class="w-12 h-12 bg-red-100 border-4 border-roots-black flex items-center justify-center text-2xl"></span>
+                Medicinal Cannabis
+            </h3>
+            <p class="text-lg font-bold text-gray-700 leading-relaxed mb-4">
+                Medical marijuana treats epilepsy, chronic pain, PTSD, glaucoma, and cancer symptoms. Currently, Kenyans travel abroad for treatment that could be produced locally.
+            </p>
+            <div class="flex flex-wrap gap-3">
+                <span class="bg-roots-black text-white px-4 py-2 font-bold text-sm uppercase">Licensed Dispensaries</span>
+                <span class="bg-roots-black text-white px-4 py-2 font-bold text-sm uppercase">Research Centers</span>
+                <span class="bg-roots-black text-white px-4 py-2 font-bold text-sm uppercase">Medical Training</span>
+            </div>
+        </div>
+
+        <!-- 3-Tier Licensing -->
+        <div class="bg-white border-4 border-roots-black p-8 mb-6 relative overflow-hidden group hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+            <div class="absolute top-0 right-0 bg-roots-red text-white px-4 py-2 font-black uppercase text-sm border-l-4 border-b-4 border-roots-black">
+                Pillar 3
+            </div>
+            <h3 class="text-3xl font-black uppercase text-roots-red mb-6 flex items-center gap-3">
+                <span class="w-12 h-12 bg-red-100 border-4 border-roots-black flex items-center justify-center text-2xl">📜</span>
+                3-Tier Licensing System
+            </h3>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-gradient-to-b from-red-100 to-red-50 border-4 border-roots-red p-6 text-center hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 bg-roots-red text-white rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-4 border-4 border-roots-black">1</div>
+                    <h4 class="font-black uppercase text-xl mb-2">Small Farmers</h4>
+                    <p class="text-sm font-bold text-gray-600">Community cooperatives for local cultivation under strict quality controls</p>
+                </div>
+                <div class="bg-gradient-to-b from-red-200 to-red-100 border-4 border-red-700 p-6 text-center hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 bg-red-700 text-white rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-4 border-4 border-roots-black">2</div>
+                    <h4 class="font-black uppercase text-xl mb-2">Industrial Processors</h4>
+                    <p class="text-sm font-bold text-gray-600">Licensed facilities for extraction, processing, and product manufacturing</p>
+                </div>
+                <div class="bg-gradient-to-b from-gray-300 to-gray-200 border-4 border-roots-black p-6 text-center hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 bg-roots-black text-white rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-4 border-4 border-roots-red">3</div>
+                    <h4 class="font-black uppercase text-xl mb-2">Export Houses</h4>
+                    <p class="text-sm font-bold text-gray-600">Certified companies handling international trade and pharmaceutical partnerships</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Creation Section -->
+    <div class="bg-roots-black text-white p-8 md:p-12 border-4 border-roots-red shadow-[16px_16px_0px_0px_#E60000] mb-16 relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 opacity-10">
+            <svg viewBox="0 0 100 100" class="w-64 h-64" fill="#E60000">
+                <path d="M50 55 C50 45, 50 35, 50 15 C55 25, 58 35, 58 45 C58 35, 62 25, 68 18 C65 30, 60 40, 58 48 C62 42, 70 35, 80 32 C70 42, 62 48, 58 52 C62 50, 72 48, 85 50 C72 55, 62 55, 58 55 C62 58, 70 65, 80 72 C68 68, 60 62, 56 58 L50 55 C44 58, 40 62, 32 68 C30 65, 38 58, 42 55 C38 55, 28 55, 15 50 C28 48, 38 50, 42 52 C38 48, 30 42, 20 32 C30 35, 38 42, 42 48 C40 40, 35 30, 32 18 C38 25, 42 35, 42 45 C42 35, 45 25, 50 15"/>
+            </svg>
+        </div>
+        <h2 class="text-4xl font-black uppercase mb-8 relative z-10">
+            <span class="bg-roots-red text-white px-4 py-2 transform rotate-1 inline-block border-4 border-white">Job Creation Projections</span>
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+            <div class="border-4 border-roots-red p-6 hover:bg-red-900/30 transition-colors">
+                <p class="text-5xl font-black text-roots-red mb-2">500K+</p>
+                <p class="font-bold uppercase tracking-wide">Farming Jobs</p>
+                <p class="text-sm text-gray-400 mt-2">Direct cultivation</p>
+            </div>
+            <div class="border-4 border-roots-red p-6 hover:bg-red-900/30 transition-colors">
+                <p class="text-5xl font-black text-roots-red mb-2">100K+</p>
+                <p class="font-bold uppercase tracking-wide">Industrial Jobs</p>
+                <p class="text-sm text-gray-400 mt-2">Processing facilities</p>
+            </div>
+            <div class="border-4 border-roots-red p-6 hover:bg-red-900/30 transition-colors">
+                <p class="text-5xl font-black text-roots-red mb-2">200K+</p>
+                <p class="font-bold uppercase tracking-wide">Service Jobs</p>
+                <p class="text-sm text-gray-400 mt-2">Retail & distribution</p>
+            </div>
+            <div class="border-4 border-roots-red p-6 hover:bg-red-900/30 transition-colors">
+                <p class="text-5xl font-black text-roots-red mb-2">10K+</p>
+                <p class="font-bold uppercase tracking-wide">Scientific Positions</p>
+                <p class="text-sm text-gray-400 mt-2">Research & development</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regulatory Framework -->
+    <div class="mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+            <span class="bg-roots-black text-white px-4 py-2 transform -rotate-1 border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000]">Regulatory Framework</span>
+        </h2>
+        <div class="bg-white border-4 border-roots-black p-8 shadow-[12px_12px_0px_0px_#1a1a1a]">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 bg-roots-red text-white flex items-center justify-center border-4 border-roots-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-black uppercase text-roots-red">Cannabis Control Authority of Kenya (CCAK)</h3>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Issue and monitor all licenses</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Enforce quality and safety standards</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Prevent diversion to illegal markets</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Ensure fair taxation and revenue collection</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Protect youth through strict age restrictions (21+)</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-roots-red">
+                    <span class="text-roots-red text-2xl">✓</span>
+                    <span class="font-bold text-gray-700">Regulate advertising and marketing</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kenyan Impact Section -->
+    <div class="bg-roots-red text-white p-8 md:p-12 border-4 border-roots-black shadow-[16px_16px_0px_0px_#1a1a1a] relative mb-16 overflow-hidden">
+        <div class="absolute -top-8 -left-8 bg-white text-roots-black border-4 border-roots-black px-6 py-3 font-black uppercase text-xl transform -rotate-6 shadow-[4px_4px_0px_0px_#1a1a1a] z-10">
+            🇰🇪 Kenyan Impact
+        </div>
+        
+        <div class="mt-8 grid md:grid-cols-2 gap-8">
+            <div class="bg-white/10 backdrop-blur border-4 border-white/30 p-6">
+                <h4 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="text-3xl"></span> The Nyeri Gold Legacy
+                </h4>
+                <p class="font-bold leading-relaxed">
+                    We will protect and celebrate indigenous Kenyan strains like the legendary Nyeri Gold. Farmers who have been criminalized for generations will become licensed agricultural entrepreneurs.
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur border-4 border-white/30 p-6">
+                <h4 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="text-3xl">🏛️</span> County Benefits
+                </h4>
+                <ul class="font-bold space-y-2">
+                    <li>• Cultivation zones in Nyeri, Meru, Nyandarua</li>
+                    <li>• Processing hubs for industrial employment</li>
+                    <li>• Export centers at Mombasa port</li>
+                    <li>• Research institutions at universities</li>
+                </ul>
+            </div>
+            <div class="bg-white/10 backdrop-blur border-4 border-white/30 p-6">
+                <h4 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="text-3xl">⚖️</span> Social Justice
+                </h4>
+                <p class="font-bold leading-relaxed">
+                    We will expunge criminal records for those previously convicted of simple marijuana possession. No family should be torn apart for a plant that will now build our economy.
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur border-4 border-white/30 p-6">
+                <h4 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="text-3xl">🌍</span> Environmental Impact
+                </h4>
+                <p class="font-bold leading-relaxed">
+                    Hemp requires no pesticides, restores soil health, sequesters carbon, and uses 50% less water than cotton. This is sustainable agriculture for the next century.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Section -->
+    {% if item.evidence.exists %}
+    <div class="mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+            <span class="bg-roots-black text-white px-4 py-2 transform -rotate-2 border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000]">🌍 Global Proof</span>
+            <span class="text-gray-500 text-lg font-bold">It works elsewhere</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for proof in item.evidence.all %}
+            <a href="{% url 'cannabis_country_detail' proof.slug %}" class="block bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#E60000] hover:-translate-y-2 transition-all group cursor-pointer">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-12 h-12 bg-roots-red flex items-center justify-center border-4 border-roots-black group-hover:scale-110 transition-transform overflow-hidden">
+                        {% if proof.slug == 'canada' %}
+                        <img src="https://flagcdn.com/w40/ca.png" alt="Canada" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'usa-colorado' %}
+                        <img src="https://flagcdn.com/w40/us.png" alt="USA" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'israel' %}
+                        <img src="https://flagcdn.com/w40/il.png" alt="Israel" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'uruguay' %}
+                        <img src="https://flagcdn.com/w40/uy.png" alt="Uruguay" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'germany' %}
+                        <img src="https://flagcdn.com/w40/de.png" alt="Germany" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'thailand' %}
+                        <img src="https://flagcdn.com/w40/th.png" alt="Thailand" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'morocco' %}
+                        <img src="https://flagcdn.com/w40/ma.png" alt="Morocco" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'south-africa' %}
+                        <img src="https://flagcdn.com/w40/za.png" alt="South Africa" class="w-8 h-6 object-cover">
+                        {% elif proof.slug == 'lesotho' %}
+                        <img src="https://flagcdn.com/w40/ls.png" alt="Lesotho" class="w-8 h-6 object-cover">
+                        {% else %}
+                        <span class="text-white text-2xl">🌍</span>
+                        {% endif %}
+                    </span>
+                    <h3 class="font-black uppercase text-2xl text-roots-red leading-none">{{ proof.country }}</h3>
+                </div>
+                <p class="font-bold text-gray-700 border-l-4 border-roots-red pl-4 mb-4">
+                    {{ proof.description }}
+                </p>
+                <div class="flex items-center gap-2 text-roots-red font-black uppercase text-sm group-hover:underline">
+                    <span>Learn Full History</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- CTA Section -->
+    <div class="bg-roots-red p-8 md:p-12 border-4 border-roots-black shadow-[12px_12px_0px_0px_#1a1a1a] text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E&quot;);"></div>
+        <div class="relative z-10">
+            <h3 class="font-black uppercase text-4xl md:text-5xl mb-4 text-white drop-shadow-lg">Support This Policy?</h3>
+            <p class="text-xl font-bold text-white/90 mb-8 max-w-2xl mx-auto">Join the movement to transform Kenya's economy through sustainable cannabis agriculture</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/join/" class="bg-roots-black text-white px-8 py-4 font-black uppercase text-xl border-4 border-white shadow-[6px_6px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" /></svg>
+                    Become a Member
+                </a>
+                <a href="/donate/" class="bg-white text-roots-red px-8 py-4 font-black uppercase text-xl border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a] hover:bg-gray-100 hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+                    Fund The Movement
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% elif item.slug == 'hemp-industry' %}
+    <!-- SPECIAL HEMP INDUSTRY PAGE LAYOUT -->
+    
+    <!-- Hero Section -->
+    <div class="relative bg-gradient-to-br from-amber-900 via-amber-800 to-roots-black border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] mb-12 overflow-hidden">
+        <!-- Industrial Pattern Background -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='10' width='40' height='40' stroke='%23ffffff' fill='none' stroke-width='2'/%3E%3Crect x='20' y='20' width='20' height='20' stroke='%23ffffff' fill='none' stroke-width='1'/%3E%3C/svg%3E&quot;); background-size: 60px 60px;"></div>
+        </div>
+        
+        <div class="relative z-10 p-8 md:p-12 lg:p-16">
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                <!-- Factory Icon -->
+                <div class="relative">
+                    <div class="w-40 h-40 md:w-56 md:h-56 bg-amber-700 rounded-lg border-8 border-roots-black shadow-[0_0_60px_rgba(217,119,6,0.5)] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-24 h-24 md:w-32 md:h-32 text-white">
+                            <path d="M19.006 3.705a.75.75 0 0 0-.512-1.41L6 6.838V3a.75.75 0 0 0-.75-.75h-1.5A.75.75 0 0 0 3 3v4.93l-1.006.365a.75.75 0 0 0 .512 1.41l16.5-6Z" />
+                            <path fill-rule="evenodd" d="M3.019 11.114 18 5.667v14.32a2.25 2.25 0 0 1-2.25 2.25H3a.75.75 0 0 1-.75-.75v-9.623l.769-.75ZM6.75 15.75a.75.75 0 0 0-1.5 0v2.25a.75.75 0 0 0 1.5 0v-2.25Zm3.75-.75a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0v-2.25a.75.75 0 0 1 .75-.75Zm4.5.75a.75.75 0 0 0-1.5 0v2.25a.75.75 0 0 0 1.5 0v-2.25Z" clip-rule="evenodd" />
+                            <path d="M19.5 9.75a.75.75 0 0 1 .75.75v8.25a2.25 2.25 0 0 1-2.25 2.25h-.75v-12Z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Title & Revenue -->
+                <div class="text-center lg:text-left flex-1">
+                    <p class="text-amber-300 font-bold uppercase tracking-widest mb-2">Beyond Cannabis</p>
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85] text-white mb-6">
+                        {{ item.title }}
+                    </h1>
+                    <p class="text-xl md:text-2xl text-amber-200 font-bold uppercase tracking-widest mb-8">
+                        Hemp is NOT Marijuana — It's Industrial Gold
+                    </p>
+                    {% if item.target_revenue %}
+                    <div class="inline-block bg-amber-600 text-white border-4 border-white px-6 py-4 transform -rotate-1 shadow-[8px_8px_0px_0px_#1a1a1a]">
+                        <p class="font-bold text-sm uppercase opacity-80 mb-1">Industry Size Target</p>
+                        <p class="font-black text-3xl md:text-4xl">{{ item.target_revenue }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hemp vs Cannabis Clarification -->
+    <div class="bg-amber-100 border-4 border-roots-black p-6 mb-12 relative">
+        <div class="absolute -top-4 -left-4 bg-roots-black text-white px-4 py-2 font-black uppercase transform -rotate-2 border-4 border-amber-500">
+            Important Distinction
+        </div>
+        <div class="flex items-start gap-4 mt-4">
+            <div class="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+            </div>
+            <div>
+                <h3 class="font-black text-2xl uppercase mb-2 text-amber-800">Hemp ≠ Marijuana</h3>
+                <p class="font-bold text-lg text-amber-900">Industrial hemp contains less than 0.3% THC and CANNOT get you high. It is grown for fiber, seeds, and industrial applications—completely separate from recreational or medicinal cannabis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hemp Products Grid -->
+    <div class="mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+            <span class="bg-amber-600 text-white px-4 py-2 transform -rotate-2 border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a]">Hemp Products</span>
+        </h2>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Textiles -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Textiles & Fabric</h3>
+                <p class="font-bold text-gray-700">3x stronger than cotton, 50% less water needed. Hemp clothing, bags, and industrial fabrics for export.</p>
+            </div>
+            
+            <!-- Hempcrete -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Hempcrete</h3>
+                <p class="font-bold text-gray-700">Sustainable building material. Lightweight, fire-resistant, carbon-negative. Perfect for affordable housing.</p>
+            </div>
+            
+            <!-- Biofuels -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Biofuels</h3>
+                <p class="font-bold text-gray-700">Hemp biodiesel and ethanol. Reduce petroleum imports. Hemp bioplastics are fully biodegradable.</p>
+            </div>
+            
+            <!-- Paper -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Paper & Packaging</h3>
+                <p class="font-bold text-gray-700">1 acre of hemp = 4 acres of trees. No toxic bleaching chemicals needed. Save our forests.</p>
+            </div>
+            
+            <!-- Food -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75-1.5.75a3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0L3 16.5m15-3.379a48.474 48.474 0 0 0-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 0 1 3 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 0 1 6 13.12M12.265 3.11a.375.375 0 1 1-.53 0L12 2.845l.265.265Zm-3 0a.375.375 0 1 1-.53 0L9 2.845l.265.265Zm6 0a.375.375 0 1 1-.53 0L15 2.845l.265.265Z" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Food & Nutrition</h3>
+                <p class="font-bold text-gray-700">Hemp seeds are a superfood. All essential amino acids, omega fatty acids, high protein content.</p>
+            </div>
+            
+            <!-- Rope -->
+            <div class="bg-white border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#d97706] transition-all group">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" /></svg>
+                </div>
+                <h3 class="text-2xl font-black uppercase mb-2 text-amber-800">Rope & Cordage</h3>
+                <p class="font-bold text-gray-700">Industrial hemp rope for marine, agricultural, and industrial applications worldwide.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Zones -->
+    <div class="bg-roots-black text-white p-8 md:p-12 border-4 border-amber-500 shadow-[16px_16px_0px_0px_#d97706] mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8">
+            <span class="bg-amber-600 text-white px-4 py-2 transform rotate-1 inline-block border-4 border-white">Hemp Processing Zones</span>
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="border-4 border-amber-500 p-6 hover:bg-amber-900/30 transition-colors text-center">
+                <div class="w-14 h-14 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg>
+                </div>
+                <p class="font-black uppercase text-xl text-amber-400">Nyeri • Meru • Nyandarua</p>
+                <p class="text-sm text-gray-400 mt-2">Primary Cultivation</p>
+            </div>
+            <div class="border-4 border-amber-500 p-6 hover:bg-amber-900/30 transition-colors text-center">
+                <div class="w-14 h-14 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" /></svg>
+                </div>
+                <p class="font-black uppercase text-xl text-amber-400">Eldoret</p>
+                <p class="text-sm text-gray-400 mt-2">Textile Processing Hub</p>
+            </div>
+            <div class="border-4 border-amber-500 p-6 hover:bg-amber-900/30 transition-colors text-center">
+                <div class="w-14 h-14 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>
+                </div>
+                <p class="font-black uppercase text-xl text-amber-400">Mombasa</p>
+                <p class="text-sm text-gray-400 mt-2">Export Processing Zone</p>
+            </div>
+            <div class="border-4 border-amber-500 p-6 hover:bg-amber-900/30 transition-colors text-center">
+                <div class="w-14 h-14 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" /></svg>
+                </div>
+                <p class="font-black uppercase text-xl text-amber-400">Kisumu</p>
+                <p class="text-sm text-gray-400 mt-2">Biofuel Production</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Creation Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+        <div class="bg-amber-50 border-4 border-roots-black p-6 text-center hover:shadow-[6px_6px_0px_0px_#d97706] transition-all">
+            <p class="text-5xl font-black text-amber-700">200K+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Farming Jobs</p>
+        </div>
+        <div class="bg-amber-50 border-4 border-roots-black p-6 text-center hover:shadow-[6px_6px_0px_0px_#d97706] transition-all">
+            <p class="text-5xl font-black text-amber-700">100K+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Factory Jobs</p>
+        </div>
+        <div class="bg-amber-50 border-4 border-roots-black p-6 text-center hover:shadow-[6px_6px_0px_0px_#d97706] transition-all">
+            <p class="text-5xl font-black text-amber-700">50K+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Export/Logistics</p>
+        </div>
+        <div class="bg-amber-50 border-4 border-roots-black p-6 text-center hover:shadow-[6px_6px_0px_0px_#d97706] transition-all">
+            <p class="text-5xl font-black text-amber-700">350K+</p>
+            <p class="font-bold uppercase text-sm text-gray-700">Total Jobs</p>
+        </div>
+    </div>
+
+    <!-- Farmer Income Highlight -->
+    <div class="bg-amber-600 text-white p-8 md:p-12 border-4 border-roots-black shadow-[16px_16px_0px_0px_#1a1a1a] relative mb-16">
+        <div class="absolute -top-6 -left-6 bg-white text-roots-black border-4 border-roots-black px-4 py-2 font-black uppercase transform -rotate-6 shadow-[4px_4px_0px_0px_#1a1a1a] flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+            Farmer Income
+        </div>
+        <div class="mt-4 text-center">
+            <p class="text-2xl md:text-3xl font-bold uppercase mb-4">Hemp yields per acre:</p>
+            <p class="text-6xl md:text-8xl font-black">KES 150,000 - 250,000</p>
+            <p class="text-2xl font-bold mt-4 opacity-80">That's 5x more than traditional crops!</p>
+        </div>
+    </div>
+
+    <!-- Regulatory Body -->
+    <div class="mb-16">
+        <h2 class="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+            <span class="bg-roots-black text-white px-4 py-2 transform -rotate-1 border-4 border-amber-500 shadow-[4px_4px_0px_0px_#d97706]">Regulatory Framework</span>
+        </h2>
+        <div class="bg-white border-4 border-roots-black p-8 shadow-[12px_12px_0px_0px_#1a1a1a]">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 bg-amber-600 text-white flex items-center justify-center border-4 border-roots-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" /></svg>
+                </div>
+                <h3 class="text-3xl font-black uppercase text-amber-800">Kenya Hemp Development Authority (KHDA)</h3>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">License hemp cultivation zones</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">Set THC testing standards (&lt;0.3%)</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">Certify processing facilities</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">Facilitate export partnerships</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">Train farmers in hemp cultivation</span>
+                </div>
+                <div class="flex items-start gap-3 p-4 bg-gray-50 border-l-4 border-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <span class="font-bold text-gray-700">Organize farmer cooperatives</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Policy -->
+    <div class="bg-gray-100 border-4 border-dashed border-roots-black p-8 mb-12">
+        <h3 class="font-black uppercase text-2xl mb-4">Related Policy</h3>
+        <p class="font-bold text-gray-700 mb-4">The Hemp Industry initiative works alongside our marijuana legalization policy but is completely separate. Hemp is an industrial crop, not a recreational substance.</p>
+        <a href="/manifesto/marijuana/" class="inline-flex items-center gap-2 text-roots-red font-black uppercase hover:underline">
+            View Marijuana Legalization Policy 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+        </a>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-amber-600 p-8 md:p-12 border-4 border-roots-black shadow-[12px_12px_0px_0px_#1a1a1a] text-center relative overflow-hidden">
+        <div class="relative z-10">
+            <h3 class="font-black uppercase text-4xl md:text-5xl mb-4 text-white drop-shadow-lg">Build Kenya's Hemp Industry</h3>
+            <p class="text-xl font-bold text-white/90 mb-8 max-w-2xl mx-auto">Join us to create 350,000+ jobs and a KES 200 billion industry</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/join/" class="bg-roots-black text-white px-8 py-4 font-black uppercase text-xl border-4 border-white shadow-[6px_6px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" /></svg>
+                    Become a Member
+                </a>
+                <a href="/donate/" class="bg-white text-amber-700 px-8 py-4 font-black uppercase text-xl border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a] hover:bg-amber-100 hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+                    Fund The Industry
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- STANDARD LAYOUT FOR OTHER MANIFESTO ITEMS -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
         <!-- Sidebar / Icon -->
@@ -22,9 +614,9 @@
                 </h1>
                 
                 {% if item.target_revenue %}
-                <div class="bg-green-100 border-4 border-roots-black p-4 transform rotate-1 shadow-[8px_8px_0px_0px_#1a1a1a] mb-8">
+                <div class="bg-red-100 border-4 border-roots-black p-4 transform rotate-1 shadow-[8px_8px_0px_0px_#1a1a1a] mb-8">
                     <p class="font-bold text-sm uppercase text-gray-600 mb-1">Target Revenue</p>
-                    <p class="font-black text-3xl text-green-700">{{ item.target_revenue }}</p>
+                    <p class="font-black text-3xl text-roots-red">{{ item.target_revenue }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -55,7 +647,9 @@
                     {% for proof in item.evidence.all %}
                     <div class="bg-gray-50 border-4 border-roots-black p-6 hover:shadow-[8px_8px_0px_0px_#E60000] hover:-translate-y-1 transition-all">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="text-3xl">🌍</span>
+                            <span class="w-10 h-10 bg-roots-black flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5a17.92 17.92 0 0 1-8.716-2.247m0 0A8.966 8.966 0 0 1 3 12c0-1.97.633-3.794 1.706-5.282" /></svg>
+                            </span>
                             <h3 class="font-black uppercase text-2xl text-roots-red border-b-2 border-roots-red leading-none">{{ proof.country }}</h3>
                         </div>
                         <p class="font-bold text-gray-700 border-l-4 border-roots-black pl-4">
@@ -83,16 +677,43 @@
             <div class="bg-gray-100 border-4 border-dashed border-roots-black p-8 text-center">
                 <h3 class="font-black uppercase text-3xl mb-4">Agree with this policy?</h3>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/join/" class="brutal-btn text-xl">
-                        Become a Member 🪪
+                    <a href="/join/" class="brutal-btn text-xl inline-flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" /></svg>
+                        Become a Member
                     </a>
-                    <a href="/donate/" class="brutal-btn bg-white text-roots-black hover:bg-green-600 hover:text-white transition-colors text-xl">
-                        Donate to Cause 💰
+                    <a href="/donate/" class="brutal-btn bg-white text-roots-black hover:bg-roots-red hover:text-white transition-colors text-xl inline-flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+                        Donate to Cause
                     </a>
                 </div>
             </div>
 
         </div>
     </div>
+    {% endif %}
 </div>
+
+<style>
+    @keyframes sway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
+    .animate-sway {
+        animation: sway 4s ease-in-out infinite;
+    }
+    @keyframes pulse-slow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
+    }
+    @keyframes ping-slow {
+        0% { transform: scale(1); opacity: 0.5; }
+        75%, 100% { transform: scale(1.3); opacity: 0; }
+    }
+    .animate-ping-slow {
+        animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+</style>
 {% endblock %}

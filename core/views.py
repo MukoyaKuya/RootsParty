@@ -1,11 +1,54 @@
-from .models import Leader, ManifestoItem
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent
+from users.models import Member
 
 def home(request):
-    return render(request, 'core/home.html')
+    # Member count
+    member_count = Member.objects.count()
+    
+    # Featured blog posts
+    featured_posts = BlogPost.objects.filter(is_published=True, is_featured=True)[:3]
+    latest_posts = BlogPost.objects.filter(is_published=True)[:3]
+    
+    # County stats
+    total_counties = County.objects.count()
+    active_counties = County.objects.filter(presence_status='active').count()
+    growing_counties = County.objects.filter(presence_status='growing').count()
+    
+    return render(request, 'core/home.html', {
+        'member_count': member_count,
+        'featured_posts': featured_posts,
+        'latest_posts': latest_posts,
+        'total_counties': total_counties,
+        'active_counties': active_counties,
+        'growing_counties': growing_counties,
+    })
 
 def about(request):
     leaders = Leader.objects.all()
-    return render(request, 'core/about.html', {'leaders': leaders})
+    
+    # Stats for About page
+    # Try to get PageContent for 'about'
+    try:
+        page_content = PageContent.objects.get(page_name='about')
+        # Use KPI override if set, otherwise use DB count
+        if page_content.kpi_value is not None:
+            member_count = page_content.kpi_value
+        else:
+            member_count = Member.objects.count()
+    except PageContent.DoesNotExist:
+        page_content = None
+        member_count = Member.objects.count()
+
+    total_counties = County.objects.count()
+    active_counties = County.objects.filter(presence_status='active').count()
+    
+    return render(request, 'core/about.html', {
+        'leaders': leaders,
+        'member_count': member_count,
+        'total_counties': total_counties,
+        'active_counties': active_counties,
+        'page_content': page_content,
+    })
 
 def manifesto(request):
     items = ManifestoItem.objects.all()
@@ -85,3 +128,149 @@ def dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
+def cannabis_country_detail(request, country_slug):
+    """View for detailed cannabis legalization history by country"""
+    evidence = get_object_or_404(ManifestoEvidence, slug=country_slug)
+    # Get other countries for navigation
+    other_countries = ManifestoEvidence.objects.filter(
+        item__slug='marijuana'
+    ).exclude(slug=country_slug)[:6]
+    return render(request, 'core/cannabis_country_detail.html', {
+        'evidence': evidence,
+        'other_countries': other_countries
+    })
+
+from .forms import ContactForm
+from .models import ContactMessage
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+
+def contact(request):
+    """Contact form view"""
+    success = False
+    
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Get form data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data.get('phone', '')
+            subject_choice = form.cleaned_data['subject']
+            message_text = form.cleaned_data['message']
+            
+            # Save to database
+            ContactMessage.objects.create(
+                name=name,
+                email=email,
+                phone=phone,
+                subject=subject_choice,
+                message=message_text
+            )
+            
+            # Also try to send email notification
+            subject_display = dict(form.fields['subject'].choices).get(subject_choice, subject_choice)
+            email_subject = f"[Roots Party Contact] {subject_display} - from {name}"
+            email_body = f"""
+New contact form submission from Roots Party website:
+
+Name: {name}
+Email: {email}
+Phone: {phone if phone else 'Not provided'}
+Subject: {subject_display}
+
+Message:
+{message_text}
+
+---
+This message was sent from the Roots Party website contact form.
+View all messages at: /admin/core/contactmessage/
+            """
+            
+            try:
+                send_mail(
+                    email_subject,
+                    email_body,
+                    settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else email,
+                    [settings.CONTACT_EMAIL if hasattr(settings, 'CONTACT_EMAIL') else 'info@rootsparty.co.ke'],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass  # Silently fail if email not configured
+            
+            success = True
+            form = ContactForm()  # Reset form
+    else:
+        form = ContactForm()
+    
+    return render(request, 'core/contact.html', {
+        'form': form,
+        'success': success
+    })
+
+
+def blog_list(request):
+    """List all published blog posts"""
+    category = request.GET.get('category')
+    
+    posts = BlogPost.objects.filter(is_published=True)
+    
+    if category:
+        posts = posts.filter(category=category)
+    
+    # Get all categories for filter
+    categories = BlogPost.CATEGORY_CHOICES
+    
+    return render(request, 'core/blog_list.html', {
+        'posts': posts,
+        'categories': categories,
+        'current_category': category,
+    })
+
+
+def blog_detail(request, slug):
+    """View single blog post"""
+    post = get_object_or_404(BlogPost, slug=slug, is_published=True)
+    
+    # Increment view count
+    post.views += 1
+    post.save(update_fields=['views'])
+    
+    # Related posts (same category)
+    related_posts = BlogPost.objects.filter(
+        is_published=True, 
+        category=post.category
+    ).exclude(id=post.id)[:3]
+    
+    return render(request, 'core/blog_detail.html', {
+        'post': post,
+        'related_posts': related_posts,
+    })
+
+
+def counties(request):
+    """View county presence map"""
+    all_counties = County.objects.all()
+    
+    # Stats
+    stats = {
+        'total': all_counties.count(),
+        'active': all_counties.filter(presence_status='active').count(),
+        'growing': all_counties.filter(presence_status='growing').count(),
+        'starting': all_counties.filter(presence_status='starting').count(),
+        'planned': all_counties.filter(presence_status='planned').count(),
+        'total_members': sum(c.members_count for c in all_counties),
+    }
+    
+    # Page Content
+    try:
+        page_content = PageContent.objects.get(page_name='counties')
+    except PageContent.DoesNotExist:
+        page_content = None
+    
+    return render(request, 'core/counties.html', {
+        'counties': all_counties,
+        'stats': stats,
+        'page_content': page_content,
+    })

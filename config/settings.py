@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bs0uensq%3k++r0epml1$6csr=q56nq8=@jpl-dv^hngh5^=5+')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
@@ -160,6 +160,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Allow embedding in frames (required for PDF viewer)
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+# Email Configuration
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Roots Party <info@rootsparty.co.ke>')
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'info@rootsparty.co.ke')
+
 # Jazzmin Configuration
 # Jazzmin Configuration
 JAZZMIN_SETTINGS = {
@@ -190,6 +200,9 @@ JAZZMIN_SETTINGS = {
         "core.Product": "fas fa-tshirt",
         "core.ManifestoItem": "fas fa-scroll",
         "core.GalleryPost": "fas fa-images",
+        "core.ContactMessage": "fas fa-envelope",
+        "core.BlogPost": "fas fa-newspaper",
+        "core.County": "fas fa-map-marker-alt",
         "users.Member": "fas fa-users",
         "finance.Donation": "fas fa-hand-holding-usd",
     },
