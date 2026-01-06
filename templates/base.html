@@ -263,6 +263,11 @@
                     });
             });
         }
+        
+        // Ensure CSRF token is sent with HTMX requests
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
     </script>
 </body>
 </html>

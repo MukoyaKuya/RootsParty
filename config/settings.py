@@ -19,6 +19,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bs0uensq%3k++r0epml1$
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://rootsparty.co.ke,http://127.0.0.1:8080').split(',')
 
 
 # Application definition
@@ -78,32 +79,45 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# Use PostgreSQL if configured, else default to SQLite for dev
-DB_ENGINE = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
-DB_NAME = os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3')
-DB_USER = os.environ.get('DB_USER', '')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
-DB_HOST = os.environ.get('DB_HOST', '')
-DB_PORT = os.environ.get('DB_PORT', '')
+import dj_database_url
 
-if DB_ENGINE == 'django.db.backends.postgresql':
+# ... existing code ...
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+# Use DATABASE_URL env var if set (e.g. Cloud Run), otherwise fall back to discrete vars or sqlite
+if os.environ.get('DATABASE_URL'):
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'HOST': DB_HOST,
-            'PORT': DB_PORT,
-        }
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    # Use PostgreSQL if configured, else default to SQLite for dev
+    DB_ENGINE = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
+    DB_NAME = os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3')
+    DB_USER = os.environ.get('DB_USER', '')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
+    DB_HOST = os.environ.get('DB_HOST', '')
+    DB_PORT = os.environ.get('DB_PORT', '')
+
+    if DB_ENGINE == 'django.db.backends.postgresql':
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': DB_NAME,
+                'USER': DB_USER,
+                'PASSWORD': DB_PASSWORD,
+                'HOST': DB_HOST,
+                'PORT': DB_PORT,
+            }
         }
-    }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Persistent connections (e.g., 60s) to reuse DB connections between requests
 # This is crucial for high-concurrency environments to reduce overhead.

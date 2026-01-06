@@ -1,8 +1,9 @@
 const CACHE_NAME = 'roots-party-v1';
 const ASSETS_TO_CACHE = [
   '/',
-  '/static/manifest.json',
-  '/static/css/styles.css', 
+  '/manifest.json',
+  '/static/images/logo-192.png',
+  '/static/images/logo-512.png', 
   // Add other critical static assets here
   'https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap',
   'https://cdn.tailwindcss.com',
