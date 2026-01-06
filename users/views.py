@@ -37,19 +37,35 @@ def check_id_number(request):
 @user_passes_test(lambda u: u.is_superuser)
 def seed_members_view(request):
     try:
-        count = 75000
+        target_count = 75000
         current_count = Member.objects.count()
-        if current_count > 70000:
-            return HttpResponse(f"Already have {current_count} members. Seeding skipped.")
+        
+        if current_count >= target_count:
+            # Reset KPI on finish
+            from core.models import PageContent
+            try:
+                pc = PageContent.objects.get(page_name='about')
+                pc.kpi_value = None
+                pc.save()
+            except:
+                pass
+            return HttpResponse(f"""
+                <h1 style='color:green'>DONE! Total Members: {current_count}</h1>
+                <p>You can close this page.</p>
+            """)
 
+        # Insert batch of 5000
+        batch_limit = 5000
+        members = []
+        
+        # Calculate distinct start id for this batch based on current count
+        # This is a heuristic; assumes sequential execution
+        start_id = 70000000 + current_count 
+        
         first_names = ['John', 'Jane', 'James', 'Mary', 'Peter', 'Grace', 'David', 'Faith', 'Joseph', 'Esther', 'Samuel', 'Mercy', 'Daniel', 'Joyce', 'Francis', 'Alice', 'George', 'Ann', 'Michael', 'Rose', 'Wanjiku', 'Otieno', 'Nanjala', 'Kipchoge', 'Kamau', 'Muthoni', 'Ochieng', 'Achieng', 'Wanyama', 'Nafula', 'Kimani', 'Nyambura', 'Odhiambo', 'Anyango', 'Kipkorir', 'Chebet', 'Maina', 'Njeri', 'Omondi', 'Akoth', 'Mutua', 'Mwende', 'Rotich', 'Chepkemoi', 'Njoroge', 'Wairimu', 'Okoth', 'Atieno', 'Kibet', 'Jepkorir']
         last_names = ['Kamau', 'Omondi', 'Kiptoo', 'Wanjiku', 'Juma', 'Odhiambo', 'Mutua', 'Wafula', 'Maina', 'Otieno', 'Kariuki', 'Njeri', 'Mwangi', 'Anyango', 'Njoroge', 'Wairimu', 'Kipkorir', 'Achieng', 'Kimani', 'Nyambura', 'Kibet', 'Chebet', 'Rotich', 'Chepkemoi', 'Koech', 'Jepchirchir', 'Kosgei', 'Jepkemboi', 'Cheruiyot', 'Cherono', 'Rono', 'Jepleting', 'Tanui', 'Jepkosgei', 'Lelei', 'Chepkoech', 'Mutai', 'Chepngeno', 'Lagat', 'Chelagat', 'Choge', 'Jepchumba', 'Sang', 'Chepchirchir', 'Kiprotich', 'Chepkirui', 'Korir', 'Chebet', 'Kirui', 'Chepkorir']
 
-        batch_size = 1000
-        members = []
-        start_id = 70000000
-        
-        for i in range(count):
+        for i in range(batch_limit):
             first = random.choice(first_names)
             last = random.choice(last_names)
             full_name = f"{first} {last}"
@@ -58,13 +74,21 @@ def seed_members_view(request):
             
             members.append(Member(full_name=full_name, id_number=id_number, phone_number=phone))
             
-            if len(members) >= batch_size:
-                Member.objects.bulk_create(members, ignore_conflicts=True)
-                members = []
-                
-        if members:
-            Member.objects.bulk_create(members, ignore_conflicts=True)
-            
-        return HttpResponse(f"DONE! Seeded {count} members. Total now: {Member.objects.count()}")
+        Member.objects.bulk_create(members, ignore_conflicts=True)
+        
+        new_total = Member.objects.count()
+        remaining = target_count - new_total
+        
+        return HttpResponse(f"""
+            <h1>Seeding Progress...</h1>
+            <p>Added 5,000 members.</p>
+            <p><strong>Total: {new_total} / {target_count}</strong></p>
+            <p>Remaining: {remaining}</p>
+            <p><em>Auto-refreshing in 1 second to continue...</em></p>
+            <script>
+                setTimeout(function(){{ window.location.reload(); }}, 1000);
+            </script>
+        """)
+
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")
