@@ -5,7 +5,7 @@
 {% block content %}
 <div class="mt-8 mb-24 max-w-7xl mx-auto px-4">
     
-    <!-- Header -->
+    <!-- Header (Reverted to Brutalist Style) -->
     <div class="text-center mb-12">
         <div class="inline-block bg-roots-black text-white px-6 py-3 font-black text-xl uppercase transform -rotate-2 border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 inline mr-2">
@@ -21,12 +21,19 @@
                 Roots <span class="text-roots-red">Across Kenya</span>
             {% endif %}
         </h1>
-        <p class="text-xl font-bold text-gray-700 max-w-2xl mx-auto">
+        <p class="text-xl font-bold text-gray-700 max-w-2xl mx-auto mb-8">
             {{ page_content.content|default:"We are building a grassroots movement in every village, ward, and county."|linebreaksbr }}
         </p>
+        
+        <a href="{% url 'county_map' %}" class="inline-flex items-center bg-roots-black text-white px-8 py-4 font-black uppercase text-xl border-4 border-roots-red shadow-[6px_6px_0px_0px_#E60000] hover:bg-roots-red hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            View Interactive Map
+        </a>
     </div>
 
-    <!-- Stats Dashboard -->
+    <!-- Stats Dashboard (Reverted to Brutalist Style) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         <div class="bg-roots-black text-white p-6 border-4 border-roots-red shadow-[6px_6px_0px_0px_#1a1a1a]">
             <p class="text-4xl font-black">{{ stats.total }}</p>
@@ -46,88 +53,115 @@
         </div>
     </div>
 
-    <!-- Map/Grid Visualization (Grid for now, interactive map could be future V2) -->
-    <div class="border-4 border-roots-black bg-gray-50 p-6 md:p-8 mb-12">
-        <h2 class="text-3xl font-black uppercase mb-6 flex items-center gap-3">
-            <span class="w-4 h-8 bg-roots-red block"></span>
-            County Status List
-        </h2>
 
-        <!-- Filters -->
-        <div class="flex flex-wrap gap-4 mb-8">
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full bg-green-500 border-2 border-black"></span>
-                <span class="font-bold uppercase text-sm">Active</span>
+    <!-- Search & Filter Controls (Kept as it adds utility, but styled to match) -->
+    <div class="sticky top-4 z-30 bg-white border-4 border-roots-black p-4 mb-12 flex flex-col md:flex-row gap-4 items-center justify-between shadow-[8px_8px_0px_0px_#1a1a1a]">
+        <!-- Search -->
+        <div class="relative w-full md:w-96">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full bg-amber-500 border-2 border-black"></span>
-                <span class="font-bold uppercase text-sm">Growing</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full bg-blue-400 border-2 border-black"></span>
-                <span class="font-bold uppercase text-sm">Starting</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full bg-gray-300 border-2 border-black"></span>
-                <span class="font-bold uppercase text-sm">Planned</span>
-            </div>
+            <input type="text" id="county-search" 
+                class="block w-full pl-10 pr-3 py-3 border-2 border-gray-200 focus:outline-none focus:border-roots-red focus:ring-0 font-bold uppercase placeholder-gray-400" 
+                placeholder="Find Your County...">
         </div>
 
-        {% if counties %}
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {% for county in counties %}
-            <div class="bg-white border-4 p-4 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000] transition-all relative overflow-hidden group
-                {% if county.presence_status == 'active' %}border-green-600
-                {% elif county.presence_status == 'growing' %}border-amber-500
-                {% elif county.presence_status == 'starting' %}border-blue-400
-                {% else %}border-gray-300{% endif %}">
-                
-                <!-- Status Badge -->
-                <div class="absolute top-0 right-0 px-2 py-1 text-[10px] font-black uppercase text-white
-                    {% if county.presence_status == 'active' %}bg-green-600
-                    {% elif county.presence_status == 'growing' %}bg-amber-500
-                    {% elif county.presence_status == 'starting' %}bg-blue-400
-                    {% else %}bg-gray-400{% endif %}">
-                    {{ county.presence_status|title }}
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-2 justify-center" id="status-filters">
+            <button class="filter-btn active px-4 py-2 font-black text-xs uppercase border-2 border-roots-black bg-roots-black text-white hover:bg-roots-red hover:border-roots-red transition-all" data-filter="all">
+                All
+            </button>
+            <button class="filter-btn px-4 py-2 font-black text-xs uppercase border-2 border-gray-200 bg-gray-100 text-gray-500 hover:bg-white hover:border-green-600 hover:text-green-600 transition-all" data-filter="active">
+                Active
+            </button>
+            <button class="filter-btn px-4 py-2 font-black text-xs uppercase border-2 border-gray-200 bg-gray-100 text-gray-500 hover:bg-white hover:border-amber-500 hover:text-amber-500 transition-all" data-filter="growing">
+                Growing
+            </button>
+            <button class="filter-btn px-4 py-2 font-black text-xs uppercase border-2 border-gray-200 bg-gray-100 text-gray-500 hover:bg-white hover:border-blue-400 hover:text-blue-400 transition-all" data-filter="starting">
+                Starting
+            </button>
+        </div>
+    </div>
+
+    <!-- Counties Grid -->
+    {% if counties %}
+    <div id="counties-grid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for county in counties %}
+        <div class="county-card group bg-white rounded-xl border-4 border-gray-200 shadow-sm hover:shadow-[8px_8px_0px_0px_#000] hover:-translate-y-1 transition-all duration-200 overflow-hidden
+             {% if county.presence_status == 'active' %}border-green-600
+             {% elif county.presence_status == 'growing' %}border-amber-500
+             {% elif county.presence_status == 'starting' %}border-blue-400
+             {% else %}border-gray-200{% endif %}"
+             data-name="{{ county.name|lower }}" 
+             data-status="{{ county.presence_status }}">
+            
+            <!-- Status Stripe -->
+            <div class="h-2 w-full
+                {% if county.presence_status == 'active' %}bg-green-500
+                {% elif county.presence_status == 'growing' %}bg-amber-500
+                {% elif county.presence_status == 'starting' %}bg-blue-400
+                {% else %}bg-gray-200{% endif %}">
+            </div>
+
+            <div class="p-6">
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 block mb-1">CODE {{ county.code|default:"000" }}</span>
+                        <h3 class="font-black text-2xl uppercase tracking-tight leading-none group-hover:text-roots-red transition-colors">
+                            {{ county.name }}
+                        </h3>
+                    </div>
+                   
                 </div>
 
-                <h3 class="font-black uppercase text-xl mb-1">{{ county.code }} - {{ county.name }}</h3>
-                
+                <!-- Coordinator -->
                 {% if county.coordinator_name %}
-                <div class="flex items-center gap-2 mb-2 text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
-                    <span class="font-bold text-gray-700">{{ county.coordinator_name }}</span>
+                <div class="mb-6 p-3 bg-gray-50 rounded-lg flex items-center gap-3 border-2 border-gray-100">
+                    <div class="w-8 h-8 rounded-full bg-roots-black text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                        {{ county.coordinator_name|slice:":1" }}
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-[10px] font-bold uppercase text-gray-400">Coordinator</p>
+                        <p class="font-bold text-sm truncate">{{ county.coordinator_name }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="mb-6 p-3 bg-red-50 rounded-lg border-2 border-dashed border-red-200 text-center hover:bg-red-100 transition-colors">
+                    <a href="/join/" class="text-xs font-bold text-roots-red uppercase hover:underline">Apply to Coordinate</a>
                 </div>
                 {% endif %}
 
-                <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t-2 border-gray-100">
+                <!-- Metrics -->
+                <div class="flex justify-between items-end border-t-2 border-gray-100 pt-4">
                     <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase">Members</p>
-                        <p class="font-black text-lg">{{ county.members_count }}</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Membership</p>
+                        <p class="font-black text-2xl text-roots-black">{{ county.members_count }}</p>
                     </div>
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase">Offices</p>
-                        <p class="font-black text-lg">{{ county.offices_count }}</p>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Offices</p>
+                        <p class="font-black text-xl text-gray-600">{{ county.offices_count }}</p>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <div class="text-center py-12">
-            <p class="font-bold text-gray-500">No counties data available yet.</p>
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% else %}
+    <div class="text-center py-24 bg-gray-50 border-4 border-dashed border-gray-300">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <h3 class="mt-2 text-sm font-bold text-gray-900">No counties found</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating a new county in the admin.</p>
+    </div>
+    {% endif %}
 
-    <!-- Logic for get_presence_status_display splitting is custom django template filter, 
-         but for simplicity we can just use the full display or assume we want the first word if we don't have the filter. 
-         Wait, 'split' filter isn't standard. I'll fix the badge logic to just use specific conditional text or full display. -->
 </div>
 
-<!-- CTA -->
+<!-- CTA (Reverted to Brutalist Style) -->
 <div class="bg-roots-red text-white p-8 md:p-12 text-center border-4 border-roots-black mb-12 shadow-[12px_12px_0px_0px_#1a1a1a]">
     <h2 class="text-3xl md:text-5xl font-black uppercase mb-4">Lead The Roots Revolution in Your County</h2>
     <p class="text-xl font-bold mb-8 max-w-2xl mx-auto">We are looking for brave coordinators to lead the grassroots movement. Are you ready to Tingiza Mti?</p>
@@ -140,4 +174,50 @@
         </a>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('county-search');
+        const countiCards = document.querySelectorAll('.county-card');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+
+        function filterCounties() {
+            const query = searchInput.value.toLowerCase();
+
+            countiCards.forEach(card => {
+                const name = card.dataset.name;
+                const status = card.dataset.status;
+                
+                const matchesSearch = name.includes(query);
+                const matchesFilter = currentFilter === 'all' || status === currentFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterCounties);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-roots-black', 'text-white', 'border-roots-black');
+                    b.classList.add('bg-gray-100', 'text-gray-500', 'border-gray-200');
+                });
+                
+                // Add active to clicked
+                this.classList.remove('bg-gray-100', 'text-gray-500', 'border-gray-200');
+                this.classList.add('bg-roots-black', 'text-white', 'border-roots-black');
+                
+                currentFilter = this.dataset.filter;
+                filterCounties();
+            });
+        });
+    });
+</script>
 {% endblock %}

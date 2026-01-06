@@ -263,18 +263,27 @@ class County(models.Model):
     ]
     
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
     code = models.CharField(max_length=10, help_text="County code e.g. 001", blank=True)
     presence_status = models.CharField(max_length=20, choices=PRESENCE_CHOICES, default='planned')
     coordinator_name = models.CharField(max_length=100, blank=True)
     coordinator_phone = models.CharField(max_length=20, blank=True)
     members_count = models.PositiveIntegerField(default=0)
     offices_count = models.PositiveIntegerField(default=0)
-    notes = models.TextField(blank=True)
+    image = models.ImageField(upload_to='counties/', blank=True, null=True, help_text="Header image for the county page")
+    description = models.TextField(blank=True, help_text="General introduction about the county")
+    notes = models.TextField(blank=True, verbose_name="Economic Plan", help_text="Detailed economic revolution plan")
     
     class Meta:
         ordering = ['name']
         verbose_name = 'County'
         verbose_name_plural = 'Counties'
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name

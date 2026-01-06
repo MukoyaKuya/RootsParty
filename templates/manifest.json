@@ -1,0 +1,23 @@
+{
+  "name": "Roots Party - TINGIZA MTI",
+  "short_name": "Roots Party",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/images/logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/images/logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "scope": "/",
+  "description": "Official Progressive Web App for the Roots Party of Kenya."
+}

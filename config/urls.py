@@ -16,6 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import TemplateView
+
+# --- Monkeypatch for Jazzmin compatibility with Django 5.0+ ---
+# Fixes TypeError: args or kwargs must be provided in format_html
+# Placed here to ensure AppRegistry is ready
+import django
+from django.utils.html import format_html
+try:
+    from jazzmin.templatetags import jazzmin as jazzmin_tags
+    def patched_format_html(html_str, *args, **kwargs):
+        if not args and not kwargs:
+            from django.utils.safestring import mark_safe
+            return mark_safe(html_str)
+        return format_html(html_str, *args, **kwargs)
+    
+    jazzmin_tags.format_html = patched_format_html
+except ImportError:
+    pass
+# -------------------------------------------------------------
+
 from core import views as core_views
 from users import views as user_views
 from finance import views as finance_views
@@ -53,6 +73,12 @@ urlpatterns = [
     
     # Counties
     path('counties/', core_views.counties, name='counties'),
+    path('counties/map/', core_views.county_map, name='county_map'),
+    path('counties/<slug:slug>/', core_views.county_detail, name='county_detail'),
+    
+    # PWA
+    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
+    path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json'), name='manifest.json'),
 ]
 
 from django.conf import settings

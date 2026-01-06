@@ -249,9 +249,21 @@ def blog_detail(request, slug):
     })
 
 
+from django.db.models import Case, When, Value, IntegerField
+
 def counties(request):
     """View county presence map"""
-    all_counties = County.objects.all()
+    # Order: Active -> Growing -> Starting -> Planned
+    all_counties = County.objects.annotate(
+        status_order=Case(
+            When(presence_status='active', then=Value(1)),
+            When(presence_status='growing', then=Value(2)),
+            When(presence_status='starting', then=Value(3)),
+            When(presence_status='planned', then=Value(4)),
+            default=Value(5),
+            output_field=IntegerField(),
+        )
+    ).order_by('status_order', '-members_count', 'name')
     
     # Stats
     stats = {
@@ -274,3 +286,19 @@ def counties(request):
         'stats': stats,
         'page_content': page_content,
     })
+
+
+def county_map(request):
+    """View interactive map of counties"""
+    # Send all counties data for the map to consume
+    counties_data = list(County.objects.all().values('name', 'presence_status', 'members_count', 'slug'))
+    
+    return render(request, 'core/county_map.html', {
+        'counties_json': counties_data
+    })
+
+
+def county_detail(request, slug):
+    """Detail view for a specific county"""
+    county = get_object_or_404(County, slug=slug)
+    return render(request, 'core/county_detail.html', {'county': county})

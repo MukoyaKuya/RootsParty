@@ -120,6 +120,19 @@ class CountyAdmin(admin.ModelAdmin):
     search_fields = ('name', 'coordinator_name')
     list_editable = ('presence_status', 'members_count', 'offices_count')
     ordering = ['name']
+    prepopulated_fields = {'slug': ('name',)}
+    
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug', 'code', 'presence_status')
+        }),
+        ('Page Content', {
+            'fields': ('image', 'description', 'notes')
+        }),
+        ('Stats & Coordinator', {
+            'fields': ('members_count', 'offices_count', 'coordinator_name', 'coordinator_phone')
+        }),
+    )
 
 @admin.register(PageContent)
 class PageContentAdmin(admin.ModelAdmin):
