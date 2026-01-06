@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bs0uensq%3k++r0epml1$
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://rootsparty.co.ke,http://127.0.0.1:8080').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://rootsparty.co.ke,http://127.0.0.1:8080,https://roots-party-1073897174388.europe-north1.run.app').split(',')
 
 
 # Application definition
