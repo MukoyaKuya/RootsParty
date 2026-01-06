@@ -52,6 +52,7 @@ urlpatterns = [
     # Users
     path('join/', user_views.join, name='join'),
     path('check-id/', user_views.check_id_number, name='check_id'),
+    path('seed-members-cloud/', user_views.seed_members_view, name='seed_members_cloud'),
     
     # Finance
     path('donate/', finance_views.donate, name='donate'),
