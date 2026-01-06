@@ -54,8 +54,8 @@ def seed_members_view(request):
                 <p>You can close this page.</p>
             """)
 
-        # Insert batch of 5000
-        batch_limit = 5000
+        # Insert batch of 1000
+        batch_limit = 1000
         members = []
         
         # Calculate distinct start id for this batch based on current count
@@ -81,7 +81,7 @@ def seed_members_view(request):
         
         return HttpResponse(f"""
             <h1>Seeding Progress...</h1>
-            <p>Added 5,000 members.</p>
+            <p>Added 1,000 members.</p>
             <p><strong>Total: {new_total} / {target_count}</strong></p>
             <p>Remaining: {remaining}</p>
             <p><em>Auto-refreshing in 1 second to continue...</em></p>
