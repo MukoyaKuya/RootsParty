@@ -16,8 +16,9 @@
                 <!-- Logo with rotation animation -->
                 <div class="relative z-10 bg-white rounded-full p-2 border-4 border-roots-black">
                      <img src="/static/images/logo.png" 
+                     id="roots-logo"
                      alt="Roots Party Logo" 
-                     class="w-48 h-48 mx-auto animate-[spin_10s_linear_infinite] hover:animate-none transition-all">
+                     class="w-48 h-48 mx-auto animate-palpate hover:animate-none transition-all cursor-pointer">
                 </div>
                 
                 <!-- Badge -->
@@ -27,10 +28,23 @@
             </div>
             
             <div class="mt-8 md:mt-0 relative">
-                <h1 class="font-black uppercase tracking-tighter leading-[0.85] transform -rotate-2 hover:rotate-0 transition-transform duration-300 cursor-default">
-                    <span class="block text-[5rem] md:text-[9rem] bg-roots-black text-white px-6 py-2 mb-2 shadow-[8px_8px_0px_0px_#E60000]">Tingiza</span>
-                    <span class="block text-[6rem] md:text-[10rem] text-roots-red outline-text bg-white border-8 border-roots-black px-6 shadow-[12px_12px_0px_0px_#1a1a1a] ml-8">Mti</span>
-                </h1>
+                <div class="max-w-2xl text-left transform -rotate-1">
+                    <h1 class="font-black uppercase text-4xl md:text-6xl mb-6 leading-none">
+                        Welcome to the <span class="text-roots-red bg-roots-black text-white px-2 inline-block transform rotate-1">Roots Party Platform</span>
+                    </h1>
+                    <div class="font-bold text-xl md:text-2xl border-4 border-roots-black bg-white p-6 shadow-[8px_8px_0px_0px_#1a1a1a] relative">
+                         <!-- Pin Icon -->
+                        <div class="absolute -top-6 -left-6 transform -rotate-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#E60000" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 text-roots-black">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            </svg>
+                        </div>
+                        <p class="leading-relaxed">
+                            "We are collaborating and organizing for a brighter, more equal future. Together, we will elect Roots up and down the ballot."
+                        </p>
+                    </div>
+                </div>
                 
                 <!-- Decorative Elements -->
                 <div class="absolute -top-12 -right-8 opacity-100 pointer-events-none select-none animate-bounce">
@@ -140,6 +154,7 @@
     </div>
 </div>
 
+
 <style>
     .blink {
         animation: blink 1s step-end infinite;
@@ -150,6 +165,27 @@
     .outline-text {
         -webkit-text-stroke: 3px #1a1a1a; 
         color: #E60000;
+    }
+    /* Palpate (Heartbeat) Animation */
+    @keyframes palpate {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.1); }
+        35% { transform: scale(1); }
+        45% { transform: scale(1.1); }
+        60% { transform: scale(1); }
+        100% { transform: scale(1); }
+    }
+    .animate-palpate {
+        animation: palpate 2s infinite ease-in-out;
+    }
+    /* Shake Animation */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake-active {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
     }
 </style>
 <!-- Welcome Modal -->
@@ -201,6 +237,21 @@
             const modal = document.getElementById('welcome-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+        }
+
+        // Logo shake on click
+        const logo = document.getElementById('roots-logo');
+        if (logo) {
+            logo.addEventListener('click', function() {
+                // Remove the class if it exists to restart the animation
+                logo.classList.remove('shake-active');
+                
+                // Trigger reflow to restart css animation
+                void logo.offsetWidth;
+                
+                // Add the class back
+                logo.classList.add('shake-active');
+            });
         }
     });
 
