@@ -59,14 +59,29 @@
     {% elif post.image %}
     <!-- Featured Image -->
     <div class="mb-8 border-4 border-roots-black shadow-[12px_12px_0px_0px_#1a1a1a] overflow-hidden">
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full" onerror="this.parentElement.style.display='none'">
     </div>
     {% endif %}
 
     <!-- Article Content -->
     <div class="prose prose-lg max-w-none mb-12">
-        <div class="bg-white border-4 border-roots-black p-6 md:p-8 shadow-[8px_8px_0px_0px_#1a1a1a]">
-            {{ post.content|linebreaks }}
+        <div class="relative bg-stone-50 border-4 border-roots-black p-8 md:p-12 shadow-[8px_8px_0px_0px_#1a1a1a]">
+            <!-- Decorative Top Border -->
+            <div class="absolute top-0 left-0 w-full h-2 opacity-20" style="background-image: repeating-linear-gradient(45deg, #E60000 0, #E60000 5px, transparent 5px, transparent 20px);"></div>
+            
+            <!-- Content -->
+            <div class="first-letter:float-left first-letter:text-7xl first-letter:pr-4 first-letter:font-black first-letter:text-roots-red first-letter:uppercase first-letter:leading-[0.8]">
+                {{ post.content|linebreaks }}
+            </div>
+            
+            <!-- End Marker -->
+            <div class="flex justify-center mt-12 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-roots-black rounded-full"></div>
+                    <div class="w-2 h-2 bg-roots-red rounded-full"></div>
+                    <div class="w-2 h-2 bg-roots-green rounded-full"></div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -19,7 +19,7 @@ def home(request):
     latest_posts = BlogPost.objects.filter(is_published=True)[:3]
     
     # Get active home video
-    video = HomeVideo.objects.filter(is_active=True).first()
+    video = HomeVideo.objects.filter(is_active=True).order_by('-created_at').first()
 
     context = {
         'featured_posts': featured_posts,

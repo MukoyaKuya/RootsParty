@@ -23,12 +23,12 @@
 
     <!-- Category Filters -->
     <div class="flex flex-wrap gap-2 justify-center mb-8">
-        <a href="/news/" class="px-4 py-2 font-bold uppercase text-sm border-4 border-roots-black {{ 'bg-roots-black text-white' if not current_category else 'bg-white hover:bg-gray-100' }} transition-all">
+        <a href="/news/" class="px-4 py-2 font-bold uppercase text-sm border-4 border-roots-black {% if not current_category %}bg-roots-black text-white{% else %}bg-white hover:bg-gray-100{% endif %} transition-all">
             All
         </a>
-        {% for key, label in categories %}
-        <a href="/news/?category={{ key }}" class="px-4 py-2 font-bold uppercase text-sm border-4 border-roots-black {% if current_category == key %}bg-roots-black text-white{% else %}bg-white hover:bg-gray-100{% endif %} transition-all">
-            {{ label }}
+        {% for cat_code, cat_label in categories %}
+        <a href="/news/?category={{ cat_code }}" class="px-4 py-2 font-bold uppercase text-sm border-4 border-roots-black {% if current_category == cat_code %}bg-roots-black text-white{% else %}bg-white hover:bg-gray-100{% endif %} transition-all">
+            {{ cat_label }}
         </a>
         {% endfor %}
     </div>
@@ -52,7 +52,12 @@
                 {% endif %}
             </div>
             {% endif %}
-            <div class="p-5">
+            <div class="p-5 relative">
+                <!-- Sticker -->
+                <div class="absolute -top-3 -right-2 bg-yellow-400 text-roots-black font-black uppercase text-[10px] px-2 py-1 transform rotate-12 border-2 border-roots-black shadow-[2px_2px_0px_0px_#000000] z-10">
+                    Official
+                </div>
+                
                 <div class="flex items-center gap-3 mb-3">
                     <span class="bg-roots-red text-white px-2 py-1 text-xs font-black uppercase">{{ post.get_category_display }}</span>
                     <span class="text-sm font-bold text-gray-500">{{ post.created_at|date:"M d, Y" }}</span>

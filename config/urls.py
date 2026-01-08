@@ -58,6 +58,8 @@ urlpatterns += [
     
     # Users
     path('join/', user_views.join, name='join'),
+    path('join/success/', user_views.join_success, name='join_success'),
+    path('member/<int:member_id>/card/', user_views.download_card, name='download_card'),
     path('check-id/', user_views.check_id_number, name='check_id'),
     path('seed-members-cloud/', user_views.seed_members_view, name='seed_members_cloud'),
     
