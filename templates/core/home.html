@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
 <div class="mt-8 mb-24 space-y-8">
     
@@ -7,7 +8,7 @@
     <header class="border-b-8 border-roots-black pb-4 text-center relative overflow-hidden bg-white">
         <div class="flex justify-between items-center border-b-4 border-roots-black pb-2 mb-4">
             <span class="font-bold uppercase text-xs">Vol. 420</span>
-            <span class="font-bold uppercase text-xs">Nairobi, Kenya</span>
+            <span class="font-bold uppercase text-xs">Kenya Worldwide</span>
             <span class="font-bold uppercase text-xs">Tingiza Mti</span>
         </div>
         
@@ -41,7 +42,7 @@
                             </svg>
                         </div>
                         <p class="leading-relaxed">
-                            "We are collaborating and organizing for a brighter, more equal future. Together, we will elect Roots up and down the ballot."
+                            "We are are like-minded, we are intelligent, we are different. We believe in the power of value addition as a necessarity means that will take Kenya out of it's current depression."
                         </p>
                     </div>
                 </div>
@@ -84,6 +85,120 @@
                 </svg>
                 <span>Contact Us</span>
             </a>
+        </div>
+    </section>
+    
+    <!-- Video Section -->
+    <section class="mt-8 border-4 border-roots-black p-4 shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] bg-white">
+        <h2 class="text-3xl font-black uppercase mb-6 border-b-4 border-roots-black inline-block">
+            {% if video %}{{ video.title }}{% else %}Watch The Message{% endif %}
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <!-- Video Placeholder -->
+            <div class="relative w-full aspect-video bg-gray-900 border-4 border-roots-black flex items-center justify-center group cursor-pointer overflow-hidden shadow-[4px_4px_0px_0px_#1a1a1a]">
+                {% if video %}
+                    {% if video.thumbnail %}
+                         <!-- Thumbnail Overlay (Click to Play) -->
+                         <div id="video-overlay" class="absolute inset-0 z-20 w-full h-full bg-black" onclick="playHomeVideo()">
+                             <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                             
+                             <!-- Play Button -->
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-20 h-20 bg-roots-red rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] transform group-hover:scale-110 group-hover:rotate-3 transition-all z-10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 ml-1 text-white">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                    </svg>
+                                </div>
+                            </div>
+                         </div>
+
+                         <!-- Hidden Player Container -->
+                         <div id="video-player" class="hidden absolute inset-0 w-full h-full z-10">
+                            {% if video.video_url %}
+                                 <iframe id="yt-iframe" data-src="{{ video.get_embed_url }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe>
+                            {% elif video.video_file %}
+                                <video id="native-video" class="w-full h-full object-cover" controls>
+                                    <source src="{{ video.video_file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                         </div>
+                         
+                    {% else %}
+                         <!-- No Thumbnail, Show Video Directly -->
+                        {% if video.video_url %}
+                             <iframe src="{{ video.get_embed_url }}" title="{{ video.title }}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe>
+                        {% elif video.video_file %}
+                            <video class="w-full h-full object-cover" controls>
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% else %}
+                             <!-- Fallback: Title provided but no media or thumbnail -->
+                            <div class="absolute inset-0 bg-roots-black/10 group-hover:bg-roots-black/0 transition-colors"></div>
+                            <div class="w-20 h-20 bg-roots-red rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] transform group-hover:scale-110 group-hover:rotate-3 transition-all z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 ml-1 text-white">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                </svg>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <!-- Default Placeholder (No HomeVideo Object) -->
+                    <div class="absolute inset-0 bg-roots-black/10 group-hover:bg-roots-black/0 transition-colors"></div>
+                    <div class="w-20 h-20 bg-roots-red rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] transform group-hover:scale-110 group-hover:rotate-3 transition-all z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 ml-1 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                        </svg>
+                    </div>
+                    <p class="absolute bottom-4 left-4 text-white font-black bg-roots-black px-2 py-1 uppercase border-2 border-white transform -rotate-1">OFFICIAL ADDRESS</p>
+                {% endif %}
+            </div>
+            
+            <!-- Context/Message -->
+            <div class="text-left">
+                {% if video %}
+                    <h3 class="font-black text-2xl uppercase mb-3 leading-none">{{ video.title }}</h3>
+                    {% if video.description %}
+                    <p class="font-bold text-lg mb-4 border-l-4 border-roots-black pl-4">
+                        "{{ video.description|linebreaksbr }}"
+                    </p>
+                    {% endif %}
+                    
+                    <div class="flex flex-wrap gap-4">
+                        {% if video.video_url %}
+                        <a href="{{ video.video_url }}" target="_blank" rel="noopener noreferrer" class="brutal-btn text-sm inline-flex items-center gap-2 w-auto bg-red-600 text-white hover:bg-red-700 hover:text-white transition-all border-none">
+                            <span>Watch on YouTube</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-4 h-4">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{{ video.button_url }}" class="brutal-btn text-sm inline-flex items-center gap-2 w-auto bg-roots-black text-white hover:bg-roots-red hover:text-white transition-all">
+                            <span>{{ video.button_text }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+                {% else %}
+                    <h3 class="font-black text-2xl uppercase mb-3 leading-none">Expanding The Vision: <span class="bg-roots-red text-white px-1">At Home</span></h3>
+                    <p class="font-bold text-lg mb-4 border-l-4 border-roots-black pl-4">
+                        "We need to expand the content at home. The people need to understand the message."
+                    </p>
+                    <p class="mb-6 text-gray-800 font-medium leading-relaxed">
+                         Our party leader addresses the nation on the critical importance of economic liberation. We are not just building a party, we are building a home for the revolution. Watch to understand the full scope of our agenda.
+                    </p>
+                    <button class="brutal-btn text-sm inline-flex items-center gap-2 w-auto bg-roots-black text-white hover:bg-roots-red hover:text-white transition-all">
+                        <span>View More Videos</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                {% endif %}
+            </div>
         </div>
     </section>
     
@@ -219,7 +334,7 @@
                     Snake Farming
                 </li>
                 <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" /></svg>
                     Hang The Corrupt
                 </li>
             </ul>
@@ -260,6 +375,29 @@
         document.getElementById('welcome-modal').classList.remove('flex');
         localStorage.setItem('roots_visited', 'true');
     }
+
+    function playHomeVideo() {
+        const overlay = document.getElementById('video-overlay');
+        const player = document.getElementById('video-player');
+        
+        if (overlay && player) {
+            overlay.classList.add('hidden');
+            player.classList.remove('hidden');
+            
+            // Handle Iframe Autoplay
+            const iframe = player.querySelector('iframe');
+            if(iframe && iframe.dataset.src) {
+                // Check if url already has params
+                const char = iframe.dataset.src.includes('?') ? '&' : '?';
+                iframe.src = iframe.dataset.src + char + "autoplay=1";
+            }
+            
+            // Handle Native Video Play
+            const vid = player.querySelector('video');
+            if(vid) vid.play();
+        }
+    }
+
 </script>
 
 {% endblock %}

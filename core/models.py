@@ -287,3 +287,59 @@ class County(models.Model):
 
     def __str__(self):
         return self.name
+
+class HomeVideo(models.Model):
+    """Model for homepage video section"""
+    title = models.CharField(max_length=200, help_text="e.g. Watch The Message")
+    description = models.TextField(blank=True, help_text="Short description or quote")
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True, help_text="Upload a video file (MP4)")
+    video_url = models.URLField(blank=True, null=True, help_text="YouTube or Vimeo URL (overrides uploaded file)")
+    thumbnail = models.ImageField(upload_to='videos/thumbnails/', blank=True, null=True, help_text="Cover image for the video")
+    button_text = models.CharField(max_length=50, default="View More Videos", help_text="Text for the call-to-action button")
+    button_url = models.CharField(max_length=200, default="/gallery/", help_text="URL for the button")
+    is_active = models.BooleanField(default=True, help_text="Only one active video will be shown")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Home Video'
+        verbose_name_plural = 'Home Videos'
+
+    def __str__(self):
+        return self.title
+
+    def get_embed_url(self):
+        """Convert standard YouTube/Vimeo URLs to embed URLs"""
+        if not self.video_url:
+            return None
+        
+        # YouTube Logic
+        import re
+        # Support for:
+        # - youtube.com/watch?v=ID
+        # - youtube.com/embed/ID
+        # - youtube.com/v/ID
+        # - youtube.com/shorts/ID
+        # - youtu.be/ID
+        youtube_regex = (
+            r'(?:https?:\/\/)?(?:www\.)?'
+            r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
+            r'([a-zA-Z0-9_-]{11})'
+        )
+        match = re.search(youtube_regex, self.video_url)
+        if match:
+            video_id = match.group(1)
+            # Use youtube-nocookie and explicit origin to fix Error 153 on localhost
+            return f"https://www.youtube-nocookie.com/embed/{video_id}?rel=0&origin=http://127.0.0.1:8080"
+            
+        # Basic Vimeo Check (keep simple for now)
+        if 'vimeo.com' in self.video_url:
+             # Vimeo usually needs the ID extracted, simple split for now
+             # format: https://vimeo.com/123456789
+             video_id = self.video_url.split('/')[-1]
+             if video_id.isdigit():
+                 return f"https://player.vimeo.com/video/{video_id}"
+
+        return self.video_url
+
+

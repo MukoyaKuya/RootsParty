@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -138,3 +138,11 @@ class CountyAdmin(admin.ModelAdmin):
 class PageContentAdmin(admin.ModelAdmin):
     list_display = ('page_name', 'title', 'kpi_value')
     search_fields = ('page_name', 'title', 'content')
+
+@admin.register(HomeVideo)
+class HomeVideoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'description')
+    list_editable = ('is_active',)
+

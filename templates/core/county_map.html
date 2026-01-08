@@ -124,11 +124,28 @@
         var countiesData = {{ counties_json|safe }};
         var countyMapDict = {};
         
-        // Create lookup dict
+        // Create lookup dict with improved normalization
         countiesData.forEach(c => {
-            // Normalize name for matching (remove spaces, lowercase)
-            var key = c.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-            countyMapDict[key] = c;
+            // Normalize name for matching
+            // Remove "County" suffix, spaces, hyphens, apostrophes, and make lowercase
+            var name = c.name.toLowerCase()
+                .replace(/\s+county$/i, '')  // Remove "County" at the end
+                .replace(/[^a-z0-9]/g, '');  // Remove all non-alphanumeric
+            
+            // Handle common spelling variations
+            name = name
+                .replace('nzoia', 'zoia')      // Trans Nzoia -> Trans Zoia
+                .replace('elgeyomarakwet', 'elgoyomarakwet')  // Common variation
+                .replace('taittaveta', 'taitataveta');  // Taita Taveta variation
+            
+            countyMapDict[name] = c;
+            
+            // Also add version WITH spaces/hyphens removed from GEOJSON side
+            // This catches cases where GeoJSON might use spaces
+            var geoKey = c.name.toLowerCase().replace(/[^a-z]/g, '');
+            if (geoKey !== name) {
+                countyMapDict[geoKey] = c;
+            }
         });
 
         // Map initialization
@@ -167,8 +184,19 @@
     function style(feature) {
         // Find status
         const props = feature.properties;
-        const name = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
-        const key = name ? name.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+        const countyName = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
+        
+        // Normalize GeoJSON county name the same way
+        var key = countyName.toLowerCase()
+            .replace(/\s+county$/i, '')  // Remove "County" at the end
+            .replace(/[^a-z0-9]/g, '');  // Remove all non-alphanumeric
+        
+        // Handle spelling variations (GeoJSON -> Database format)
+        key = key
+            .replace('transnzoia', 'transzoia')      // Trans Nzoia -> Trans Zoia  
+            .replace('elgeyomarakwet', 'elgoyomarakwet')
+            .replace('taittaveta', 'taitataveta');
+        
         const county = countyMapDict[key];
         const status = county ? county.presence_status : 'planned';
 
@@ -207,8 +235,16 @@
 
     function zoomToFeature(e) {
         const props = e.target.feature.properties;
-        const name = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
-        const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const countyName = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
+        
+        // Normalize the same way
+        var key = countyName.toLowerCase()
+            .replace(/\s+county$/i, '')
+            .replace(/[^a-z0-9]/g, '')
+            .replace('transnzoia', 'transzoia')
+            .replace('elgeyomarakwet', 'elgoyomarakwet')
+            .replace('taittaveta', 'taitataveta');
+        
         const county = countyMapDict[key];
         
         if (county && county.slug) {
@@ -253,8 +289,16 @@
             return;
         }
         
-        const name = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
-        const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const countyName = props.COUNTY_NAM || props.name || props.Name || props.COUNTY || props.county_nam || 'Unknown';
+        
+        // Normalize the same way
+        var key = countyName.toLowerCase()
+            .replace(/\s+county$/i, '')
+            .replace(/[^a-z0-9]/g, '')
+            .replace('transnzoia', 'transzoia')
+            .replace('elgeyomarakwet', 'elgoyomarakwet')
+            .replace('taittaveta', 'taitataveta');
+        
         const county = countyMapDict[key];
         const status = county ? county.presence_status.toUpperCase() : 'UNKNOWN';
         const members = county ? county.members_count : 0;

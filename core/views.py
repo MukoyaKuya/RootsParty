@@ -1,27 +1,35 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo
 from users.models import Member
+from django.core.cache import cache
 
 def home(request):
-    # Member count
-    member_count = Member.objects.count()
-    
-    # Featured blog posts
+    # Try to get stats from cache
+    stats = cache.get('home_stats')
+    if not stats:
+        stats = {
+            'member_count': Member.objects.count(),
+            'total_counties': County.objects.count(),
+            'active_counties': County.objects.filter(presence_status='active').count(),
+            'growing_counties': County.objects.filter(presence_status='growing').count(),
+        }
+        cache.set('home_stats', stats, 300) # Cache for 5 minutes
+
+    # Featured blog posts (keep real-time or short cache)
     featured_posts = BlogPost.objects.filter(is_published=True, is_featured=True)[:3]
     latest_posts = BlogPost.objects.filter(is_published=True)[:3]
     
-    # County stats
-    total_counties = County.objects.count()
-    active_counties = County.objects.filter(presence_status='active').count()
-    growing_counties = County.objects.filter(presence_status='growing').count()
-    
-    return render(request, 'core/home.html', {
-        'member_count': member_count,
+    # Get active home video
+    video = HomeVideo.objects.filter(is_active=True).first()
+
+    context = {
         'featured_posts': featured_posts,
         'latest_posts': latest_posts,
-        'total_counties': total_counties,
-        'active_counties': active_counties,
-        'growing_counties': growing_counties,
-    })
+        'video': video,
+        **stats
+    }
+    
+    return render(request, 'core/home.html', context)
+
 
 def about(request):
     leaders = Leader.objects.all()
@@ -265,22 +273,25 @@ def counties(request):
         )
     ).order_by('status_order', '-members_count', 'name')
     
-    # Stats
-    stats = {
-        'total': all_counties.count(),
-        'active': all_counties.filter(presence_status='active').count(),
-        'growing': all_counties.filter(presence_status='growing').count(),
-        'starting': all_counties.filter(presence_status='starting').count(),
-        'planned': all_counties.filter(presence_status='planned').count(),
-        'total_members': sum(c.members_count for c in all_counties),
-    }
-    
     # Page Content
     try:
         page_content = PageContent.objects.get(page_name='counties')
     except PageContent.DoesNotExist:
         page_content = None
     
+    # Cache stats
+    stats = cache.get('counties_stats')
+    if not stats:
+        stats = {
+            'total': all_counties.count(),
+            'active': all_counties.filter(presence_status='active').count(),
+            'growing': all_counties.filter(presence_status='growing').count(),
+            'starting': all_counties.filter(presence_status='starting').count(),
+            'planned': all_counties.filter(presence_status='planned').count(),
+            'total_members': Member.objects.count(),
+        }
+        cache.set('counties_stats', stats, 300)
+
     return render(request, 'core/counties.html', {
         'counties': all_counties,
         'stats': stats,

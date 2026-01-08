@@ -2,31 +2,81 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from .models import Member
-from django.db import transaction
+from django.db import IntegrityError, transaction
 import random
 from datetime import datetime
 from django.contrib.auth.decorators import user_passes_test
 
+from core.models import County
+
 def join(request):
     if request.method == "POST":
-        # Create member
-        # Basic validation
-        if not request.POST.get('id_number') or not request.POST.get('phone'):
-            return HttpResponse('<div class="text-roots-red font-bold">Please fill all fields</div>')
-            
-        Member.objects.create(
-            full_name=request.POST.get('full_name'),
-            id_number=request.POST.get('id_number'),
-            phone_number=request.POST.get('phone')
-        )
+        # Personal Info
+        surname = request.POST.get('surname')
+        other_names = request.POST.get('other_names')
+        full_name = f"{surname} {other_names}".strip() # Fallback for backward compatibility
+        id_number = request.POST.get('id_number')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        date_of_birth = request.POST.get('date_of_birth')
         
-        # If HTMX, return just the success message content (we will create a partial or just toggle blocks)
-        # But since we have success.html extending base, we need to be careful.
-        # A simple fix if we don't have separate partials is to let it redirect or render.
-        # For HTMX to work smoothly with full page templates, we usually use hx-target="body" or use a partial.
-        # Let's assume we want to render the full success page for now, but cleaner.
-        return render(request, 'users/success.html')
-    return render(request, 'users/join.html')
+        # Demographics
+        occupation = request.POST.get('occupation')
+        ethnicity = request.POST.get('ethnicity')
+        sex = request.POST.get('sex')
+        special_interest = request.POST.get('special_interest')
+        
+        # Location
+        county_id = request.POST.get('county')
+        constituency = request.POST.get('constituency')
+        ward = request.POST.get('ward')
+        polling_center = request.POST.get('polling_center')
+
+        # Basic validation
+        if not id_number or not phone or not surname:
+            messages.error(request, 'Please fill all required fields')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join.html', {'counties': counties})
+            
+        try:
+            # Get County object if selected
+            county_obj = None
+            if county_id:
+                try:
+                    county_obj = County.objects.get(id=county_id)
+                except County.DoesNotExist:
+                    pass
+
+            Member.objects.create(
+                full_name=full_name,
+                surname=surname,
+                other_names=other_names,
+                id_number=id_number,
+                phone_number=phone,
+                email=email,
+                date_of_birth=date_of_birth if date_of_birth else None,
+                occupation=occupation,
+                ethnicity=ethnicity,
+                sex=sex,
+                special_interest=special_interest,
+                county=county_obj,
+                constituency=constituency,
+                ward=ward,
+                polling_center=polling_center
+            )
+            return render(request, 'users/success.html')
+        except IntegrityError:
+            messages.error(request, 'Comrade with this ID Number already registered!')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join.html', {'counties': counties})
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join.html', {'counties': counties})
+
+    # GET request
+    counties = County.objects.all().order_by('name')
+    return render(request, 'users/join.html', {'counties': counties})
 
 def check_id_number(request):
     id_number = request.GET.get('id_number')

@@ -15,7 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+
+from django.urls import path, re_path, include
 from django.views.static import serve
 from django.views.generic import TemplateView
 
@@ -42,6 +43,12 @@ from users import views as user_views
 from finance import views as finance_views
 
 urlpatterns = [
+    # PWA (Keep outside i18n)
+    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
+    path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json'), name='manifest.json'),
+]
+
+urlpatterns += [
     path('admin/', admin.site.urls),
     
     # Core
@@ -77,10 +84,6 @@ urlpatterns = [
     path('counties/', core_views.counties, name='counties'),
     path('counties/map/', core_views.county_map, name='county_map'),
     path('counties/<slug:slug>/', core_views.county_detail, name='county_detail'),
-    
-    # PWA
-    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
-    path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json'), name='manifest.json'),
 ]
 
 from django.conf import settings

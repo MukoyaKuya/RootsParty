@@ -1,5 +1,6 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
+# Force Rebuild: 2026-01-08-v3-skeleton
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1

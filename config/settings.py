@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', # Add whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -150,9 +151,12 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Africa/Nairobi'
 
-USE_I18N = True
+USE_I18N = False
 
 USE_TZ = True
+
+
+
 
 
 # Static files (CSS, JavaScript, Images)
