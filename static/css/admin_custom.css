@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap");
+
+body {
+  font-family: "Oswald", sans-serif !important;
+}
+
+/* Brutalist Card Styling */
+.card {
+  border: 3px solid #1a1a1a !important;
+  box-shadow: 6px 6px 0px #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+/* Header Styling */
+.main-header {
+  border-bottom: 4px solid #e60000 !important;
+}
+
+/* Sidebar Styling */
+.main-sidebar {
+  border-right: 4px solid #1a1a1a !important;
+}
+
+/* Button Styling */
+.btn {
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.1s;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-primary,
+.btn-danger,
+.btn-success,
+.btn-info {
+  font-family: "Oswald", sans-serif !important;
+  letter-spacing: 1px;
+}
+
+/* Table Styling */
+table.table {
+  border: 2px solid #1a1a1a !important;
+}
+
+table.table thead th {
+  background-color: #1a1a1a !important;
+  color: #fff !important;
+  text-transform: uppercase;
+  border-bottom: 3px solid #e60000 !important;
+}
+
+/* Inputs */
+.form-control {
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  padding: 10px !important;
+}
+
+.form-control:focus {
+  border-color: #e60000 !important;
+  box-shadow: none !important;
+  background-color: #fff5f5;
+}
+
+/* Brand Logo area */
+.brand-link {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #333;
+}
+
+.brand-text {
+  font-weight: 900 !important;
+  color: #e60000 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

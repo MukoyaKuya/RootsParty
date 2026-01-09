@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="mt-8 mb-24 space-y-12">
+    
+    <header class="text-center space-y-4">
+        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
+            The<br>
+            <span class="text-white bg-roots-red px-4 transform rotate-2 inline-block shadow-[8px_8px_0px_0px_#1a1a1a]">Truths</span>
+        </h1>
+        <p class="text-xl font-bold uppercase border-t-4 border-b-4 border-roots-black py-4 inline-block">
+            Our 11 Point Manifesto
+        </p>
+    </header>
+
+    <!-- The 10 Commandments Detailed -->
+    <div class="space-y-8">
+        
+    <!-- The 10 Commandments Detailed -->
+    <div class="space-y-8">
+        {% for item in items %}
+        <a href="/manifesto/{{ item.slug }}/" class="block group">
+            <article class="border-4 border-roots-black p-6 bg-white shadow-[8px_8px_0px_0px_#1a1a1a] group-hover:translate-x-1 group-hover:translate-y-1 group-hover:shadow-none transition-all cursor-pointer">
+                <h2 class="text-4xl font-black uppercase mb-4 flex items-center group-hover:text-roots-red transition-colors">
+                    <span class="bg-roots-black text-white w-12 h-12 flex items-center justify-center mr-4 text-2xl group-hover:bg-roots-red">{{ forloop.counter }}</span>
+                    {{ item.title }}
+                </h2>
+                <p class="font-bold text-lg mb-4">
+                    {{ item.summary }}
+                </p>
+                {% if item.target_revenue %}
+                <div class="bg-gray-100 p-4 border-l-4 border-roots-red italic font-bold group-hover:bg-roots-red group-hover:text-white group-hover:border-white transition-colors">
+                    {{ item.target_revenue }}
+                </div>
+                {% endif %}
+            </article>
+        </a>
+        {% empty %}
+        <div class="p-12 text-center border-4 border-dashed border-roots-black">
+            <h2 class="text-2xl font-black uppercase">No manifesto items found.</h2>
+            <p>The revolution is currently being drafted.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    </div>
+
+    <div class="text-center">
+        <a href="/join/" class="brutal-btn inline-block text-2xl w-full">
+            Agree? Join Us
+        </a>
+    </div>
+
+</div>
+{% endblock %}

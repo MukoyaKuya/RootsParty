@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ evidence.country }} Cannabis Legalization - Roots Party{% endblock %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-6xl mx-auto px-4">
+    
+    <!-- Navigation -->
+    <a href="/manifesto/marijuana/" class="inline-flex items-center text-lg font-bold uppercase mb-8 hover:text-roots-red border-b-2 border-transparent hover:border-roots-red transition-all group">
+        <span class="mr-2 text-2xl group-hover:-translate-x-1 transition-transform">←</span> Back to Marijuana Policy
+    </a>
+
+    <!-- Hero Section -->
+    <div class="bg-roots-black text-white p-8 md:p-12 border-4 border-roots-red shadow-[16px_16px_0px_0px_#E60000] mb-12 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(230,0,0,0.1) 10px, rgba(230,0,0,0.1) 20px);"></div>
+        </div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+            <!-- Flag -->
+            <div class="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full flex items-center justify-center border-8 border-roots-red shadow-[0_0_40px_rgba(230,0,0,0.3)] animate-pulse-slow overflow-hidden">
+                {% if evidence.slug == 'canada' %}
+                <img src="https://flagcdn.com/w80/ca.png" alt="Canada" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'usa-colorado' %}
+                <img src="https://flagcdn.com/w80/us.png" alt="USA" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'israel' %}
+                <img src="https://flagcdn.com/w80/il.png" alt="Israel" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'uruguay' %}
+                <img src="https://flagcdn.com/w80/uy.png" alt="Uruguay" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'germany' %}
+                <img src="https://flagcdn.com/w80/de.png" alt="Germany" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'thailand' %}
+                <img src="https://flagcdn.com/w80/th.png" alt="Thailand" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'morocco' %}
+                <img src="https://flagcdn.com/w80/ma.png" alt="Morocco" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'south-africa' %}
+                <img src="https://flagcdn.com/w80/za.png" alt="South Africa" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% elif evidence.slug == 'lesotho' %}
+                <img src="https://flagcdn.com/w80/ls.png" alt="Lesotho" class="w-20 h-14 md:w-24 md:h-16 object-cover">
+                {% else %}
+                <span class="text-7xl md:text-8xl">🌍</span>
+                {% endif %}
+            </div>
+            
+            <!-- Title -->
+            <div class="text-center md:text-left flex-1">
+                <p class="text-roots-red font-bold uppercase tracking-widest mb-2">Cannabis Legalization Case Study</p>
+                <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.85] mb-4">
+                    {{ evidence.country }}
+                </h1>
+                {% if evidence.annual_revenue %}
+                <div class="inline-block bg-roots-red text-white px-6 py-3 border-4 border-white font-black text-xl md:text-2xl transform -rotate-1">
+                    Annual Revenue: {{ evidence.annual_revenue }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Summary -->
+    <div class="bg-white border-4 border-roots-black p-6 md:p-8 shadow-[12px_12px_0px_0px_#1a1a1a] mb-12">
+        <h2 class="text-2xl font-black uppercase mb-4 text-roots-red flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" /></svg>
+            Quick Overview
+        </h2>
+        <p class="text-xl font-bold text-gray-700 leading-relaxed">
+            {{ evidence.description }}
+        </p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Main Content Column -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Legalization History -->
+            {% if evidence.detailed_history %}
+            <div class="bg-white border-4 border-roots-black p-6 md:p-8 shadow-[8px_8px_0px_0px_#1a1a1a]">
+                <h2 class="text-3xl font-black uppercase mb-6 flex items-center gap-3">
+                    <span class="w-12 h-12 bg-roots-red text-white flex items-center justify-center border-4 border-roots-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                    </span>
+                    Legalization History
+                </h2>
+                <div class="prose prose-lg max-w-none text-gray-700 font-bold leading-relaxed space-y-4">
+                    {{ evidence.detailed_history|linebreaksbr }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Timeline -->
+            {% if evidence.timeline %}
+            <div class="bg-gray-50 border-4 border-roots-black p-6 md:p-8">
+                <h2 class="text-3xl font-black uppercase mb-6 flex items-center gap-3">
+                    <span class="w-12 h-12 bg-roots-black text-white flex items-center justify-center border-4 border-roots-red">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>
+                    </span>
+                    Key Milestones
+                </h2>
+                <div class="space-y-4">
+                    {{ evidence.timeline|linebreaksbr }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Economic Impact -->
+            {% if evidence.economic_impact %}
+            <div class="bg-roots-red text-white p-6 md:p-8 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] relative">
+                <div class="absolute -top-5 -left-5 bg-white text-roots-black border-4 border-roots-black px-4 py-2 font-black uppercase transform -rotate-3 shadow-[4px_4px_0px_0px_#1a1a1a]">
+                    Economic Data
+                </div>
+                <div class="mt-4 space-y-4">
+                    <h2 class="text-3xl font-black uppercase flex items-center gap-3">
+                        <span class="text-4xl">💰</span>
+                        Economic Impact
+                    </h2>
+                    <div class="text-lg font-bold leading-relaxed">
+                        {{ evidence.economic_impact|linebreaksbr }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-8">
+            
+            <!-- Lessons for Kenya -->
+            {% if evidence.lessons_for_kenya %}
+            <div class="bg-white border-4 border-roots-black p-6 shadow-[8px_8px_0px_0px_#E60000] sticky top-24">
+                <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="text-3xl">🇰🇪</span>
+                    Lessons for Kenya
+                </h2>
+                <div class="space-y-3 text-gray-700 font-bold leading-relaxed">
+                    {{ evidence.lessons_for_kenya|linebreaksbr }}
+                </div>
+                
+                <div class="mt-6 pt-6 border-t-4 border-dashed border-roots-black">
+                    <p class="font-black uppercase text-sm text-gray-600 mb-3">Apply These Lessons</p>
+                    <a href="/join/" class="block w-full bg-roots-red text-white text-center py-3 font-black uppercase border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+                        Join The Movement
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Other Countries -->
+            {% if other_countries %}
+            <div class="bg-gray-100 border-4 border-roots-black p-6">
+                <h3 class="text-xl font-black uppercase mb-4">More Case Studies</h3>
+                <div class="space-y-3">
+                    {% for country in other_countries %}
+                    <a href="{% url 'cannabis_country_detail' country.slug %}" class="flex items-center gap-3 p-3 bg-white border-2 border-roots-black hover:border-roots-red hover:shadow-[4px_4px_0px_0px_#E60000] hover:-translate-y-1 transition-all">
+                        <span class="w-8 h-6 flex items-center justify-center overflow-hidden">
+                            {% if country.slug == 'canada' %}
+                            <img src="https://flagcdn.com/w40/ca.png" alt="Canada" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'usa-colorado' %}
+                            <img src="https://flagcdn.com/w40/us.png" alt="USA" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'israel' %}
+                            <img src="https://flagcdn.com/w40/il.png" alt="Israel" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'uruguay' %}
+                            <img src="https://flagcdn.com/w40/uy.png" alt="Uruguay" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'germany' %}
+                            <img src="https://flagcdn.com/w40/de.png" alt="Germany" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'thailand' %}
+                            <img src="https://flagcdn.com/w40/th.png" alt="Thailand" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'morocco' %}
+                            <img src="https://flagcdn.com/w40/ma.png" alt="Morocco" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'south-africa' %}
+                            <img src="https://flagcdn.com/w40/za.png" alt="South Africa" class="w-8 h-5 object-cover">
+                            {% elif country.slug == 'lesotho' %}
+                            <img src="https://flagcdn.com/w40/ls.png" alt="Lesotho" class="w-8 h-5 object-cover">
+                            {% else %}
+                            <span class="text-xl">🌍</span>
+                            {% endif %}
+                        </span>
+                        <span class="font-black uppercase">{{ country.country }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="mt-12 bg-roots-black text-white p-8 md:p-12 border-4 border-roots-red shadow-[12px_12px_0px_0px_#E60000] text-center">
+        <h3 class="text-3xl md:text-4xl font-black uppercase mb-4">Kenya Can Do This Too</h3>
+        <p class="text-xl font-bold text-gray-300 mb-8 max-w-2xl mx-auto">
+            {{ evidence.country }} shows what's possible. Join Roots Party to make it happen in Kenya.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/join/" class="bg-roots-red text-white px-8 py-4 font-black uppercase text-xl border-4 border-white shadow-[6px_6px_0px_0px_#fff] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" /></svg>
+                Become a Member
+            </a>
+            <a href="/manifesto/marijuana/" class="bg-white text-roots-black px-8 py-4 font-black uppercase text-xl border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all inline-flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
+                View Full Policy
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse-slow {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.9; transform: scale(1.02); }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-5xl mx-auto px-4">
+    
+    <!-- Hero Header -->
+    <header class="text-center mb-16 relative">
+        <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85] mb-6 relative z-10">
+            People's <br>
+            <span class="text-white bg-roots-red px-6 py-2 transform -rotate-2 inline-block border-4 border-roots-black shadow-[12px_12px_0px_0px_#1a1a1a] hover:rotate-0 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#1a1a1a] transition-all duration-300">
+                Rallies
+            </span>
+        </h1>
+        <p class="font-bold text-2xl md:text-3xl uppercase max-w-2xl mx-auto leading-tight bg-white border-4 border-roots-black p-4 shadow-[8px_8px_0px_0px_#1a1a1a] transform rotate-1">
+            Join us kwa ground. <br> As we spread the Roots Gospel.
+        </p>
+        
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 hidden md:block animate-bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-roots-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+    </header>
+
+    <!-- Upcoming Events Section -->
+    <div class="mb-24 relative">
+        <!-- Section Title Badge -->
+        <div class="absolute -top-6 left-0 md:-left-8 z-20">
+            <span class="bg-roots-black text-white text-2xl font-black uppercase px-6 py-2 border-4 border-roots-red shadow-[4px_4px_0px_0px_#1a1a1a] transform -rotate-3">
+                Next Stops
+            </span>
+        </div>
+
+        {% if upcoming_events %}
+        <div class="space-y-12 pt-8">
+            {% for event in upcoming_events %}
+            <div class="group relative bg-white border-4 border-roots-black p-0 shadow-[16px_16px_0px_0px_#1a1a1a] hover:shadow-[8px_8px_0px_0px_#E60000] hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+                
+                <div class="flex flex-col md:flex-row h-full">
+                    <!-- Date Column -->
+                    <div class="w-full md:w-48 bg-roots-black text-white flex flex-col items-center justify-center p-6 border-b-4 md:border-b-0 md:border-r-4 border-roots-black sticky top-0">
+                        <span class="text-7xl font-black leading-none mb-2 text-roots-red">{{ event.date|date:"d" }}</span>
+                        <span class="text-3xl font-bold uppercase tracking-widest">{{ event.date|date:"M" }}</span>
+                        <span class="text-xl font-mono mt-2 opacity-70">{{ event.date|date:"Y" }}</span>
+                        <span class="mt-4 px-3 py-1 border-2 border-white text-xs font-bold uppercase rounded-full">
+                            {{ event.date|date:"l" }}
+                        </span>
+                    </div>
+
+                    <!-- Content Column -->
+                    <div class="flex-grow p-6 md:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-3 mb-4">
+                                <span class="bg-roots-red text-white text-sm font-black uppercase px-3 py-1 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] inline-flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                                    {{ event.location }}
+                                </span>
+                                <span class="bg-yellow-300 text-roots-black text-sm font-black uppercase px-3 py-1 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] inline-flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                    {{ event.date|date:"H:i" }}
+                                </span>
+                            </div>
+                            
+                            <h3 class="text-4xl md:text-5xl font-black uppercase leading-[0.9] mb-6 group-hover:text-roots-red transition-colors">
+                                {{ event.title }}
+                            </h3>
+                            
+                            {% if event.description %}
+                            <p class="font-bold text-lg md:text-xl leading-snug border-l-8 border-gray-200 pl-6 mb-8 text-gray-800">
+                                "{{ event.description|linebreaksbr }}"
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="flex flex-col sm:flex-row gap-4 mt-auto border-t-4 border-dashed border-gray-300 pt-6">
+                            <button 
+                                type="button"
+                                class="brutal-btn flex-grow text-center text-lg hover:bg-roots-black hover:text-white transition-all transform active:scale-95"
+                                onclick="rsvpEvent('{{ event.title|escapejs }}', '{{ event.location|escapejs }}', '{{ event.date|date:'d M Y' }}', '{{ event.date|date:'H:i' }}')">
+                                NIKO NDANI!
+                            </button>
+                            <a 
+                                href="https://wa.me/?text=ROOTS%20PARTY%20RALLY%0A%0A{{ event.title|urlencode }}%0A{{ event.location|urlencode }}%0A{{ event.date|date:'d M Y' }}%20at%20{{ event.date|date:'H:i' }}%0A%0ATINGIZA%20MTI!"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="brutal-btn bg-white text-roots-black flex-grow text-center text-lg hover:bg-green-500 hover:text-white transition-all transform active:scale-95 inline-flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                SHARE
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Column (Hidden on mobile) -->
+                    {% if event.image %}
+                    <div class="hidden lg:block w-64 border-l-4 border-roots-black overflow-hidden relative group-hover:grayscale-0 grayscale transition-all duration-500">
+                        <img src="{{ event.image.url }}" class="w-full h-full object-cover absolute inset-0 transform scale-100 group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-roots-red mix-blend-multiply opacity-20 group-hover:opacity-0 transition-opacity"></div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="mt-8 border-4 border-dashed border-roots-black bg-gray-50 p-12 text-center transform rotate-1">
+            <h3 class="text-4xl font-black uppercase mb-4">No rallies scheduled right now.</h3>
+            <p class="font-bold text-xl mb-6">The Generals are in the War Room. Stay tuned.</p>
+            <div class="animate-pulse flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Past Events Section -->
+    {% if past_events %}
+    <div class="relative py-12 border-t-8 border-roots-black">
+        <h2 class="text-4xl font-black uppercase mb-12 text-center opacity-50 hover:opacity-100 transition-opacity">
+            <span class="bg-gray-200 px-4 py-2 border-4 border-gray-400">History Books</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 opacity-75 hover:opacity-100 transition-opacity duration-500">
+            {% for event in past_events %}
+            <div class="bg-gray-100 border-4 border-gray-400 p-6 flex gap-6 hover:bg-white hover:border-roots-black hover:shadow-[8px_8px_0px_0px_#1a1a1a] transition-all group">
+                <div class="flex-shrink-0 text-center border-r-4 border-gray-300 pr-6 group-hover:border-roots-black">
+                    <span class="block text-4xl font-black text-gray-500 group-hover:text-roots-red">{{ event.date|date:"d" }}</span>
+                    <span class="block text-lg font-bold uppercase text-gray-500 group-hover:text-roots-black">{{ event.date|date:"M" }}</span>
+                </div>
+                <div>
+                    <h4 class="font-black uppercase text-2xl leading-none mb-2 line-through decoration-roots-red decoration-4 group-hover:no-underline">{{ event.title }}</h4>
+                    <span class="text-sm font-bold uppercase bg-gray-300 px-2 py-1 group-hover:bg-roots-red group-hover:text-white transition-colors inline-flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                        {{ event.location }}
+                    </span>
+                    <span class="block text-xs font-bold text-gray-500 mt-2 uppercase">Completed</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-16 text-center">
+        <a href="/" class="brutal-btn inline-block text-xl bg-white text-roots-black hover:bg-roots-black hover:text-white">
+            ← Back to HQ
+        </a>
+    </div>
+
+</div>
+
+<!-- RSVP Success Modal -->
+<div id="rsvp-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.85);">
+    <div class="bg-white border-8 border-roots-black shadow-[20px_20px_0px_0px_#E60000] max-w-md w-full transform transition-all duration-300 scale-95 opacity-0 relative" id="rsvp-modal-content">
+        <!-- Header -->
+        <div class="bg-roots-black text-white p-6 text-center">
+            <div class="flex justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-16 h-16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black uppercase tracking-tight">TINGIZA MTI!</h2>
+        </div>
+        
+        <!-- Body -->
+        <div class="p-6 text-center">
+            <div class="inline-flex items-center gap-2 bg-green-500 text-white px-4 py-2 font-black uppercase text-lg mb-4 border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] transform -rotate-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                Registered
+            </div>
+            
+            <h3 id="rsvp-event-title" class="text-2xl font-black uppercase leading-tight mb-6"></h3>
+            
+            <div class="space-y-4 text-left bg-gray-100 border-4 border-roots-black p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-roots-black flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                        </svg>
+                    </div>
+                    <span id="rsvp-location" class="font-bold text-lg"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-roots-black flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                    </div>
+                    <span id="rsvp-date" class="font-bold text-lg"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-roots-black flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <span id="rsvp-time" class="font-bold text-lg"></span>
+                </div>
+            </div>
+            
+            <p class="mt-6 font-bold text-xl uppercase text-roots-red flex items-center justify-center gap-2">
+                See you there, Comrade!
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="border-t-4 border-roots-black p-4">
+            <button onclick="closeRsvpModal()" class="brutal-btn w-full text-xl hover:bg-roots-black hover:text-white flex items-center justify-center gap-3">
+                TUTAONANA
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Decorative corners -->
+        <div class="absolute -top-3 -left-3 w-6 h-6 bg-roots-red border-4 border-roots-black"></div>
+        <div class="absolute -top-3 -right-3 w-6 h-6 bg-roots-red border-4 border-roots-black"></div>
+        <div class="absolute -bottom-3 -left-3 w-6 h-6 bg-roots-red border-4 border-roots-black"></div>
+        <div class="absolute -bottom-3 -right-3 w-6 h-6 bg-roots-red border-4 border-roots-black"></div>
+    </div>
+</div>
+
+<script>
+function rsvpEvent(title, location, date, time) {
+    // Populate modal content
+    document.getElementById('rsvp-event-title').textContent = title;
+    document.getElementById('rsvp-location').textContent = location;
+    document.getElementById('rsvp-date').textContent = date;
+    document.getElementById('rsvp-time').textContent = time;
+    
+    // Show modal
+    var modal = document.getElementById('rsvp-modal');
+    var content = document.getElementById('rsvp-modal-content');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Animate in
+    setTimeout(function() {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeRsvpModal() {
+    var modal = document.getElementById('rsvp-modal');
+    var content = document.getElementById('rsvp-modal-content');
+    
+    // Animate out
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(function() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }, 200);
+}
+
+// Close on backdrop click
+document.getElementById('rsvp-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeRsvpModal();
+    }
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        var modal = document.getElementById('rsvp-modal');
+        if (!modal.classList.contains('hidden')) {
+            closeRsvpModal();
+        }
+    }
+});
+</script>
+{% endblock %}
+
+

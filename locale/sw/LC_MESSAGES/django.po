@@ -1,0 +1,229 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: RootsParty\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 12:00+0000\n"
+"PO-Revision-Date: 2024-01-08 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sw\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Home"
+msgstr "Nyumbani"
+
+msgid "About"
+msgstr "Kuhusu"
+
+msgid "Manifesto"
+msgstr "Manifesto"
+
+msgid "Rallies"
+msgstr "Mikutano"
+
+msgid "Fund"
+msgstr "Changia"
+
+msgid "Shop"
+msgstr "Duka"
+
+msgid "Resources"
+msgstr "Rasilimali"
+
+msgid "By registering, I agree to the"
+msgstr ""
+
+msgid "Members"
+msgstr ""
+
+msgid "Polling Center"
+msgstr ""
+
+msgid "Join The Movement"
+msgstr "Jiunge na Harakati"
+
+msgid "Agree? Join Us"
+msgstr "Unakubali? Jiunge Nasi"
+
+msgid "Our Agenda:"
+msgstr "Ajenda Yetu:"
+
+msgid "Weed"
+msgstr "Bangi"
+
+msgid "Snakes"
+msgstr "Nyoka"
+
+msgid "To liberate the economy through the legalization of marijuana, snake farming, and potential hyena meat export. We stand for the downtrodden, the youth, and the dreamers. We are not just a party; we are a movement."
+msgstr ""
+
+msgid "Surname"
+msgstr "Jina la ukoo"
+
+msgid "Date of Birth"
+msgstr "Tarehe ya Kuzaliwa"
+
+msgid "Active Now"
+msgstr ""
+
+msgid "Party Leadership"
+msgstr ""
+
+msgid "Friday is for prayer and rest. Kenyans work too hard for too little. 24-hour economy, 4 days a week."
+msgstr ""
+
+msgid "Welcome to the"
+msgstr "Karibu kwenye"
+
+msgid "View Gallery"
+msgstr ""
+
+msgid "Demographics"
+msgstr ""
+
+msgid "COMPRADES, THE TIME IS NOW. THE SYSTEM IS BROKEN. WE HAVE THE SOLUTION."
+msgstr ""
+
+msgid "Mobile Number"
+msgstr ""
+
+msgid "Our 11 Point Manifesto"
+msgstr ""
+
+msgid "The Revolution Is Here"
+msgstr "Mapinduzi Yapo Hapa"
+
+msgid "Growing Movement"
+msgstr ""
+
+msgid "Contact Us"
+msgstr "Wasiliana Nasi"
+
+msgid "The"
+msgstr ""
+
+msgid "Join The Party"
+msgstr "Jiunge na Chama"
+
+msgid "Join the movement. Become a Comrade."
+msgstr ""
+
+msgid "Constitution of the Roots Party"
+msgstr ""
+
+msgid "The revolution is currently being drafted."
+msgstr ""
+
+msgid "View County Map"
+msgstr ""
+
+msgid "Simulated"
+msgstr ""
+
+msgid "Venom is the new gold."
+msgstr ""
+
+msgid "Other Names"
+msgstr ""
+
+msgid "and pledge to support the legalization of hemp for economic liberation."
+msgstr ""
+
+msgid "Are"
+msgstr ""
+
+msgid "We will legalize marijuana for industrial and medicinal use. This will pay off our national debt and create millions of jobs."
+msgstr ""
+
+msgid "Truths"
+msgstr ""
+
+msgid "Read The 10 Commandments"
+msgstr ""
+
+msgid "Register As Member"
+msgstr ""
+
+msgid "Official Platform"
+msgstr "Jukwaa Rasmi"
+
+msgid "Important:"
+msgstr ""
+
+msgid "Road to 1 Million Members"
+msgstr ""
+
+msgid "Personal Information"
+msgstr "Taarifa Binafsi"
+
+msgid "4-Day Work Week"
+msgstr ""
+
+msgid "Anti-venom is expensive. We will farm snakes, extract venom, and sell it to pharmaceutical companies abroad."
+msgstr ""
+
+msgid "No manifesto items found."
+msgstr ""
+
+msgid "National Presence"
+msgstr ""
+
+msgid "Our Mission"
+msgstr ""
+
+msgid "Legalization"
+msgstr ""
+
+msgid "Roots Party Platform"
+msgstr "Jukwaa la Roots Party"
+
+msgid "Latest News"
+msgstr ""
+
+msgid "Legalize Marijuana"
+msgstr "Halalisha Bangi"
+
+msgid "Please ensure you have unblocked Roots Party messages by dialling"
+msgstr ""
+
+msgid "ID / Passport Number"
+msgstr ""
+
+msgid "Snake Farming"
+msgstr ""
+
+msgid "Membership Registration"
+msgstr ""
+
+msgid "Hang The Corrupt"
+msgstr ""
+
+msgid "View All"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Core Agenda"
+msgstr "Ajenda Kuu"
+
+msgid "Who We"
+msgstr "Sisi Ni Nani"
+
+msgid "The Party of Truth and Integrity"
+msgstr "Chama cha Ukweli na Uadilifu"
+
+msgid "Economic freedom is coming."
+msgstr ""
+
+msgid "Welcome to the official digital headquarters of The Roots Party."
+msgstr ""
+
+msgid "Target Counties"
+msgstr ""
+
+msgid "No leaders found. Admin, wake up!"
+msgstr ""

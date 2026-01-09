@@ -1,0 +1,17 @@
+[
+{
+  "model": "core.homevideo",
+  "pk": 5,
+  "fields": {
+    "title": "Who is this man George Luchiri Wajackoyah?",
+    "description": "Get to know Professor George Wajackoyah's life history and reasons why he believes Hemp can change Kenya's economic trajectory.",
+    "video_file": "",
+    "video_url": "https://youtu.be/K1xKohPQHU0?si=UTVSDbabxccxVNjo",
+    "thumbnail": "videos/thumbnails/images_1_fVHFo6a.jfif",
+    "button_text": "View More Videos",
+    "button_url": "/gallery/",
+    "is_active": true,
+    "created_at": "2026-01-08T16:35:53.489Z"
+  }
+}
+]
