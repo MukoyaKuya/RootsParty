@@ -146,4 +146,31 @@ The project uses TailwindCSS. For development, the standard CDN build is often s
 
 ---
 
+---
+
+## ☁️ Cloud Deployment
+
+The project is configured for Google Cloud Run.
+
+### Automated Deployment
+
+A PowerShell script `deploy.ps1` is provided to automate the build and deploy process.
+
+**Usage:**
+
+```powershell
+# Open PowerShell in the project root
+.\deploy.ps1
+```
+
+**What it does:**
+
+1.  Sets the active Google Cloud project.
+2.  Builds the Docker container and pushes to Container Registry.
+3.  Deploys the new image to Cloud Run with production environment variables.
+
+For detailed deployment architecture and troubleshooting, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
+
 **Roots Party of Kenya** - _Tingiza Mti!_
