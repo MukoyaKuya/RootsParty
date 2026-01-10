@@ -232,11 +232,30 @@ def download_gate_pass(request, event_id):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename=f'gate_pass_{event.slug}.pdf')
 
-from .models import Product, Resource
+from .models import Product, Resource, Vendor
  
 def shop(request):
-    products = Product.objects.filter(is_available=True)
-    return render(request, 'core/shop.html', {'products': products})
+    """List all active vendors (shops)"""
+    vendors = Vendor.objects.filter(is_active=True).prefetch_related('products')
+    return render(request, 'core/shop_list.html', {'vendors': vendors})
+
+def vendor_detail(request, vendor_slug):
+    """Show a specific vendor's shop with their products"""
+    vendor = get_object_or_404(Vendor, slug=vendor_slug, is_active=True)
+    products = vendor.products.filter(is_available=True)
+    return render(request, 'core/vendor_detail.html', {
+        'vendor': vendor,
+        'products': products
+    })
+
+def product_detail(request, vendor_slug, product_slug):
+    """Show detailed product information"""
+    vendor = get_object_or_404(Vendor, slug=vendor_slug, is_active=True)
+    product = get_object_or_404(Product, slug=product_slug, vendor=vendor, is_available=True)
+    return render(request, 'core/product_detail.html', {
+        'vendor': vendor,
+        'product': product
+    })
 
 def resources(request):
     docs = Resource.objects.filter(is_public=True)

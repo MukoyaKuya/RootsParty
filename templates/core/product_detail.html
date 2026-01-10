@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - {{ vendor.name }} - Roots Party{% endblock %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-6xl mx-auto px-4">
+    
+    <!-- Breadcrumb -->
+    <div class="mb-8 text-sm font-bold uppercase flex items-center gap-2 opacity-70">
+        <a href="{% url 'shop' %}" class="hover:text-roots-red transition-colors">Shops</a>
+        <span>→</span>
+        <a href="{% url 'vendor_detail' vendor.slug %}" class="hover:text-roots-red transition-colors">{{ vendor.name }}</a>
+        <span>→</span>
+        <span class="text-roots-black">{{ product.name }}</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        
+        <!-- Product Image -->
+        <div class="border-6 border-roots-black bg-white shadow-[12px_12px_0px_0px_#1a1a1a] overflow-hidden">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto">
+            {% else %}
+            <div class="aspect-square bg-gray-200 flex items-center justify-center font-black uppercase text-9xl text-gray-400">
+                📦
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Details -->
+        <div class="flex flex-col">
+            <div class="border-6 border-roots-black bg-white shadow-[10px_10px_0px_0px_#1a1a1a] p-8 md:p-12 flex-grow">
+                
+                <h1 class="text-5xl md:text-6xl font-black uppercase leading-tight mb-6">
+                    {{ product.name }}
+                </h1>
+                
+                <div class="mb-8 inline-block">
+                    <div class="bg-roots-red text-white font-black text-4xl px-6 py-3 border-4 border-roots-black transform-rotate-1 shadow-[6px_6px_0px_0px_#1a1a1a]">
+                        KES {{ product.price|floatformat:0 }}
+                    </div>
+                </div>
+
+                <div class="mb-8 pb-8 border-b-4 border-dashed border-gray-300">
+                    <h2 class="text-2xl font-black uppercase mb-3">Description</h2>
+                    <p class="text-lg font-bold opacity-80 leading-relaxed">
+                        {{ product.description|default:"High-quality Roots Party merchandise. Show your support for the movement!" }}
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <h2 class="text-2xl font-black uppercase mb-3">Vendor</h2>
+                    <a href="{% url 'vendor_detail' vendor.slug %}" class="text-lg font-black text-roots-red hover:underline">
+                        {{ vendor.name }} →
+                    </a>
+                    {% if vendor.contact_email %}
+                    <p class="text-sm font-bold opacity-70 mt-1">{{ vendor.contact_email }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- WhatsApp Button -->
+                <a href="https://wa.me/{{ vendor.contact_phone|default:'254700000000' }}?text=Hi!%20I'm%20interested%20in%20buying%20{{ product.name|urlencode }}%20for%20KES%20{{ product.price }}" target="_blank" class="brutal-btn w-full text-center flex items-center justify-center gap-3 text-xl mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669-.149-.198 0-.42.001-.643.001-.223 0-.585.085-.89.42-.305.334-1.171 1.143-1.171 2.788 0 1.649 1.201 3.243 1.368 3.468.166.223 2.364 3.612 5.728 5.066 2.399 1.034 2.888.828 3.408.778.52-.05 1.758-.718 2.006-1.411.248-.693.248-1.288.173-1.412-.074-.124-.272-.199-.57-.347z"/>
+                    </svg>
+                    Order via WhatsApp
+                </a>
+
+                <a href="{% url 'vendor_detail' vendor.slug %}" class="block text-center brutalbtn-secondary w-full text-lg">
+                    ← Browse More from {{ vendor.name }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

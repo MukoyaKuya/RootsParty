@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vendor.name }} - Shop - Roots Party{% endblock %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-7xl mx-auto px-4">
+    
+    <!-- Vendor Header -->
+    <div class="mb-16 border-6 border-roots-black bg-white shadow-[12px_12px_0px_0px_#1a1a1a] overflow-hidden">
+        {% if vendor.image %}
+        <div class="h-80 border-b-6 border-roots-black overflow-hidden relative">
+            <img src="{{ vendor.image.url }}" alt="{{ vendor.name }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute bottom-8 left-8 right-8">
+                <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] flex items-center gap-4">
+                    {{ vendor.name }}
+                    {% if vendor.is_verified %}
+                    <span class="text-4xl" title="Verified Official Vendor">✓</span>
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+        {% else %}
+        <div class="p-12 bg-gradient-to-br from-gray-800 to-gray-900">
+            <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none text-white flex items-center gap-4">
+                {{ vendor.name }}
+                {% if vendor.is_verified %}
+                <span class="text-4xl" title="Verified Official Vendor">✓</span>
+                {% endif %}
+            </h1>
+        </div>
+        {% endif %}
+        
+        <div class="p-8 md:p-12">
+            <p class="text-lg font-bold opacity-80 leading-relaxed mb-6">
+                {{ vendor.description|default:"An official Roots Party merchandise vendor." }}
+            </p>
+            
+            {% if vendor.contact_email or vendor.contact_phone %}
+            <div class="flex flex-wrap gap-6 items-center text-sm font-bold">
+                {% if vendor.contact_email %}
+                <a href="mailto:{{ vendor.contact_email }}" class="flex items-center gap-2 hover:text-roots-red transition-colors">
+                    <span>✉️</span> {{ vendor.contact_email }}
+                </a>
+                {% endif %}
+                {% if vendor.contact_phone %}
+                <a href="tel:{{ vendor.contact_phone }}" class="flex items-center gap-2 hover:text-roots-red transition-colors">
+                    <span>📞</span> {{ vendor.contact_phone }}
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    {% if products %}
+    <div class="mb-8">
+        <h2 class="text-4xl font-black uppercase mb-8">Products ({{ products.count }})</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {% for product in products %}
+        <a href="{% url 'product_detail' vendor.slug product.slug %}" class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+            
+            <div class="h-64 border-b-4 border-roots-black overflow-hidden relative">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                {% else %}
+                <div class="w-full h-full bg-gray-200 flex items-center justify-center font-black uppercase text-gray-400 text-4xl">
+                    📦
+                </div>
+                {% endif %}
+                <div class="absolute top-2 right-2 bg-roots-red text-white font-black text-lg px-3 py-1 border-2 border-roots-black rotate-3 shadow-md">
+                    KES {{ product.price|floatformat:0 }}
+                </div>
+            </div>
+            
+            <div class="p-5 flex-grow flex flex-col">
+                <h3 class="text-2xl font-black uppercase leading-tight mb-2 group-hover:text-roots-red transition-colors">{{ product.name }}</h3>
+                <p class="text-xs font-bold opacity-60 line-clamp-2">{{ product.description|truncatewords:15 }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-24 border-4 border-dashed border-roots-black bg-gray-50">
+        <div class="text-6xl mb-4">📭</div>
+        <h2 class="text-3xl font-black uppercase mb-2">No Products Yet</h2>
+        <p class="font-bold text-lg opacity-70">This vendor is still stocking up.</p>
+    </div>
+    {% endif %}
+
+    <div class="mt-16 text-center flex gap-4 justify-center">
+        <a href="{% url 'shop' %}" class="brutal-btn inline-block text-lg">
+            ← Back to Shops
+        </a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -78,11 +78,26 @@ class EventAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     inlines = [GatePassInline]
 
+class ProductInline(admin.TabularInline):
+    model = Product
+    extra = 1
+    fields = ('name', 'slug', 'price', 'is_available', 'image')
+    prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'contact_email', 'is_active', 'is_verified', 'created_at')
+    list_filter = ('is_active', 'is_verified', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    list_editable = ('is_active', 'is_verified')
+    inlines = [ProductInline]
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'is_available')
-    list_filter = ('is_available',)
-    search_fields = ('name',)
+    list_display = ('name', 'vendor', 'price', 'is_available')
+    list_filter = ('is_available', 'vendor')
+    search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Resource)

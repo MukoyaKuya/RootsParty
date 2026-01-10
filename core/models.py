@@ -123,7 +123,28 @@ class GatePass(models.Model):
     def __str__(self):
         return f"{self.code} - {self.event.title}"
 
+class Vendor(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='vendors/', blank=True, null=True, help_text="Shop Logo or Banner")
+    contact_phone = models.CharField(max_length=20, blank=True)
+    contact_email = models.EmailField(blank=True)
+    is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False, help_text="Verified/Official Roots Party vendor")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
+    vendor = models.ForeignKey(Vendor, related_name='products', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to='products/')
@@ -138,7 +159,7 @@ class Product(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.vendor.name if self.vendor else 'No Vendor'})"
 
 class Resource(models.Model):
     title = models.CharField(max_length=200)
