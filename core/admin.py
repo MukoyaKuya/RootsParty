@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -30,12 +30,53 @@ class GalleryAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     inlines = [PostImageInline]
 
+@admin.register(GatePass)
+class GatePassAdmin(admin.ModelAdmin):
+    list_display = ('code', 'event_info', 'created_at')
+    list_filter = ('event__is_completed', 'event', 'created_at')
+    search_fields = ('code', 'event__title')
+    actions = ['delete_completed_event_passes']
+
+    @admin.display(description='Event (Total Downloads)')
+    def event_info(self, obj):
+        return f"{obj.event.title} ({obj.event.gate_pass_downloads})"
+
+    change_list_template = 'admin/core/gatepass/change_list.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['total_downloads'] = GatePass.objects.count()
+        return super().changelist_view(request, extra_context=extra_context)
+
+    @admin.action(description="Delete passes for COMPLETED events")
+    def delete_completed_event_passes(self, request, queryset):
+        # We delete passes where the event is marked is_completed=True
+        # Note: 'queryset' is what the user selected. If they select all, it works.
+        # But usually actions apply to selection. 
+        # If the user wants to delete *all* irrespective of selection, we might need a different approach or just instruct them to "Select All".
+        # Let's stick to standard Django action behavior: apply to selected.
+        # But to be helpful, let's filter the selected ones to only delete if event is completed.
+        
+        # Actually, standard requirement "allow admin to be able to delete the data" usually means bulk delete.
+        # Let's just allow standard delete but provide the filter so they can easily find them.
+        # AND provide an action that specifically deletes ONLY completed ones from the selection.
+        
+        deleted_count, _ = queryset.filter(event__is_completed=True).delete()
+        self.message_user(request, f"Deleted {deleted_count} gate passes for completed events.")
+
+class GatePassInline(admin.TabularInline):
+    model = GatePass
+    extra = 0
+    readonly_fields = ('code', 'created_at')
+    can_delete = False
+
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'location', 'date', 'is_completed')
+    list_display = ('title', 'location', 'date', 'is_completed', 'gate_pass_downloads')
     list_filter = ('is_completed', 'date')
     search_fields = ('title', 'location')
     prepopulated_fields = {'slug': ('title',)}
+    inlines = [GatePassInline]
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):

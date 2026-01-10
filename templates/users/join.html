@@ -168,6 +168,29 @@
 <script>
     const API_KEY = "keyPub1569gsvndc123kg9sjhg";
     const API_BASE = "https://kenyaareadata.vercel.app/api/areas";
+    
+    // Verified mappings from API investigation
+    const MAPPINGS = {
+        'Elgoyo Marakwet': 'Elgeyo/Marakwet',
+        'Homabay': 'Homa Bay',
+        'Murang\'a': "Murang'A",
+        'Tharaka Nithi': 'Tharaka - Nithi',
+        'Trans Zoia': 'Trans Nzoia',
+        'Transzoia': 'Trans Nzoia',
+        'Nairobi': 'Nairobi City'
+    };
+
+    function getMappedCountyName(rawName) {
+        if (!rawName) return '';
+        // Clean county name first (e.g. remove " County", " City")
+        let name = rawName.replace(' County', '').replace(' City', '').trim();
+        
+        // Apply specific mappings if they exist
+        if (MAPPINGS[name]) {
+            return MAPPINGS[name];
+        }
+        return name;
+    }
 
     async function fetchConstituencies(countyId) {
         const constituencySelect = document.getElementById('field-constituency');
@@ -188,9 +211,7 @@
 
         if (!countyNameRaw) return;
 
-        // Clean county name to match API expectation (e.g. "Mombasa County" -> "Mombasa")
-        // Also handle "Nairobi City" -> "Nairobi" if applicable
-        const countyName = countyNameRaw.replace(' County', '').replace(' City', '').trim();
+        const countyName = getMappedCountyName(countyNameRaw);
         
         console.log(`Fetching data for: ${countyName}`); // Debug log
 
@@ -198,13 +219,9 @@
             loader.classList.remove('hidden');
             constituencySelect.classList.add('hidden'); // Hide select while loading for swap effect
             
-            // Check if user is typing or selecting. The API works with Name strings.
-            // Using ?county=Mombasa gives { Mombasa: { Const1: [], Const2: [] } }
-            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${countyName}`);
+            // Encode the name to handle special chars like apostrophes
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}`);
             const data = await response.json();
-            
-            // Data format: { "Mombasa": { "Changamwe": [...], "Jomvu": [...] } }
-            // We need to extract the constituencies (keys of the county object)
             
             if (data && data[countyName]) {
                 const constituencies = Object.keys(data[countyName]);
@@ -244,25 +261,15 @@
         
         if (!countyNameRaw) return;
         
-        // Clean county name
-        const countyName = countyNameRaw.replace(' County', '').replace(' City', '').trim();
+        const countyName = getMappedCountyName(countyNameRaw);
 
         try {
             loader.classList.remove('hidden');
             wardSelect.classList.add('hidden'); // Hide select
 
-            // Can fetch specific constituency: ?county=...&constituency=...
-            // Response: { "Changamwe": ["Ward1", "Ward2"] }
-            
-            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${countyName}&constituency=${constituencyName}`);
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}&constituency=${encodeURIComponent(constituencyName)}`);
             const data = await response.json();
 
-            // Handle response wrapping styles just in case
-            // Docs say: { "Changamwe": ["Port Reitz", ...] }
-            
-            // Response format: { "Mombasa": { "Changamwe": ["Port Reitz", ...] } }
-            // We need to extract the wards for the specific county AND constituency
-            
             let wards = [];
             
             if (data && data[countyName] && data[countyName][constituencyName]) {

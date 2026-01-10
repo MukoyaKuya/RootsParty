@@ -94,6 +94,7 @@ class Event(models.Model):
     image = models.ImageField(upload_to='events/', blank=True, null=True)
     description = models.TextField(blank=True)
     is_completed = models.BooleanField(default=False)
+    gate_pass_downloads = models.PositiveIntegerField(default=0, help_text="Number of times the gate pass has been downloaded")
     
     class Meta:
         ordering = ['-date']
@@ -110,6 +111,17 @@ class Event(models.Model):
     @property
     def is_upcoming(self):
         return self.date > timezone.now()
+
+class GatePass(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='passes')
+    code = models.CharField(max_length=20, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f"{self.code} - {self.event.title}"
 
 class Product(models.Model):
     name = models.CharField(max_length=200)

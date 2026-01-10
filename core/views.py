@@ -1,6 +1,19 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass
 from users.models import Member
 from django.core.cache import cache
+
+import io
+import os
+import random
+import string
+import qrcode
+from django.conf import settings
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.lib.utils import ImageReader
 
 def home(request):
     # Try to get stats from cache
@@ -101,6 +114,123 @@ def events(request):
     upcoming_events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
     past_events = Event.objects.filter(date__lt=timezone.now()).order_by('-date')
     return render(request, 'core/events.html', {'upcoming_events': upcoming_events, 'past_events': past_events})
+
+def download_gate_pass(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    
+    # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    
+    # Helper for wrapping text
+    def draw_wrapped_text(c, text, x, y, max_width, font_name, font_size, leading=None):
+        if leading is None:
+            leading = font_size * 1.2
+        c.setFont(font_name, font_size)
+        from reportlab.lib.utils import simpleSplit
+        lines = simpleSplit(text, font_name, font_size, max_width)
+        for line in lines:
+            c.drawCentredString(x, y, line)
+            y -= leading
+        return y # Return new Y position
+
+    # 1. Background / Border
+    p.setStrokeColor(colors.black)
+    p.setLineWidth(5)
+    p.rect(0.5*inch, 0.5*inch, width-1*inch, height-1*inch)
+    
+    # 2. Header
+    current_y = height - 1.0 * inch  # Moved up from 1.2
+    p.setFillColor(colors.black)
+    p.setFont("Helvetica-Bold", 30)
+    p.drawCentredString(width/2, current_y, "ROOTS PARTY")
+    
+    current_y -= 0.35 * inch
+    p.setFont("Helvetica-Bold", 16)
+    p.drawCentredString(width/2, current_y, "TINGIZA MTI!")
+    
+    # 3. Logo
+    current_y -= 1.8 * inch # Reduced from 2.2 to save space
+    logo_size = 1.6 * inch  # Slightly smaller logo
+    logo_y = current_y + 0.1 * inch
+    
+    try:
+        # Use first static dir
+        logo_path = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'roots_logo_circle.png')
+        if os.path.exists(logo_path):
+             logo_x = (width - logo_size) / 2
+             p.drawImage(logo_path, logo_x, logo_y, width=logo_size, height=logo_size, mask='auto', preserveAspectRatio=True)
+    except Exception as e:
+        print(f"Error loading logo: {e}")
+
+    # 4. "OFFICIAL GATE PASS"
+    current_y -= 0.6 * inch # Reduced from 0.8
+    p.setFillColor(colors.red)
+    p.setFont("Helvetica-Bold", 28) # Slightly smaller font
+    p.drawCentredString(width/2, current_y, "OFFICIAL GATE PASS")
+    
+    # 5. Event Details
+    current_y -= 0.8 * inch # Reduced from 1.0
+    p.setFillColor(colors.black)
+    # Wrap title if long
+    current_y = draw_wrapped_text(p, event.title.upper(), width/2, current_y, width - 2*inch, "Helvetica-Bold", 22) # Font 24 -> 22
+    
+    current_y -= 0.5 * inch # Reduced from 0.6
+    p.setFont("Helvetica", 16) # Font 18 -> 16
+    p.drawCentredString(width/2, current_y, f"LOCATION: {event.location.upper()}")
+    
+    current_y -= 0.35 * inch # Reduced from 0.4
+    p.drawCentredString(width/2, current_y, f"DATE: {event.date.strftime('%d %B %Y').upper()}")
+    
+    current_y -= 0.3 * inch
+    p.drawCentredString(width/2, current_y, f"TIME: {event.date.strftime('%H:%M')}")
+    
+    # 6. Access Code
+    current_y -= 0.8 * inch
+    # Generate unique code and save
+    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    GatePass.objects.create(event=event, code=code)
+    
+    # Increment download count (keep for stats)
+    event.gate_pass_downloads += 1
+    event.save(update_fields=['gate_pass_downloads'])
+    
+    p.setFont("Courier-Bold", 24)
+    p.setFillColor(colors.HexColor('#1a1a1a'))
+    p.drawCentredString(width/2, current_y, f"CODE: {code}")
+
+    # 7. QR Code
+    qr_size = 2.4 * inch
+    qr_y = 1.6 * inch 
+    
+    qr = qrcode.QRCode(version=1, box_size=10, border=4)
+    qr_data = f"ROOTSPARTY-EVENT-{event.id}-{code}"
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    qr_buffer = io.BytesIO()
+    img.save(qr_buffer, format='PNG')
+    qr_buffer.seek(0)
+    
+    p.drawImage(ImageReader(qr_buffer), (width - qr_size)/2, qr_y, width=qr_size, height=qr_size)
+
+    # Footer
+    p.setFillColor(colors.black)
+    p.setFont("Helvetica-Oblique", 12)
+    p.drawCentredString(width/2, 1.0*inch, "Admit One. Non-Transferable. Tingiza Mti.")
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename=f'gate_pass_{event.slug}.pdf')
 
 from .models import Product, Resource
  

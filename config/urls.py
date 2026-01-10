@@ -73,6 +73,7 @@ urlpatterns += [
     path('gallery/', core_views.gallery, name='gallery'),
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
     path('events/', core_views.events, name='events'),
+    path('events/<int:event_id>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
     path('shop/', core_views.shop, name='shop'),
     path('resources/', core_views.resources, name='resources'),
     path('analytics/', core_views.dashboard, name='dashboard'),

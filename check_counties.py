@@ -1,29 +1,23 @@
 import os
 import django
+import sys
 
-# Setup Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-os.environ["DATABASE_URL"] = "postgresql://neondb_owner:npg_aPjBTZvw8cD2@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+# Add project root to path
+sys.path.append(os.getcwd())
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 from core.models import County
 
-# Get all counties with their presence status
-counties = County.objects.all().order_by('name')
+problem_counties = ['Elgoyo', 'Homa', 'Murang', 'Nairobi', 'Tharaka', 'Trans']
+found_counties = []
 
-print("Counties in database with presence status:")
-print("=" * 60)
-for county in counties:
-    # Normalize name for matching (like JavaScript does)
-    normalized = county.name.lower().replace(' ', '').replace('-', '').replace("'", "")
-    print(f"{county.name:20s} | {county.presence_status:10s} | Key: {normalized}")
+for term in problem_counties:
+    matches = County.objects.filter(name__icontains=term)
+    for c in matches:
+        found_counties.append(c.name)
 
-print("\n" + "=" * 60)
-print(f"Total counties: {counties.count()}")
-
-# Group by status
-from collections import Counter
-status_counts = Counter(c.presence_status for c in counties)
-print("\nCounts by status:")
-for status, count in status_counts.items():
-    print(f"  {status}: {count}")
+print("Found Counties:")
+for name in sorted(list(set(found_counties))):
+    print(f"- {name}")
