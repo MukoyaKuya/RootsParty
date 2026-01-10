@@ -183,7 +183,7 @@ if GS_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_DEFAULT_ACL = None  # Use bucket policy
     # Ensure media is served through the bucket
-    # MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
