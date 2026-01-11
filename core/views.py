@@ -1,4 +1,4 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole
 from users.models import Member
 from django.core.cache import cache
 
@@ -524,3 +524,9 @@ def county_detail(request, slug):
     """Detail view for a specific county"""
     county = get_object_or_404(County, slug=slug)
     return render(request, 'core/county_detail.html', {'county': county})
+
+def role_detail(request, slug):
+    """Detail view for leadership roles"""
+    # Fetch from database
+    role = get_object_or_404(LeadershipRole, slug=slug)
+    return render(request, 'core/role_detail.html', {'role': role})

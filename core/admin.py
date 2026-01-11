@@ -1,9 +1,26 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
     extra = 1
+
+@admin.register(LeadershipRole)
+class LeadershipRoleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'updated_at')
+    prepopulated_fields = {'slug': ('title',)}
+    search_fields = ('title', 'description')
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'icon_svg_path')
+        }),
+        ('Role Details', {
+            'fields': ('description', 'responsibilities', 'roots_context', 'prospects')
+        }),
+        ('Candidate Info', {
+            'fields': ('candidate_name', 'image', 'video_url')
+        }),
+    )
 
 @admin.register(Leader)
 class LeaderAdmin(admin.ModelAdmin):

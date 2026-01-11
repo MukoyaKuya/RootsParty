@@ -74,6 +74,7 @@ urlpatterns += [
     path('gallery/', core_views.gallery, name='gallery'),
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
     path('events/', core_views.events, name='events'),
+    path('roles/<slug:slug>/', core_views.role_detail, name='role_detail'),
     path('events/<int:event_id>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
     path('shop/', core_views.shop, name='shop'),
     path('shop/<slug:vendor_slug>/', core_views.vendor_detail, name='vendor_detail'),

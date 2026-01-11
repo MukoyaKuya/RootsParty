@@ -386,3 +386,60 @@ class NewsletterSubscriber(models.Model):
 
 
 
+class LeadershipRole(models.Model):
+    """Model for editable leadership role content"""
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, help_text="URL identifier e.g. president, governor")
+    icon_svg_path = models.TextField(help_text="Paste the SVG path data (d attribute) here")
+    description = models.TextField(help_text="Main role description")
+    responsibilities = models.TextField(help_text="Enter each responsibility on a new line")
+    roots_context = models.TextField(help_text="The Roots Mandate for this role")
+    prospects = models.TextField(blank=True, help_text="Why a Roots Government? Enter each point on a new line")
+    
+    # Candidate specific fields
+    candidate_name = models.CharField(max_length=200, blank=True, help_text="Name of the current candidate/holder")
+    image = models.ImageField(upload_to='leadership/', blank=True, null=True, help_text="Candidate photo")
+    video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo link for candidate message")
+    
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+    
+    def get_responsibilities_list(self):
+        return [line.strip() for line in self.responsibilities.split('\n') if line.strip()]
+
+    def get_prospects_list(self):
+        return [line.strip() for line in self.prospects.split('\n') if line.strip()]
+
+    def get_embed_url(self):
+        """Convert standard YouTube/Vimeo URLs to embed URLs"""
+        if not self.video_url:
+            return None
+        
+        import re
+        youtube_regex = (
+            r'(?:https?:\/\/)?(?:www\.)?'
+            r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
+            r'([a-zA-Z0-9_-]{11})'
+        )
+        match = re.search(youtube_regex, self.video_url)
+        if match:
+            video_id = match.group(1)
+            # Use standard YouTube embed without hardcoded origin for better local compatibility
+            return f"https://www.youtube.com/embed/{video_id}?rel=0"
+            
+        if 'vimeo.com' in self.video_url:
+             video_id = self.video_url.split('/')[-1]
+             if video_id.isdigit():
+                 return f"https://player.vimeo.com/video/{video_id}"
+
+        return self.video_url
+
+

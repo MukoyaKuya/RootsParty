@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ role.title }} - Roots Party{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    
+    <!-- Back to Home (Outside for better flow) -->
+    <a href="{% url 'home' %}" class="inline-flex items-center gap-2 font-bold uppercase hover:text-roots-red transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    {% if role.slug == 'president' %}
+    {% if role.image or role.video_url %}
+    <!-- Candidate Media -->
+    <div class="border-4 border-roots-black bg-gray-100 aspect-video flex items-center justify-center relative overflow-hidden shadow-[8px_8px_0px_0px_#1a1a1a]">
+        {% if role.video_url %}
+            <iframe 
+                src="{{ role.get_embed_url }}" 
+                title="{{ role.title }}"
+                class="w-full h-full"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="origin"
+                allowfullscreen>
+            </iframe>
+        {% elif role.image %}
+            <img src="{{ role.image.url }}" alt="{{ role.candidate_name }}" class="w-full h-full object-cover">
+        {% endif %}
+    </div>
+    {% else %}
+    <!-- Candidate Media Placeholder -->
+    <div class="border-4 border-roots-black bg-gray-100 aspect-video flex items-center justify-center relative overflow-hidden group shadow-[8px_8px_0px_0px_#1a1a1a]">
+        <div class="text-center group-hover:scale-105 transition-transform duration-300">
+            <div class="w-20 h-20 bg-white border-2 border-roots-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0px_0px_#E60000]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-roots-black">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+            </div>
+            <p class="font-black text-roots-black uppercase tracking-widest text-xl">Candidate Address</p>
+            <p class="font-bold text-gray-500 mt-1">Video Coming Soon</p>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    
+    <!-- Header -->
+    <div class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] p-8">
+        <!-- Moved Back Link Up -->
+        
+        <div class="flex flex-col md:flex-row items-center gap-6">
+            <div class="w-24 h-24 bg-roots-red border-4 border-roots-black flex items-center justify-center text-white shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ role.icon_svg_path }}" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-4xl md:text-6xl font-black uppercase leading-none mb-2">
+                    {{ role.title }}
+                </h1>
+                <p class="font-bold text-xl text-gray-500 uppercase tracking-widest">Leadership Profile</p>
+            </div>
+        </div>
+    </div>
+
+    {% if role.prospects %}
+    <!-- Why Roots Government Prospects -->
+    <div class="border-4 border-roots-black bg-white p-8 shadow-[8px_8px_0px_0px_#E60000]">
+        <h2 class="text-2xl md:text-3xl font-black uppercase mb-6">
+            <span class="bg-roots-black text-white px-4 py-2 transform -rotate-1 inline-block border-2 border-roots-red shadow-[4px_4px_0px_0px_#E60000]">Why a Roots Government?</span>
+        </h2>
+        <ul class="space-y-6">
+            {% for prospect in role.get_prospects_list %}
+            <li class="flex items-start gap-4 group hover:translate-x-2 transition-transform duration-300">
+                <div class="w-8 h-8 shrink-0 bg-roots-red border-2 border-roots-black flex items-center justify-center text-white mt-1 shadow-[2px_2px_0px_0px_#000]">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                </div>
+                <span class="font-bold text-lg md:text-xl leading-tight text-roots-black">{{ prospect }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Job Description -->
+    <div class="border-4 border-roots-black bg-white p-8 space-y-8">
+        <div>
+            <h2 class="text-2xl font-black uppercase mb-4 border-b-4 border-roots-black inline-block bg-roots-black text-white px-2">Role Definition</h2>
+            <p class="font-bold text-lg md:text-xl leading-relaxed">
+                {{ role.description }}
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-black uppercase mb-4 border-b-4 border-roots-black inline-block bg-roots-black text-white px-2">Key Responsibilities</h2>
+            <ul class="space-y-4">
+                {% for resp in role.get_responsibilities_list %}
+                <li class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6 text-roots-red shrink-0 mt-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                    <span class="font-bold text-lg">{{ resp }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Roots Context -->
+    <div class="border-4 border-roots-black bg-roots-red text-white p-8 shadow-[8px_8px_0px_0px_#1a1a1a]">
+        <h2 class="text-2xl md:text-3xl font-black uppercase mb-4 flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
+            </svg>
+            The Roots Mandate
+        </h2>
+        <p class="font-bold text-xl leading-relaxed opacity-90">
+            "{{ role.roots_context }}"
+        </p>
+    </div>
+
+</div>
+{% endblock %}
