@@ -98,6 +98,78 @@ def join(request):
     counties = County.objects.all().order_by('name')
     return render(request, 'users/join.html', {'counties': counties})
 
+def join_coordinator(request):
+    if request.method == "POST":
+        # Personal Info
+        surname = request.POST.get('surname')
+        other_names = request.POST.get('other_names')
+        full_name = f"{surname} {other_names}".strip()
+        id_number = request.POST.get('id_number')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        date_of_birth = request.POST.get('date_of_birth')
+        
+        # Demographics
+        occupation = request.POST.get('occupation')
+        ethnicity = request.POST.get('ethnicity')
+        sex = request.POST.get('sex')
+        special_interest = request.POST.get('special_interest')
+        
+        # Location
+        county_id = request.POST.get('county')
+        constituency = request.POST.get('constituency')
+        ward = request.POST.get('ward')
+        polling_center = request.POST.get('polling_center')
+
+        # Basic validation
+        if not id_number or not phone or not surname:
+            messages.error(request, 'Please fill all required fields')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join_coordinator.html', {'counties': counties})
+            
+        try:
+            # Get County object if selected
+            county_obj = None
+            if county_id:
+                try:
+                    county_obj = County.objects.get(id=county_id)
+                except County.DoesNotExist:
+                    pass
+
+            member = Member.objects.create(
+                full_name=full_name,
+                surname=surname,
+                other_names=other_names,
+                id_number=id_number,
+                phone_number=phone,
+                email=email,
+                date_of_birth=date_of_birth if date_of_birth else None,
+                occupation=occupation,
+                ethnicity=ethnicity,
+                sex=sex,
+                special_interest=special_interest,
+                county=county_obj,
+                constituency=constituency,
+                ward=ward,
+                polling_center=polling_center,
+                is_coordinator_applicant=True  # Mark as coordinator applicant
+            )
+            # Store member ID in session for the success page
+            request.session['new_member_id'] = member.id
+            return redirect('join_success')
+        except IntegrityError:
+            messages.error(request, 'Comrade with this ID Number already registered!')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join_coordinator.html', {'counties': counties})
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join_coordinator.html', {'counties': counties})
+
+    # GET request
+    counties = County.objects.all().order_by('name')
+    return render(request, 'users/join_coordinator.html', {'counties': counties})
+
 def check_id_number(request):
     id_number = request.GET.get('id_number')
     if id_number and Member.objects.filter(id_number=id_number).exists():

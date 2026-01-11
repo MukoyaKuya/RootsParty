@@ -94,7 +94,7 @@
     <!-- Marquee Ticker -->
     <div class="bg-roots-black text-roots-white overflow-hidden py-2 border-b-4 border-roots-black fixed top-0 w-full z-50">
         <div class="whitespace-nowrap animate-marquee font-bold uppercase tracking-widest text-sm">
-            ● MEMBERSHIP REGISTRATION ONGOING// ● WEZI WA MALI YA UMA WATANYONGWA // TINGIZA MTI // ● EXPORT HYENA MEAT // ● GEN Z // ● 4-DAY WORK WEEK IS COMING
+            ● MEMBERSHIP REGISTRATION ONGOING// ● WEZI WA MALI YA UMA WATANYONGWA // TINGIZA MTI // ● JOIN THE ROOTS WAVE // ● GEN Z // ● READY FOR THE HEMP PRODUCTION
         </div>
     </div>
 
@@ -155,7 +155,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                 </svg>
-                <span class="font-bold uppercase tracking-widest text-lg">Fund</span>
+                <span class="font-bold uppercase tracking-widest text-lg">SUPPORT</span>
             </a>
             
             <a href="/shop/" class="group flex items-center px-6 py-4 text-white hover:bg-white hover:text-roots-black transition-all border-b border-gray-800">
@@ -252,6 +252,137 @@
             animation: marquee 40s linear infinite;
         }
     </style>
+
+    <!-- Official Footer -->
+    <footer class="bg-roots-black text-white border-t-8 border-roots-red mt-auto relative overflow-hidden md:ml-64 transition-all">
+        <!-- Newsletter Section -->
+        <div class="border-b-4 border-white/20">
+            <div class="container mx-auto px-6 md:px-12 py-12">
+                <div class="lg:flex items-center justify-between gap-12">
+                    <div class="max-w-2xl mb-8 lg:mb-0">
+                        <h3 class="text-3xl md:text-4xl font-black uppercase mb-3 leading-none">Sign up for our newsletter!</h3>
+                        <p class="font-bold text-gray-400 text-lg">Get the latest updates from the movement directly to your inbox.</p>
+                    </div>
+                    <form hx-post="{% url 'subscribe' %}" hx-swap="outerHTML" class="flex-1 w-full max-w-lg flex gap-0 shrink-0">
+                        {% csrf_token %}
+                            <input type="email" name="email" placeholder="Enter your email" class="w-full bg-white text-roots-black px-6 py-4 font-bold uppercase focus:outline-none border-4 border-transparent focus:border-roots-red min-w-0" required aria-label="Email Address">
+                            <button type="submit" class="bg-roots-red text-white px-6 md:px-8 py-4 font-black uppercase border-4 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap">
+                                Sign Up
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 md:px-12 py-16">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
+                <!-- Brand Info -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-4xl lg:text-5xl font-black uppercase leading-none mb-3">Roots Party<br><span class="text-roots-red">Of Kenya</span></h2>
+                        <p class="font-bold text-xl italic text-gray-200">"Tingiza Mti! Wakati ni Sasa!"</p>
+                    </div>
+                    <p class="text-gray-400 font-medium leading-relaxed">
+                        The Roots Party of Kenya is committed to building a nation that is self-sufficient, prosperous, just, and inclusive. By addressing the core issues of corruption, economic independence, youth and women empowerment, inclusive governance, education, healthcare, and industrialization, we will create a Kenya where all Kenyans can thrive.
+                    </p>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-black uppercase border-b-4 border-roots-red inline-block pb-1">Contact Us</h3>
+                    
+                    <div class="space-y-6 font-bold text-lg">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-roots-red/10 flex items-center justify-center flex-shrink-0 mt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-roots-red">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="uppercase text-gray-500 text-xs tracking-widest mb-1">Headquarters</p>
+                                <p class="leading-tight">Cara House, Karen Road<br>Nairobi, Kenya</p>
+                                <a href="https://maps.google.com/?q=Cara+House,+Karen+Road,+Nairobi" target="_blank" class="text-roots-red text-sm hover:text-white transition-colors mt-2 inline-flex items-center gap-1">
+                                    Get Directions 
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-roots-red/10 flex items-center justify-center flex-shrink-0 mt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-roots-red">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="uppercase text-gray-500 text-xs tracking-widest mb-1">Office Hours</p>
+                                <p>Mon - Fri: 8AM - 5PM</p>
+                                <p>Sat: 9AM - 1PM</p>
+                                <p class="text-gray-500">Sun: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links & Social -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-black uppercase border-b-4 border-roots-red inline-block pb-1">Connect</h3>
+                    
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3 font-bold uppercase text-sm">
+                        <a href="{% url 'about' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> About Us
+                        </a>
+                        <a href="{% url 'manifesto' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> Manifesto
+                        </a>
+                        <a href="{% url 'join' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> Join Us
+                        </a>
+                        <a href="{% url 'shop' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> Shop
+                        </a>
+                        <a href="{% url 'events' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> Rallies
+                        </a>
+                        <a href="{% url 'donate' %}" class="hover:text-roots-red transition-colors flex items-center gap-2 group">
+                            <span class="w-1.5 h-1.5 bg-gray-600 group-hover:bg-roots-red transition-colors"></span> Donate
+                        </a>
+                    </div>
+
+                    <div class="pt-6 border-t font-medium border-white/10">
+                        <p class="uppercase text-gray-500 text-xs tracking-widest mb-4 font-bold">Social Media</p>
+                        <div class="flex gap-4">
+                            <a href="#" class="w-12 h-12 bg-white/5 flex items-center justify-center hover:bg-roots-red hover:text-white transition-all transform hover:-translate-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white/5 flex items-center justify-center hover:bg-roots-red hover:text-white transition-all transform hover:-translate-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white/5 flex items-center justify-center hover:bg-roots-red hover:text-white transition-all transform hover:-translate-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t-4 border-white/10 mt-12 pt-8 text-center text-sm font-bold text-gray-500">
+                <p>Copyright © 2025 ROOTS PARTY OF KENYA - All Rights Reserved.</p>
+                <div class="mt-2 text-xs">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a> • 
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a> •
+                    <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+                </div>
+                <div class="mt-8 opacity-50 text-[10px] uppercase tracking-widest">
+                    This website uses cookies to optimize your experience. Tingiza Mti.
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Official Footer -->
 
     {% block extra_js %}{% endblock %}
 

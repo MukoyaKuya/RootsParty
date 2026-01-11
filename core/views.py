@@ -8,7 +8,7 @@ import random
 import string
 import qrcode
 from django.conf import settings
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseNotAllowed
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -40,6 +40,7 @@ def home(request):
         'featured_posts': featured_posts,
         'latest_posts': latest_posts,
         'video': video,
+        'party_video': video,  # For the party video section
         **stats
     }
     
@@ -264,22 +265,41 @@ def resources(request):
 from django.contrib.admin.views.decorators import staff_member_required
 from users.models import Member
 from finance.models import Donation
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 @staff_member_required
 def dashboard(request):
-    # Stats
-    total_members = Member.objects.count()
+    # --- MEMBERSHIP STATS ---
+    # Total Members (excluding coordinators for this count if desired, or total people)
+    # Let's count actual members distinct from coordinator applicants if they are mutually exclusive in intent
+    total_members = Member.objects.filter(is_coordinator_applicant=False).count()
+    total_coordinators = Member.objects.filter(is_coordinator_applicant=True).count()
+    
+    # Growth Stats
+    today = timezone.now().date()
+    week_ago = today - timezone.timedelta(days=7)
+    
+    new_members_today = Member.objects.filter(created_at__date=today, is_coordinator_applicant=False).count()
+    new_members_week = Member.objects.filter(created_at__date__gte=week_ago, is_coordinator_applicant=False).count()
+    
+    
+    # --- FINANCIALS ---
+    interest_stats = Member.objects.filter(is_coordinator_applicant=False).values('special_interest').annotate(count=Count('special_interest')).order_by('-count')
+    
+    # --- FINANCIALS ---
     total_donations_amount = Donation.objects.filter(status='PENDING').aggregate(Sum('amount'))['amount__sum'] or 0
     # Note: In real app, we filter by 'COMPLETED'. Using PENDING for mock data visibility.
     
     upcoming_events_count = Event.objects.filter(date__gte=timezone.now()).count()
     
-    recent_members = Member.objects.order_by('-created_at')[:5]
+    recent_members = Member.objects.filter(is_coordinator_applicant=False).order_by('-created_at')[:5]
     recent_donations = Donation.objects.order_by('-created_at')[:5]
     
     context = {
         'total_members': total_members,
+        'total_coordinators': total_coordinators,
+        'new_members_today': new_members_today,
+        'new_members_week': new_members_week,
         'total_donations_amount': total_donations_amount,
         'upcoming_events_count': upcoming_events_count,
         'recent_members': recent_members,
@@ -367,6 +387,46 @@ View all messages at: /admin/core/contactmessage/
         'form': form,
         'success': success
     })
+
+
+from .models import NewsletterSubscriber
+from .forms import NewsletterForm
+
+def subscribe(request):
+    """Newsletter subscription view (HTMX)"""
+    if request.method == 'POST':
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            
+            # Check if likely spam/bot (simple check)
+            if 'rootsparty' in email and 'admin' in email:
+                 # Minimal honeypot-like logic could go here
+                 pass
+            
+            # Save if not exists
+            subscriber, created = NewsletterSubscriber.objects.get_or_create(email=email)
+            
+            if created:
+                # Send notification to Admin
+                try:
+                    send_mail(
+                        subject=f"[Roots Party Newsletter] New Subscriber: {email}",
+                        message=f"New newsletter subscriber from website:\n\nEmail: {email}\n\nDate: {timezone.now()}",
+                        from_email=settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'noreply@rootsparty.co.ke',
+                        recipient_list=[settings.CONTACT_EMAIL if hasattr(settings, 'CONTACT_EMAIL') else 'info@rootsparty.co.ke'],
+                        fail_silently=True,
+                    )
+                except Exception:
+                    pass
+                
+                return render(request, 'partials/subscribe_success.html', {'message': 'Subscribed successfully!'})
+            else:
+                return render(request, 'partials/subscribe_success.html', {'message': 'Already subscribed!'})
+        else:
+            return render(request, 'partials/subscribe_error.html', {'form': form})
+    
+    return HttpResponseNotAllowed(['POST'])
 
 
 def blog_list(request):

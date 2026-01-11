@@ -376,3 +376,13 @@ class HomeVideo(models.Model):
         return self.video_url
 
 
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.email
+
+
+

@@ -44,3 +44,14 @@ class ContactForm(forms.Form):
             'rows': 6
         })
     )
+
+
+class NewsletterForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Enter your email address',
+            'class': 'bg-white/10 border-2 border-white/20 text-white placeholder-gray-400 px-6 py-4 font-bold text-lg focus:outline-none focus:border-roots-red focus:bg-black transition-all w-full',
+            'aria-label': 'Email Address'
+        })
+    )
+

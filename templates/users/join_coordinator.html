@@ -5,8 +5,8 @@
 <div class="container mx-auto px-4 py-8 max-w-4xl">
     <!-- Header -->
     <div class="text-center mb-8">
-        <h1 class="text-4xl md:text-5xl font-black uppercase mb-2">Membership Registration</h1>
-        <p class="text-xl text-gray-400">Join the movement. Become a Comrade.</p>
+        <h1 class="text-4xl md:text-5xl font-black uppercase mb-2">Coordinator Application</h1>
+        <p class="text-xl text-gray-400">Lead the revolution in your county. Become a Leader.</p>
         
         <div class="mt-8 p-6 border-4 border-roots-red bg-roots-red/10 rounded-none transform -rotate-1 shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] inline-block text-left transition-transform hover:rotate-0">
             <p class="text-roots-red font-black uppercase tracking-widest text-lg mb-2">📢 Important Directive</p>
@@ -20,7 +20,7 @@
         <!-- Decorative bg element -->
         <div class="absolute top-0 right-0 w-64 h-64 bg-roots-red/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
 
-        <form method="POST" action="/join/" class="space-y-8">
+        <form method="POST" action="{% url 'join_coordinator' %}" class="space-y-8">
             {% csrf_token %}
 
             <!-- Section 1: Personal Information -->
@@ -156,7 +156,7 @@
 
                 <div class="mt-8">
                     <button type="submit" class="w-full bg-roots-red border-4 border-roots-black text-white font-black uppercase py-5 rounded-none tracking-widest text-2xl shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] hover:shadow-[12px_12px_0px_0px_rgba(26,26,26,1)] hover:-translate-y-1 hover:-translate-x-1 active:translate-y-0 active:translate-x-0 active:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] transition-all">
-                        Register As Member
+                        Apply for Coordinator
                     </button>
                     <p class="text-center text-xs text-gray-500 mt-4">
                         &copy; {% now "Y" %} Roots Party of Kenya. All rights reserved.
@@ -303,7 +303,6 @@
             } else if (data && data[constituencyName]) {
                  wards = data[constituencyName];
             } else {
-                 // Try looking in top level just in case structure flattened
                  if (data && Array.isArray(data)) wards = data;
             }
 

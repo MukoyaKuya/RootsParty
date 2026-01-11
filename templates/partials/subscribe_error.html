@@ -1,0 +1,14 @@
+<form hx-post="{% url 'subscribe' %}" hx-swap="outerHTML" class="flex flex-col gap-4">
+    {% csrf_token %}
+    <div class="relative">
+        {{ form.email }}
+        {% if form.email.errors %}
+        <div class="absolute -bottom-6 left-0 text-roots-red font-bold text-xs bg-black px-2 py-1">
+            {{ form.email.errors.0 }}
+        </div>
+        {% endif %}
+    </div>
+    <button type="submit" class="bg-roots-red text-white font-black uppercase px-8 py-4 border-2 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap shadow-[4px_4px_0px_0px_white] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
+        SIGN UP
+    </button>
+</form>

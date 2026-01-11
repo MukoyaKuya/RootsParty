@@ -58,6 +58,7 @@ urlpatterns += [
     
     # Users
     path('join/', user_views.join, name='join'),
+    path('join-coordinator/', user_views.join_coordinator, name='join_coordinator'),
     path('join/success/', user_views.join_success, name='join_success'),
     path('member/<int:member_id>/card/', user_views.download_card, name='download_card'),
     path('check-id/', user_views.check_id_number, name='check_id'),
@@ -80,6 +81,7 @@ urlpatterns += [
     path('resources/', core_views.resources, name='resources'),
     path('analytics/', core_views.dashboard, name='dashboard'),
     path('contact/', core_views.contact, name='contact'),
+    path('subscribe/', core_views.subscribe, name='subscribe'),
     
     # Blog/News
     path('news/', core_views.blog_list, name='blog_list'),
