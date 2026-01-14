@@ -92,6 +92,11 @@ urlpatterns += [
     path('counties/', core_views.counties, name='counties'),
     path('counties/map/', core_views.county_map, name='county_map'),
     path('counties/<slug:slug>/', core_views.county_detail, name='county_detail'),
+    
+    # Legal Pages
+    path('privacy-policy/', core_views.privacy_policy, name='privacy_policy'),
+    path('terms-of-service/', core_views.terms_of_service, name='terms_of_service'),
+    path('cookie-policy/', core_views.cookie_policy, name='cookie_policy'),
 ]
 
 from django.conf import settings

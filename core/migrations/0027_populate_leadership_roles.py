@@ -3,6 +3,71 @@
 from django.db import migrations
 
 
+def populate_roles(apps, schema_editor):
+    LeadershipRole = apps.get_model('core', 'LeadershipRole')
+    roles_data = {
+        'president': {
+            'title': 'President',
+            'icon_svg_path': 'M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418',
+            'description': 'The Head of State and Government, and Commander-in-Chief of the Kenya Defence Forces. The President is the symbol of national unity.',
+            'responsibilities': "Protect the sovereignty and territorial integrity of the Republic.\nPromote and enhance the unity of the nation.\nAssent to bills passed by Parliament.\nCommander-in-Chief of the Kenya Defence Forces.\nAppoint and dismiss Cabinet Secretaries, Principal Secretaries, and other State officers.",
+            'roots_context': 'A Roots Party President is the Commander-in-Chief of Economic Liberation. They will sign the Executive Order legalizing marijuana on Day 1, suspend the constitution to punish corruption, and shift the capital to Isiolo to open up the North.',
+            'prospects': "Economic Liberation: Immediate legalization of marijuana for export to pay off our national debt in 3 years.\nZero Tolerance on Corruption: We will introduce capital punishment for those who steal public resources.\nSnake Farming: Establishing a multi-billion shilling anti-venom industry.\n4-Day Work Week: Kenyans deserve time to rest and build their families.\nCapital Relocation: Moving the capital to Isiolo to unlock the potential of Northern Kenya.",
+        },
+        'governor': {
+            'title': 'Governor',
+            'icon_svg_path': 'M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z',
+            'description': 'The Governor is the Chief Executive Officer of the County Government. They are responsible for the implementation of county legislation, management of county executive functions, and administration of the county.',
+            'responsibilities': "Implement county legislation and national legislation within the county.\nManage and coordinate the functions of the county administration and its departments.\nSupervise the administration and delivery of services in the county.\nSubmit county plans and policies to the county assembly for approval.\nOversee the implementation of the County Integrated Development Plan (CIDP).",
+            'roots_context': 'A Roots Party Governor will be the primary driver of our economic zones. They will identify land for marijuana cultivation and snake farming, ensure local youth are employed in these industries, and guard county resources against corruption.',
+        },
+        'senator': {
+            'title': 'Senator',
+            'icon_svg_path': 'M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z',
+            'description': 'The Senator represents the county at the national level (Senate) and serves to protect the interests of the county and its government.',
+            'responsibilities': "Represent the county in the Senate and protect the interests of the county.\nParticipate in the law-making function of Parliament by debating and approving bills concerning counties.\nDetermine the allocation of national revenue among counties.\nExercise oversight over national revenue allocated to the county governments.",
+            'roots_context': 'A Roots Party Senator acts as the Watchman of the people\'s resources. They will ensure that revenue generated from our new industries returns to the county for development and that the Governor remains accountable to the people.',
+        },
+        'woman-rep': {
+            'title': 'Woman Representative',
+            'icon_svg_path': 'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z',
+            'description': 'The Woman Representative is a Member of the National Assembly elected from each of the 47 counties to specially represent the interests of women, youth, and persons with disabilities.',
+            'responsibilities': "Legislate on matters specifically affecting women, youth, and marginalized groups.\nManage the National Government Affirmative Action Fund (NGAAF).\nAdvocate for gender equity and social justice in national policies.",
+            'roots_context': 'A Roots Party Woman Rep is a champion of economic equity. She will ensure that women and youth are given first priority in trade licenses for our export markets and that NGAAF funds are used to start real businesses, not just seminars.',
+        },
+        'mp': {
+            'title': 'Member of Parliament',
+            'icon_svg_path': 'M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46',
+            'description': 'The Member of Parliament (MP) represents a constituency in the National Assembly. They play a key role in national legislation and oversight of the national government.',
+            'responsibilities': "Represent the people of the constituency in the National Assembly.\nEnact national legislation and approve national budget.\nOversee the State officers and national revenues.\nManage the National Government Constituencies Development Fund (NG-CDF).",
+            'roots_context': 'A Roots Party MP is a legislator for liberation. Their primary mandate is to pass the laws that legalize our economy (Marijuana, Snake Farming) and to ensure CDF is used to build the infrastructure needed for these industries.',
+        },
+        'mca': {
+            'title': 'Member of County Assembly',
+            'icon_svg_path': 'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z',
+            'description': 'The MCA is the representative of a Ward in the County Assembly. They legislate at the county level and provide oversight to the County Executive.',
+            'responsibilities': "Represent the ward residents in the County Assembly.\nMake county laws (Acts) and policies.\nApprove county budget and development plans.\nProvide oversight on the County Executive Committee and other county organs.",
+            'roots_context': 'A Roots Party MCA is the voice of the grassroots. They ensure that every village benefits from the party\'s agenda and that local resources are protected from grabbing. They are the first line of defense against tyranny.',
+        }
+    }
+
+    for slug, data in roles_data.items():
+        LeadershipRole.objects.update_or_create(
+            slug=slug,
+            defaults={
+                'title': data['title'],
+                'icon_svg_path': data['icon_svg_path'],
+                'description': data['description'],
+                'responsibilities': data['responsibilities'],
+                'roots_context': data['roots_context'],
+                'prospects': data.get('prospects', '')
+            }
+        )
+
+def remove_roles(apps, schema_editor):
+    LeadershipRole = apps.get_model('core', 'LeadershipRole')
+    LeadershipRole.objects.all().delete()
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,4 +75,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(populate_roles, reverse_code=remove_roles),
     ]

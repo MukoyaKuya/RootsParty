@@ -14,6 +14,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
+    nginx \
+    curl \
+    gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
@@ -23,8 +26,15 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project
 COPY . /app/
 
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf.template
+
+# Copy startup script
+COPY start.sh /app/
+RUN chmod +x /app/start.sh
+
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Run gunicorn
-CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 config.wsgi:application
+# Run start script (Nginx + Gunicorn)
+CMD ["./start.sh"]

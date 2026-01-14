@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-4xl mx-auto">
+    <!-- Header -->
+    <header class="border-b-4 border-roots-black pb-8 mb-12 text-center md:text-left">
+        <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-4">
+            Privacy <span class="bg-roots-red text-white px-3 inline-block transform -rotate-2 shadow-[8px_8px_0px_0px_#1a1a1a]">Policy</span>
+        </h1>
+        <p class="text-xl font-bold uppercase text-gray-500">
+            Last Updated: 2026-01-12 // We Are Watching The Economy, Not You.
+        </p>
+    </header>
+
+    <div class="space-y-12 font-bold text-lg leading-relaxed">
+        
+        <!-- Section 1 -->
+        <section class="border-l-4 border-roots-black pl-6">
+            <h2 class="text-3xl font-black uppercase mb-4 flex items-center gap-3">
+                <span class="bg-roots-black text-white w-10 h-10 flex items-center justify-center text-xl">1</span>
+                Data Collection
+            </h2>
+            <p class="mb-4">
+                We collect minimal personal data necessary for your membership and participation in the movement. This includes your name, contact details, and ID number as required by the Registrar of Political Parties.
+            </p>
+            <p class="bg-gray-100 p-4 border-2 border-roots-black">
+                <span class="text-roots-red uppercase font-black">NOTE:</span> We do not sell your data. We are not capitalists farming your attention. We are revolutionaries farming hemp and ideas.
+            </p>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="border-l-4 border-roots-black pl-6">
+            <h2 class="text-3xl font-black uppercase mb-4 flex items-center gap-3">
+                <span class="bg-roots-black text-white w-10 h-10 flex items-center justify-center text-xl">2</span>
+                Usage of Information
+            </h2>
+            <p>
+                Your information is used solely for:
+            </p>
+            <ul class="list-disc ml-8 mt-4 space-y-2 uppercase text-base">
+                <li>Membership verification and card issuance</li>
+                <li>Communication regarding party rallies and updates</li>
+                <li>Internal statistical analysis (like our awesome charts)</li>
+                <li>Compliance with Kenyan electoral laws</li>
+            </ul>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="border-l-4 border-roots-black pl-6">
+            <h2 class="text-3xl font-black uppercase mb-4 flex items-center gap-3">
+                <span class="bg-roots-black text-white w-10 h-10 flex items-center justify-center text-xl">3</span>
+                Cookies & Tracking
+            </h2>
+            <p class="mb-4">
+                We use essential cookies to keep you logged in and functional cookies to remember your preferences (like that dark mode you love).
+            </p>
+            <p>
+                We use Google Analytics to count how many comrades are joining the revolution. It’s anonymous. We don’t care what you browse privately; that’s your business.
+            </p>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="border-l-4 border-roots-black pl-6">
+            <h2 class="text-3xl font-black uppercase mb-4 flex items-center gap-3">
+                <span class="bg-roots-black text-white w-10 h-10 flex items-center justify-center text-xl">4</span>
+                Your Rights
+            </h2>
+            <p>
+                You have the right to access, correct, or delete your data (unless the law says we must keep it). Contact us at <a href="mailto:info@rootsparty.co.ke" class="text-roots-red hover:underline">info@rootsparty.co.ke</a> if you have concerns.
+            </p>
+        </section>
+
+        <!-- CTA -->
+        <div class="border-t-4 border-b-4 border-roots-black py-8 text-center mt-12 bg-gray-50">
+            <p class="text-2xl font-black uppercase mb-4">Questions?</p>
+            <a href="/contact/" class="brutal-btn inline-block">Contact The Secretariat</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

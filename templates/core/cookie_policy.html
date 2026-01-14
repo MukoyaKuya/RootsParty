@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8 mb-24 max-w-4xl mx-auto">
+    <!-- Header -->
+    <header class="border-b-4 border-roots-black pb-8 mb-12 text-center md:text-left">
+        <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-4">
+            Cookie <span class="bg-roots-black text-white px-3 inline-block transform rotate-2 shadow-[8px_8px_0px_0px_#E60000]">Policy</span>
+        </h1>
+        <p class="text-xl font-bold uppercase text-gray-500">
+            We prefer organic hemp cookies, but digital ones are necessary.
+        </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-8 font-bold text-lg">
+        
+        <!-- What are cookies -->
+        <div class="border-4 border-roots-black p-6 bg-white shadow-[8px_8px_0px_0px_#1a1a1a]">
+            <h2 class="text-2xl font-black uppercase mb-4 text-roots-red">What Are Cookies?</h2>
+            <p>
+                Cookies are small text files stored on your device. They act as a memory for the website, helping it remember if you've logged in or if you prefer dark mode.
+            </p>
+        </div>
+
+        <!-- How we use them -->
+        <div class="border-4 border-roots-black p-6 bg-white shadow-[8px_8px_0px_0px_#1a1a1a]">
+            <h2 class="text-2xl font-black uppercase mb-4 text-roots-red">How We Use Them</h2>
+            <ul class="space-y-2 list-none">
+                <li class="flex items-start gap-2">
+                    <span class="text-roots-red text-xl">●</span>
+                    <span><strong>Essential cookies:</strong> Required for the site to work.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-roots-red text-xl">●</span>
+                    <span><strong>Analytics cookies:</strong> To understand our traffic (Google Analytics).</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-roots-red text-xl">●</span>
+                    <span><strong>Functional cookies:</strong> To remember your choices.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Managing Cookies -->
+        <div class="border-4 border-roots-black p-6 bg-roots-black text-white shadow-[8px_8px_0px_0px_#E60000] md:col-span-2">
+            <h2 class="text-2xl font-black uppercase mb-4 text-roots-red">Managing Cookies</h2>
+            <p class="mb-4">
+                You can control and/or delete cookies as you wish using your browser settings. You can delete all cookies that are already on your computer and you can set most browsers to prevent them from being placed.
+            </p>
+            <p class="text-sm text-gray-400 uppercase">
+                Note: If you do this, you may have to manually adjust some preferences every time you visit a site and some services and functionalities may not work.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

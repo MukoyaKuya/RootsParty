@@ -530,3 +530,15 @@ def role_detail(request, slug):
     # Fetch from database
     role = get_object_or_404(LeadershipRole, slug=slug)
     return render(request, 'core/role_detail.html', {'role': role})
+
+def privacy_policy(request):
+    """View for Privacy Policy"""
+    return render(request, 'core/privacy_policy.html')
+
+def terms_of_service(request):
+    """View for Terms of Service"""
+    return render(request, 'core/terms_of_service.html')
+
+def cookie_policy(request):
+    """View for Cookie Policy"""
+    return render(request, 'core/cookie_policy.html')
