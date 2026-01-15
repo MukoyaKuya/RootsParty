@@ -56,7 +56,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Mobile Number *</label>
-                        <input type="tel" name="phone" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="0712 345 678">
+                        <input type="tel" name="phone_number" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="0712 345 678">
                     </div>
                 </div>
             </div>
@@ -147,6 +147,11 @@
 
             <!-- Footer -->
             <div class="pt-6 border-t border-gray-800">
+                <!-- Security Fields -->
+                <div class="mb-6">
+                    {{ form.confirm_email_hidden }}
+                </div>
+
                 <label class="flex items-start gap-4 cursor-pointer group mt-8 bg-gray-50 border-4 border-roots-black p-4 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all">
                     <input type="checkbox" required class="mt-1 w-6 h-6 rounded-none border-4 border-roots-black text-roots-red focus:ring-0 checked:bg-roots-red">
                     <span class="text-sm text-black font-bold">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -224,3 +224,11 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     list_display = ('email', 'created_at', 'is_active')
     list_filter = ('is_active', 'created_at')
     search_fields = ('email',)
+
+@admin.register(CarouselImage)
+class CarouselImageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'order', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    list_editable = ('order', 'is_active')
+    search_fields = ('title',)
+    ordering = ['order', '-created_at']

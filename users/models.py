@@ -24,6 +24,11 @@ class Member(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.id_number})"
 
+    def save(self, *args, **kwargs):
+        if not self.full_name and (self.surname or self.other_names):
+            self.full_name = f"{self.surname or ''} {self.other_names or ''}".strip()
+        super().save(*args, **kwargs)
+
 class CoordinatorApplicant(Member):
     class Meta:
         proxy = True

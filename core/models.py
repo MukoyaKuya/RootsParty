@@ -443,3 +443,18 @@ class LeadershipRole(models.Model):
         return self.video_url
 
 
+class CarouselImage(models.Model):
+    """Model for homepage carousel images"""
+    title = models.CharField(max_length=200, help_text="Image title/description")
+    image = models.ImageField(upload_to='carousel/', help_text="Carousel image (recommended: 1200x400px)")
+    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
+    is_active = models.BooleanField(default=True, help_text="Show this image in the carousel")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = 'Carousel Image'
+        verbose_name_plural = 'Carousel Images'
+    
+    def __str__(self):
+        return self.title

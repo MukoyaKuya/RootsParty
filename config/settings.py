@@ -42,12 +42,37 @@ INSTALLED_APPS = [
     
     # Third-party
     'django_htmx',
+    'django_ratelimit',
 
     # Local
     'core',
     'users',
     'finance',
 ]
+
+# ... (omitted middleware) ...
+
+SILENCED_SYSTEM_CHECKS = [
+    'django_ratelimit.E003',
+    'django_ratelimit.W001',
+]
+
+# Ratelimit Settings
+RATELIMIT_USE_CACHE = 'default'
+RATELIMIT_ENABLE = True
+
+# Database Cache Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Proxy & Security Settings (Critical for Cloud Run + Nginx)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

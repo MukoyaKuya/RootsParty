@@ -1,4 +1,4 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole, CarouselImage
 from users.models import Member
 from django.core.cache import cache
 
@@ -34,13 +34,15 @@ def home(request):
     # Get active home video
     video = HomeVideo.objects.filter(is_active=True).order_by('-created_at').first()
     
-
+    # Get active carousel images
+    carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order', '-created_at')
 
     context = {
         'featured_posts': featured_posts,
         'latest_posts': latest_posts,
         'video': video,
         'party_video': video,  # For the party video section
+        'carousel_images': carousel_images,
         **stats
     }
     
