@@ -164,8 +164,10 @@ class ContactMessageAdmin(admin.ModelAdmin):
     )
 
 
+from image_cropping import ImageCroppingMixin
+
 @admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ('title', 'category', 'author', 'is_featured', 'is_published', 'views', 'created_at')
     list_filter = ('category', 'is_featured', 'is_published', 'created_at')
     search_fields = ('title', 'excerpt', 'content')
@@ -178,7 +180,7 @@ class BlogPostAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'category', 'author')
         }),
         ('Content', {
-            'fields': ('excerpt', 'content', 'image', 'video_url', 'video_file')
+            'fields': ('excerpt', 'content', 'image', 'cropping', 'video_url', 'video_file')
         }),
         ('Publishing', {
             'fields': ('is_featured', 'is_published')
@@ -226,9 +228,18 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     search_fields = ('email',)
 
 @admin.register(CarouselImage)
-class CarouselImageAdmin(admin.ModelAdmin):
+class CarouselImageAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ('title', 'order', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
     list_editable = ('order', 'is_active')
     search_fields = ('title',)
     ordering = ['order', '-created_at']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'image', 'cropping', 'order', 'is_active')
+        }),
+    )
+
+    class Media:
+        js = ('js/admin_crop_preview.js',)

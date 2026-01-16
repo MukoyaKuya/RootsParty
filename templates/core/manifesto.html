@@ -2,55 +2,186 @@
 
 
 {% block content %}
-<div class="mt-8 mb-24 space-y-12">
+<div class="mt-8 mb-24 space-y-16">
     
-    <header class="text-center space-y-4">
-        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
-            The<br>
-            <span class="text-white bg-roots-red px-4 transform rotate-2 inline-block shadow-[8px_8px_0px_0px_#1a1a1a]">Truths</span>
+    <header class="text-center relative py-12 border-b-8 border-roots-black">
+        <!-- Decorative bg noise/pattern could go here -->
+        <h1 class="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-6 relative z-10">
+            ROOTS<br>
+            <span class="text-white bg-roots-red px-6 py-2 transform -rotate-2 inline-block shadow-[12px_12px_0px_0px_#1a1a1a] border-4 border-roots-black">Manifesto</span>
         </h1>
-        <p class="text-xl font-bold uppercase border-t-4 border-b-4 border-roots-black py-4 inline-block">
-            Our 11 Point Manifesto
-        </p>
+        <div class="inline-block bg-white border-4 border-roots-black p-2 transform rotate-1 mt-4">
+             <p class="text-2xl font-bold uppercase tracking-widest px-8 py-2 border-2 border-roots-black border-dashed">
+                These Are Our 11 Point Agendas
+            </p>
+        </div>
     </header>
 
-    <!-- The 10 Commandments Detailed -->
-    <div class="space-y-8">
-        
-    <!-- The 10 Commandments Detailed -->
-    <div class="space-y-8">
-        {% for item in items %}
-        <a href="/manifesto/{{ item.slug }}/" class="block group">
-            <article class="border-4 border-roots-black p-6 bg-white shadow-[8px_8px_0px_0px_#1a1a1a] group-hover:translate-x-1 group-hover:translate-y-1 group-hover:shadow-none transition-all cursor-pointer">
-                <h2 class="text-4xl font-black uppercase mb-4 flex items-center group-hover:text-roots-red transition-colors">
-                    <span class="bg-roots-black text-white w-12 h-12 flex items-center justify-center mr-4 text-2xl group-hover:bg-roots-red">{{ forloop.counter }}</span>
-                    {{ item.title }}
-                </h2>
-                <p class="font-bold text-lg mb-4">
-                    {{ item.summary }}
-                </p>
-                {% if item.target_revenue %}
-                <div class="bg-gray-100 p-4 border-l-4 border-roots-red italic font-bold group-hover:bg-roots-red group-hover:text-white group-hover:border-white transition-colors">
-                    {{ item.target_revenue }}
-                </div>
-                {% endif %}
-            </article>
-        </a>
-        {% empty %}
-        <div class="p-12 text-center border-4 border-dashed border-roots-black">
-            <h2 class="text-2xl font-black uppercase">No manifesto items found.</h2>
-            <p>The revolution is currently being drafted.</p>
+
+
+    <!-- The 11 Points Grid -->
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+            {% for item in items %}
+            <a href="/manifesto/{{ item.slug }}/" class="block group relative">
+                <!-- Connector Line for visual flow (optional, maybe too much clutter) -->
+                
+                <article class="h-full border-4 border-roots-black bg-white p-8 relative shadow-[8px_8px_0px_0px_#1a1a1a] transition-all duration-300 group-hover:-translate-y-2 group-hover:translate-x-2 group-hover:shadow-[16px_16px_0px_0px_#E60000]">
+                    
+                    <!-- Number Badge -->
+                    <div class="absolute -top-6 -left-6 w-16 h-16 bg-roots-black text-white border-4 border-white flex items-center justify-center transform -rotate-6 shadow-md z-10 group-hover:bg-roots-red group-hover:rotate-0 transition-all">
+                        <span class="font-black text-3xl">{{ forloop.counter }}</span>
+                    </div>
+
+                    <h2 class="text-4xl font-black uppercase mb-6 leading-tight group-hover:underline decoration-4 underline-offset-4 decoration-roots-red">
+                        {{ item.title }}
+                    </h2>
+                    
+                    <p class="font-bold text-lg mb-6 leading-relaxed border-l-4 border-gray-200 pl-4 text-gray-800">
+                        {{ item.summary }}
+                    </p>
+                    
+                    {% if item.target_revenue %}
+                    <div class="mt-auto bg-gray-100 border-2 border-roots-black p-3 flex justify-between items-center group-hover:bg-roots-black group-hover:text-roots-green transition-colors">
+                        <span class="text-xs font-black uppercase text-gray-500 group-hover:text-gray-400">Projected Revenue:</span>
+                        <span class="font-mono font-black text-lg">{{ item.target_revenue }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Pulsating Rasta Circle -->
+                    <div class="absolute top-4 right-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                         <div class="relative w-8 h-8 flex items-center justify-center">
+                             <!-- Pulse Animation -->
+                             <span class="absolute w-8 h-8 rounded-full bg-roots-red opacity-75 animate-ping"></span>
+                             <!-- Circles -->
+                             <div class="relative w-8 h-8 rounded-full bg-roots-red flex items-center justify-center shadow-md">
+                                 <div class="w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center">
+                                     <div class="w-2 h-2 rounded-full bg-roots-green"></div>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                </article>
+            </a>
+            {% empty %}
+            <div class="col-span-full p-24 text-center border-4 border-dashed border-roots-black opacity-50">
+                <h2 class="text-3xl font-black uppercase mb-4">Manifesto Loading...</h2>
+                <p class="font-bold">The revolution is being digitized.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
     </div>
 
-    <div class="text-center">
-        <a href="/join/" class="brutal-btn inline-block text-2xl w-full">
-            Agree? Join Us
+    <!-- The Roots Hemp Engine Section -->
+    <section class="border-y-4 border-roots-black bg-roots-red text-white py-12 px-4 relative overflow-hidden mt-16 mb-16">
+        <!-- Background Texture -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%); background-size: 20px 20px;"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <h2 class="text-4xl md:text-6xl font-black uppercase text-center mb-2 animate-pulse">The Hemp Engine</h2>
+            <p class="text-center font-bold text-xl uppercase tracking-widest mb-10 opacity-90">Select a Reality to Unlock</p>
+
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Scenario 1: The Debt Killer -->
+                <div class="group relative cursor-pointer" onclick="activateEngine('debt')">
+                    <div class="absolute inset-0 bg-black translate-x-2 translate-y-2 transition-transform group-hover:translate-x-4 group-hover:translate-y-4"></div>
+                    <div class="relative bg-white text-roots-black border-4 border-roots-black p-6 h-full flex flex-col justify-between transition-transform group-hover:-translate-y-1">
+                        <div>
+                            <div class="bg-roots-black text-white px-3 py-1 inline-block font-black uppercase text-sm mb-4">Macro Impact</div>
+                            <h3 class="font-black text-3xl uppercase mb-2 leading-none">The Debt Killer</h3>
+                            <p class="font-bold text-gray-600 text-sm uppercase">Kenya's Debt: <span class="text-roots-red line-through">KES 12.3 Trillion</span></p>
+                        </div>
+                        <div class="mt-6 border-t-4 border-roots-black pt-4">
+                            <p class="font-black text-lg uppercase mb-2">The Solution:</p>
+                            <p class="text-sm font-bold">Export <span class="bg-roots-green text-white px-1">70M Tonnes</span> of Green Gold.</p>
+                            <div id="res-debt" class="hidden mt-4 bg-roots-black text-roots-green p-3 font-mono font-black text-center text-xl animate-bounce">
+                                DEBT FREE IN 10 YEARS
+                            </div>
+                            <button class="mt-4 w-full bg-roots-red text-white font-black uppercase py-2 hover:bg-roots-black transition-colors" id="btn-debt">Actuate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 2: The Wealthy Farmer -->
+                <div class="group relative cursor-pointer" onclick="activateEngine('farmer')">
+                    <div class="absolute inset-0 bg-black translate-x-2 translate-y-2 transition-transform group-hover:translate-x-4 group-hover:translate-y-4"></div>
+                    <div class="relative bg-white text-roots-black border-4 border-roots-black p-6 h-full flex flex-col justify-between transition-transform group-hover:-translate-y-1">
+                        <div>
+                            <div class="bg-roots-green text-roots-black px-3 py-1 inline-block font-black uppercase text-sm mb-4">Farmer Wealth</div>
+                            <h3 class="font-black text-3xl uppercase mb-2 leading-none">Maize vs Hemp</h3>
+                            <p class="font-bold text-gray-600 text-sm uppercase">Why stay poor?</p>
+                        </div>
+                        <div class="mt-6 border-t-4 border-roots-black pt-4">
+                            <div class="flex justify-between items-end mb-2 text-sm font-bold opacity-50">
+                                <span>Maize (1 Acre)</span>
+                                <span>KES 40,000</span>
+                            </div>
+                            <div class="flex justify-between items-end mb-4 font-black uppercase text-xl">
+                                <span>Hemp (1 Acre)</span>
+                                <span class="text-roots-red">KES 696,000</span>
+                            </div>
+                            <div id="res-farmer" class="hidden mt-2 bg-roots-black text-white p-3 font-mono font-bold text-center text-sm">
+                                17X MORE INCOME
+                            </div>
+                            <button class="mt-4 w-full bg-roots-green text-roots-black font-black uppercase py-2 hover:bg-roots-black hover:text-white transition-colors" id="btn-farmer">Compare</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3: The Job Creator -->
+                <div class="group relative cursor-pointer" onclick="activateEngine('jobs')">
+                    <div class="absolute inset-0 bg-black translate-x-2 translate-y-2 transition-transform group-hover:translate-x-4 group-hover:translate-y-4"></div>
+                    <div class="relative bg-white text-roots-black border-4 border-roots-black p-6 h-full flex flex-col justify-between transition-transform group-hover:-translate-y-1">
+                        <div>
+                            <div class="bg-blue-600 text-white px-3 py-1 inline-block font-black uppercase text-sm mb-4">Social Impact</div>
+                            <h3 class="font-black text-3xl uppercase mb-2 leading-none">Mass Employment</h3>
+                            <p class="font-bold text-gray-600 text-sm uppercase">Youth Unemployment: <span class="text-roots-red">CRITICAL</span></p>
+                        </div>
+                        <div class="mt-6 border-t-4 border-roots-black pt-4">
+                            <p class="font-black text-lg uppercase mb-2">The Engine:</p>
+                            <p class="text-sm font-bold">Factories, Logistics, Farming, Medicine.</p>
+                            <div id="res-jobs" class="hidden mt-4 bg-roots-black text-white p-3 font-mono font-black text-center text-xl">
+                                +170,000 NEW JOBS
+                                <span class="block text-[10px] text-gray-400 font-normal">Per 1.7M Acres</span>
+                            </div>
+                            <button class="mt-4 w-full bg-blue-600 text-white font-black uppercase py-2 hover:bg-roots-black transition-colors" id="btn-jobs">Ignite</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-white/60 text-xs font-bold uppercase mt-8 font-mono">
+                *Estimates based on $1350/Tonne Market Price & 4 Tonnes/Acre Yield.
+            </p>
+        </div>
+    </section>
+
+    <div class="text-center py-12 bg-roots-black text-white mt-12">
+        <h3 class="text-3xl font-black uppercase mb-8">Ready to be part of the change?</h3>
+        <a href="/join/" class="inline-block bg-roots-red text-white font-black uppercase text-2xl px-12 py-4 border-4 border-white hover:bg-white hover:text-roots-black hover:border-roots-red transition-all shadow-[8px_8px_0px_0px_#fff] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+            Join The Movement
         </a>
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function activateEngine(type) {
+        if(type === 'debt') {
+            document.getElementById('res-debt').classList.remove('hidden');
+            document.getElementById('btn-debt').innerText = "ACTIVATED";
+            document.getElementById('btn-debt').classList.add('bg-roots-black', 'text-white');
+        } else if (type === 'farmer') {
+            document.getElementById('res-farmer').classList.remove('hidden');
+            document.getElementById('btn-farmer').innerText = "WEALTH UNLOCKED";
+        } else if (type === 'jobs') {
+            document.getElementById('res-jobs').classList.remove('hidden');
+            document.getElementById('btn-jobs').innerText = "IGNITED";
+        }
+    }
+</script>
 {% endblock %}

@@ -245,6 +245,10 @@ class BlogPost(models.Model):
     excerpt = models.TextField(max_length=300, help_text="Short summary for list views")
     content = models.TextField(help_text="Full article content (supports markdown)")
     image = models.ImageField(upload_to='blog/', blank=True, null=True)
+    
+    # Image Cropping - allows admin to crop the uploaded image
+    from image_cropping import ImageRatioField
+    cropping = ImageRatioField('image', '800x450', help_text="Crop for optimal display (16:9 ratio)")
     video_url = models.URLField(blank=True, null=True, help_text="YouTube or Vimeo URL")
     video_file = models.FileField(upload_to='blog/videos/', blank=True, null=True, help_text="Upload video file (MP4, etc.)")
     author = models.CharField(max_length=100, default="Roots Party Media")
@@ -447,6 +451,8 @@ class CarouselImage(models.Model):
     """Model for homepage carousel images"""
     title = models.CharField(max_length=200, help_text="Image title/description")
     image = models.ImageField(upload_to='carousel/', help_text="Carousel image (recommended: 1200x400px)")
+    from image_cropping import ImageRatioField
+    cropping = ImageRatioField('image', '1200x500')
     order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
     is_active = models.BooleanField(default=True, help_text="Show this image in the carousel")
     created_at = models.DateTimeField(auto_now_add=True)

@@ -94,7 +94,7 @@
     <!-- Marquee Ticker -->
     <div class="bg-roots-black text-roots-white overflow-hidden py-2 border-b-4 border-roots-black fixed top-0 w-full z-50">
         <div class="whitespace-nowrap animate-marquee font-bold uppercase tracking-widest text-sm">
-            ● MEMBERSHIP REGISTRATION ONGOING// ● WEZI WA MALI YA UMA WATANYONGWA // TINGIZA MTI // ● JOIN THE ROOTS WAVE // ● GEN Z // ● READY FOR THE HEMP PRODUCTION
+            ● MEMBERSHIP REGISTRATION ONGOING// ● WEZI WA MALI YA UMA WATANYONGWA // TINGIZA MTI // ● JOIN THE ROOTS WAVE // ● GEN Z // ● PREPARING KENYA FOR THE GREEN GOLD RUSH
         </div>
     </div>
 
@@ -303,7 +303,7 @@
                             <div>
                                 <p class="uppercase text-gray-500 text-xs tracking-widest mb-1">Headquarters</p>
                                 <p class="leading-tight">Cara House, Karen Road<br>Nairobi, Kenya</p>
-                                <a href="https://maps.google.com/?q=Cara+House,+Karen+Road,+Nairobi" target="_blank" class="text-roots-red text-sm hover:text-white transition-colors mt-2 inline-flex items-center gap-1">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Cara+House,+Karen+Road,+Nairobi" target="_blank" class="text-roots-red text-sm hover:text-white transition-colors mt-2 inline-flex items-center gap-1">
                                     Get Directions 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" /></svg>
                                 </a>
@@ -404,5 +404,10 @@
             event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
         });
     </script>
+    <!-- Floating Action Button (FAB) -->
+    <a href="{% url 'join' %}" class="fixed bottom-6 right-6 z-50 bg-roots-red text-white w-16 h-16 rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:scale-110 active:scale-95 transition-all md:bottom-12 md:right-12" aria-label="Join Now">
+        <span class="font-black text-xs uppercase text-center leading-none">Join<br>Now</span>
+    </a>
+
 </body>
 </html>
