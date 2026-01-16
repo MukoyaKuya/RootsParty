@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -243,3 +243,38 @@ class CarouselImageAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     class Media:
         js = ('js/admin_crop_preview.js',)
+
+@admin.register(Constituency)
+class ConstituencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'county', 'slug')
+    list_filter = ('county',)
+    search_fields = ('name', 'county__name')
+    prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(Aspirant)
+class AspirantAdmin(ImageCroppingMixin, admin.ModelAdmin):
+    list_display = ('name', 'role', 'county', 'constituency', 'is_active')
+    list_filter = ('role', 'is_active', 'county', 'constituency__county')
+    search_fields = ('name', 'county__name', 'constituency__name', 'description')
+    list_editable = ('is_active',)
+    autocomplete_fields = ['county', 'constituency']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('role', 'name', 'is_active')
+        }),
+        ('Jurisdiction', {
+            'fields': ('county', 'constituency', 'ward'),
+            'description': "Select County for Governor/Senator. Select Constituency for MP. Select Ward for MCA."
+        }),
+        ('Media', {
+            'fields': ('profile_image', 'cropping', 'video_url')
+        }),
+        ('Profile', {
+            'fields': ('description', 'manifesto')
+        }),
+        ('Social Media', {
+            'fields': ('social_handle_twitter', 'social_handle_facebook')
+        }),
+    )
+

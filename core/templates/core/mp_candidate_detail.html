@@ -1,0 +1,130 @@
+{% load thumbnail cropping %}
+
+{% block content %}
+<div class="border-b-4 border-roots-black bg-zinc-50 dark:bg-zinc-900 border-t-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center text-sm font-bold uppercase tracking-wider">
+            <a href="{% url 'mp_list' %}" class="hover:text-roots-red transition-colors">Counties</a>
+            <span class="mx-3 text-roots-red">/</span>
+            <a href="{% url 'mp_county_detail' constituency.county.slug %}" class="hover:text-roots-red transition-colors">{{ constituency.county.name }}</a>
+            <span class="mx-3 text-roots-red">/</span>
+            <span class="text-gray-500">{{ constituency.name }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="py-12 bg-white dark:bg-zinc-950 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if candidate %}
+            <!-- Hero Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+                <!-- Image Column -->
+                <div class="lg:col-span-4">
+                    <div class="sticky top-8">
+                        <div class="border-4 border-roots-black bg-gray-200 shadow-[8px_8px_0px_0px_#1a1a1a] mb-6 relative group">
+                            {% if candidate.profile_image %}
+                                <img src="{% cropped_thumbnail candidate 'cropping' %}" alt="{{ candidate.name }}" class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                                <div class="absolute bottom-0 left-0 w-full bg-roots-red text-white py-2 text-center font-black uppercase text-xl leading-none">
+                                    Vote Roots
+                                </div>
+                            {% else %}
+                                <div class="w-full aspect-[4/5] flex items-center justify-center bg-zinc-100">
+                                    <span class="text-8xl text-gray-300">👤</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Connect Box -->
+                        <div class="border-4 border-roots-black bg-white p-6 shadow-[8px_8px_0px_0px_#E60000]">
+                            <h3 class="font-black uppercase text-xl mb-4 flex items-center gap-2">
+                                <span class="w-3 h-3 bg-roots-red block"></span>
+                                Connect
+                            </h3>
+                            <div class="space-y-4">
+                                {% if candidate.social_handle_twitter %}
+                                <a href="https://twitter.com/{{ candidate.social_handle_twitter }}" target="_blank" class="flex items-center gap-3 font-bold hover:text-roots-red transition-colors group">
+                                    <div class="w-8 h-8 bg-black text-white flex items-center justify-center group-hover:bg-roots-red transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/></svg>
+                                    </div>
+                                    @{{ candidate.social_handle_twitter }}
+                                </a>
+                                {% endif %}
+                                {% if candidate.social_handle_facebook %}
+                                <a href="https://facebook.com/{{ candidate.social_handle_facebook }}" target="_blank" class="flex items-center gap-3 font-bold hover:text-roots-red transition-colors group">
+                                    <div class="w-8 h-8 bg-blue-800 text-white flex items-center justify-center group-hover:bg-roots-red transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/></svg>
+                                    </div>
+                                    Facebook
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Column -->
+                <div class="lg:col-span-8 space-y-8">
+                    <!-- Header -->
+                    <div class="border-4 border-roots-black bg-white p-8 shadow-[12px_12px_0px_0px_#1a1a1a] relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-roots-red font-black uppercase tracking-widest text-sm mb-2">Member of Parliament Aspirant</h2>
+                        <h1 class="text-5xl md:text-6xl font-black uppercase leading-none mb-4">{{ candidate.name }}</h1>
+                        <div class="inline-block bg-roots-black text-white px-4 py-1 font-bold uppercase tracking-widest text-sm">
+                            {{ constituency.name }} Constituency
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="prose prose-xl dark:prose-invert max-w-none font-medium leading-relaxed text-gray-800 dark:text-gray-200">
+                        {{ candidate.description|linebreaks }}
+                    </div>
+
+                    <!-- Video -->
+                    {% if candidate.video_url %}
+                    <div class="border-4 border-roots-black bg-roots-black p-2 shadow-[8px_8px_0px_0px_#E60000]">
+                        <div class="aspect-video">
+                             <iframe class="w-full h-full" src="{{ candidate.get_embed_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Manifesto -->
+                    {% if candidate.manifesto %}
+                    <div class="border-4 border-roots-black bg-white p-8 shadow-[8px_8px_0px_0px_#1a1a1a]">
+                        <div class="flex items-center gap-4 mb-8 border-b-4 border-roots-black pb-4">
+                            <div class="w-12 h-12 bg-roots-red flex items-center justify-center text-white border-2 border-roots-black">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-black uppercase">The Manifesto</h3>
+                        </div>
+                        <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-strong:text-roots-red prose-strong:font-black">
+                            {{ candidate.manifesto|safe }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="max-w-2xl mx-auto text-center py-24">
+                <div class="border-4 border-roots-black bg-white p-12 shadow-[12px_12px_0px_0px_#E60000]">
+                    <div class="text-6xl mb-6">🚧</div>
+                    <h2 class="text-4xl font-black uppercase mb-4">Profile Pending</h2>
+                    <p class="text-xl text-gray-600 mb-8">
+                        The Roots Party candidate for <span class="font-bold text-roots-black">{{ constituency.name }}</span> has not been profiled yet.
+                    </p>
+                    <a href="{% url 'mp_county_detail' constituency.county.slug %}" class="inline-block bg-roots-black text-white px-8 py-3 font-black uppercase hover:bg-roots-red transition-colors border-2 border-roots-black">
+                        &larr; Back to {{ constituency.county.name }}
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

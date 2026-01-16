@@ -45,12 +45,21 @@ INSTALLED_APPS = [
     'django_ratelimit',
     'easy_thumbnails',
     'image_cropping',
+    'ckeditor',
 
     # Local
     'core',
     'users',
     'finance',
+    'rest_framework',
+    'django_filters',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
 
 # Image Cropping Settings
 from easy_thumbnails.conf import Settings as thumbnail_settings
@@ -204,17 +213,27 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# STORAGES Configuration (Django 4.2+)
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+}
+
 # Persistent Storage (Google Cloud Storage) for production
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 if GS_BUCKET_NAME:
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    STORAGES["default"]["BACKEND"] = "storages.backends.gcloud.GoogleCloudStorage"
     GS_DEFAULT_ACL = None  # Use bucket policy
+    GS_QUERYSTRING_AUTH = False # Disable signed URLs (public bucket)
     # Ensure media is served through the bucket
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 

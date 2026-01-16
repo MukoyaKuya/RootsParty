@@ -125,5 +125,20 @@
         </p>
     </div>
 
+    {% if role.get_aspirant_role_key %}
+    <!-- Active Aspirants CTA -->
+    <div class="border-4 border-roots-black bg-white p-8 shadow-[8px_8px_0px_0px_#1a1a1a] text-center">
+        <h2 class="text-3xl font-black uppercase mb-4">
+            Meet The Aspirants
+        </h2>
+        <p class="font-bold text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            View the list of approved candidates running for {{ role.title }} on the Roots Party ticket.
+        </p>
+        <a href="{% url 'aspirant_list' %}?role={{ role.get_aspirant_role_key }}" class="inline-block bg-roots-black text-white px-8 py-4 text-xl font-black uppercase tracking-widest border-2 border-roots-black hover:bg-roots-red hover:border-roots-red transition-colors shadow-[4px_4px_0px_0px_#E60000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
+            View Approved Aspirants &rarr;
+        </a>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}

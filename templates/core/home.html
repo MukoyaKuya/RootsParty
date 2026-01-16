@@ -5,47 +5,54 @@
 
 {% block content %}
 <div class="mt-2 mb-24 space-y-8">
-    
+
     <!-- Hero Header -->
     <header class="border-b-4 border-roots-black pb-8 text-center relative overflow-hidden bg-white">
         <!-- Top Bar -->
         <div class="flex justify-between items-center border-b-2 border-roots-black pb-2 mb-6 px-4">
-            <a href="{% url 'manifesto' %}" class="font-black uppercase text-xs hover:text-roots-red transition-colors tracking-widest">Vol. 420</a>
-            <a href="{% url 'join' %}" class="font-black uppercase text-xs hover:text-roots-red transition-colors tracking-widest">Diaspora Chapter</a>
+            <a href="{% url 'manifesto' %}"
+                class="font-black uppercase text-xs hover:text-roots-red transition-colors tracking-widest">Vol. 420</a>
+            <a href="{% url 'join' %}"
+                class="font-black uppercase text-xs hover:text-roots-red transition-colors tracking-widest">Diaspora
+                Chapter</a>
             <span class="font-black uppercase text-xs tracking-widest text-roots-red">Tingiza Mti</span>
         </div>
-        
-        <div class="md:flex md:items-center md:items-start md:justify-center md:gap-12 p-8 md:p-12 border-b-4 border-roots-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] min-h-[50vh]">
+
+        <div
+            class="md:flex md:items-center md:items-start md:justify-center md:gap-12 p-8 md:p-12 border-b-4 border-roots-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] min-h-[50vh]">
             <!-- Logo Section -->
-            <div class="relative flex flex-col items-center mb-12 md:mb-0 transform hover:scale-105 transition-transform duration-500 group shrink-0">
+            <div
+                class="relative flex flex-col items-center mb-12 md:mb-0 transform hover:scale-105 transition-transform duration-500 group shrink-0">
                 <div class="relative z-10 p-2">
-                     <img src="/static/images/logo.png" 
-                     id="roots-logo"
-                     alt="Roots Party Logo" 
-                     class="w-48 h-48 md:w-64 md:h-64 object-contain animate-palpate group-hover:animate-none transition-all cursor-pointer drop-shadow-2xl" loading="lazy">
+                    <img src="/static/images/logo.png" id="roots-logo" alt="Roots Party Logo"
+                        class="w-48 h-48 md:w-64 md:h-64 object-contain animate-palpate group-hover:animate-none transition-all cursor-pointer drop-shadow-2xl"
+                        loading="lazy">
                 </div>
-                
+
                 <!-- Official Platform Badge -->
                 <div class="absolute -bottom-6 z-20">
-                    <span class="bg-roots-black text-white px-4 py-1 font-black uppercase text-base border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000] whitespace-nowrap tracking-wider rotate-0">
+                    <span
+                        class="bg-roots-black text-white px-4 py-1 font-black uppercase text-base border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000] whitespace-nowrap tracking-wider rotate-0">
                         ★ Official Platform ★
                     </span>
                 </div>
             </div>
-            
+
             <!-- Content Section -->
             <div class="mt-4 md:mt-0 relative max-w-3xl w-full flex flex-col md:items-start items-center">
-                <h1 class="font-black uppercase text-xl md:text-2xl mb-4 leading-none text-center md:text-left text-roots-black tracking-widest">
+                <h1
+                    class="font-black uppercase text-xl md:text-2xl mb-4 leading-none text-center md:text-left text-roots-black tracking-widest">
                     Welcome to the
                 </h1>
-                
+
                 <div class="mb-4 transform -rotate-1 origin-left">
-                     <span class="text-white bg-roots-red px-6 py-4 inline-block font-black text-5xl md:text-7xl uppercase border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a]">
+                    <span
+                        class="text-white bg-roots-red px-6 py-4 inline-block font-black text-5xl md:text-7xl uppercase border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a]">
                         Roots Party
-                     </span>
+                    </span>
                 </div>
-                
-                
+
+
             </div>
         </div>
     </header>
@@ -63,40 +70,36 @@
                 The Roots Party is a movement for economic liberation
             </p>
         </div>
-        
+
         <!-- Image/Video Carousel -->
         {% if carousel_images %}
         <div class="relative bg-gray-100 border-b-4 border-roots-black overflow-hidden">
             <div class="carousel-container relative h-64 md:h-[500px]">
                 <!-- Carousel Slides -->
                 {% for image in carousel_images %}
-                <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000" data-slide="{{ forloop.counter0 }}">
-                    <img src="{% cropped_thumbnail image 'cropping' %}" alt="{{ image.title }}" class="w-full h-full object-cover" onerror="this.src='/static/images/logo.png'; this.classList.add('object-contain', 'p-8');">
+                <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000"
+                    data-slide="{{ forloop.counter0 }}">
+                    <img src="{% cropped_thumbnail image 'cropping' %}" alt="{{ image.title }}"
+                        class="w-full h-full object-cover"
+                        onerror="this.src='/static/images/logo.png'; this.classList.add('object-contain', 'p-8');">
                 </div>
                 {% endfor %}
-                
-                <!-- Navigation Arrows -->
-                {% if carousel_images|length > 1 %}
-                <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-roots-red text-white border-4 border-roots-black w-14 h-14 flex items-center justify-center font-black text-2xl hover:bg-roots-black transition-all shadow-[4px_4px_0px_0px_#1a1a1a] z-10">
-                    ‹
-                </button>
-                <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-roots-red text-white border-4 border-roots-black w-14 h-14 flex items-center justify-center font-black text-2xl hover:bg-roots-black transition-all shadow-[4px_4px_0px_0px_#1a1a1a] z-10">
-                    ›
-                </button>
-                {% endif %}
+
             </div>
-            
+
             <!-- Carousel Dots -->
             {% if carousel_images|length > 1 %}
             <div class="flex justify-center gap-3 py-4 bg-white border-t-4 border-roots-black">
                 {% for image in carousel_images %}
-                <button onclick="goToSlide({{ forloop.counter0 }})" class="carousel-dot w-4 h-4 border-2 border-roots-black bg-white transition-all shadow-[2px_2px_0px_0px_#1a1a1a]" data-dot="{{ forloop.counter0 }}"></button>
+                <button onclick="goToSlide({{ forloop.counter0 }})"
+                    class="carousel-dot w-4 h-4 border-2 border-roots-black bg-white transition-all shadow-[2px_2px_0px_0px_#1a1a1a]"
+                    data-dot="{{ forloop.counter0 }}"></button>
                 {% endfor %}
             </div>
             {% endif %}
         </div>
         {% endif %}
-        
+
         <div class="p-6 md:p-12 space-y-16 max-w-7xl mx-auto">
             <!-- Our Mission -->
             <!-- Executive Mission Statement -->
@@ -104,7 +107,8 @@
                 <h3 class="text-sm font-black uppercase text-gray-500 tracking-widest mb-6">Our Mission</h3>
                 <div>
                     <p class="text-2xl md:text-4xl text-gray-800 leading-relaxed font-bold">
-                        To <span class="text-roots-red">liberate the economy</span> through the legalization of marijuana, snake farming, and potential hyena meat export.
+                        To <span class="text-roots-red">liberate the economy</span> through the legalization of
+                        marijuana, snake farming, and potential hyena meat export.
                     </p>
                 </div>
             </div>
@@ -112,20 +116,27 @@
             <!-- Why Elevate Roots Champions -->
             <div class="pt-8">
                 <div class="text-center mb-12">
-                    <span class="bg-roots-black text-white px-10 py-4 font-black text-3xl md:text-5xl uppercase border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] inline-block transform -rotate-1">
+                    <span
+                        class="bg-roots-black text-white px-10 py-4 font-black text-3xl md:text-5xl uppercase border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] inline-block transform -rotate-1">
                         Why Elevate Roots Champions?
                     </span>
                 </div>
-                
+
                 <div class="grid md:grid-cols-3 gap-8 mt-8">
                     <!-- President -->
-                    <a href="{% url 'role_detail' 'president' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                    <a href="{% url 'role_detail' 'president' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">President</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            President</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             Commander-in-Chief. The symbol of national unity and economic liberation.
                         </p>
@@ -133,244 +144,302 @@
 
 
                     <!-- Governor -->
-                    <a href="{% url 'role_detail' 'governor' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+                    <a href="{% url 'role_detail' 'governor' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">Governor</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            Governor</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             County CEO. The driver of local economic zones and resource management.
                         </p>
                     </a>
 
                     <!-- Senator -->
-                    <a href="{% url 'role_detail' 'senator' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+                    <a href="{% url 'role_detail' 'senator' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">Senator</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            Senator</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             The Protector. Ensures counties get their fair revenue share and oversight.
                         </p>
                     </a>
 
                     <!-- Woman Rep -->
-                    <a href="{% url 'role_detail' 'woman-rep' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    <a href="{% url 'role_detail' 'woman-rep' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">Woman Rep</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            Woman Rep</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             Equity Champion. Focusing on women, youth, and PWD empowerment.
                         </p>
                     </a>
 
                     <!-- MPs -->
-                    <a href="{% url 'role_detail' 'mp' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
+                    <a href="{% url 'role_detail' 'mp' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">MP</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            MP</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             Legislator. Making laws for liberation and overseeing national funds.
                         </p>
                     </a>
 
                     <!-- MCAs -->
-                    <a href="{% url 'role_detail' 'mca' %}" class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                    <a href="{% url 'role_detail' 'mca' %}"
+                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-10 h-10 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                             </svg>
                         </div>
-                        <h4 class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">MCA</h4>
+                        <h4
+                            class="font-black text-2xl uppercase mb-3 leading-none group-hover:text-roots-red transition-colors">
+                            MCA</h4>
                         <p class="font-bold text-base leading-tight text-gray-700">
                             Ward Representative. Your voice at the grassroots regarding local development.
                         </p>
                     </a>
                 </div>
-                </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 
-    <!-- Party Video Section -->
-    <section class="mt-8 border-2 border-roots-black bg-white shadow-[3px_3px_0px_0px_rgba(26,26,26,1)] overflow-hidden">
-        <div class="bg-roots-black text-white px-6 py-4 flex items-center justify-between border-b-2 border-roots-black">
-            <h2 class="text-3xl md:text-4xl font-black uppercase flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-                </svg>
-                Watch Our Movement
-            </h2>
-        </div>
-        
-        <div class="p-6 md:p-8">
-            {% if party_video %}
-                <div class="grid md:grid-cols-2 gap-8 items-start">
-                    <!-- Video Player -->
-                    <div class="relative w-full aspect-video bg-gray-900 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] overflow-hidden">
-                        {% if party_video.video_url %}
-                            <iframe 
-                                src="{{ party_video.get_embed_url }}" 
-                                title="{{ party_video.title }}" 
-                                class="w-full h-full" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerpolicy="origin" 
-                                allowfullscreen>
-                            </iframe>
-                        {% else %}
-                            <div class="absolute inset-0 flex items-center justify-center bg-gray-800">
-                                <div class="text-center text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mx-auto mb-4 opacity-50">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                    </svg>
-                                    <p class="font-bold text-sm">Video Coming Soon</p>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Video Info -->
-                    <div>
-                        <h3 class="font-black text-2xl md:text-3xl uppercase mb-4 leading-tight">
-                            {{ party_video.title }}
-                        </h3>
-                        {% if party_video.description %}
-                        <p class="font-bold text-base md:text-lg mb-6 leading-relaxed border-l-2 border-roots-red pl-4">
-                            {{ party_video.description|linebreaksbr }}
-                        </p>
-                        {% endif %}
-                        
-                        {% if party_video.video_url %}
-                        <a href="{{ party_video.video_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-red-600 text-white font-bold uppercase px-6 py-3 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
-                            <span>Watch on YouTube</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                <!-- Placeholder when no video is set -->
-                <div class="text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-roots-red border-2 border-roots-black flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-white">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+<!-- Party Video Section -->
+<section class="mt-8 border-2 border-roots-black bg-white shadow-[3px_3px_0px_0px_rgba(26,26,26,1)] overflow-hidden">
+    <div class="bg-roots-black text-white px-6 py-4 flex items-center justify-between border-b-2 border-roots-black">
+        <h2 class="text-3xl md:text-4xl font-black uppercase flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
+            Watch Our Movement
+        </h2>
+    </div>
+
+    <div class="p-6 md:p-8">
+        {% if party_video %}
+        <div class="grid md:grid-cols-2 gap-8 items-start">
+            <!-- Video Player -->
+            <div
+                class="relative w-full aspect-video bg-gray-900 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] overflow-hidden">
+                {% if party_video.video_url %}
+                <iframe src="{{ party_video.get_embed_url }}" title="{{ party_video.title }}" class="w-full h-full"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="origin" allowfullscreen>
+                </iframe>
+                {% else %}
+                <div class="absolute inset-0 flex items-center justify-center bg-gray-800">
+                    <div class="text-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-16 h-16 mx-auto mb-4 opacity-50">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
                         </svg>
+                        <p class="font-bold text-sm">Video Coming Soon</p>
                     </div>
-                    <h3 class="font-black text-2xl uppercase mb-2">Party Video Coming Soon</h3>
-                    <p class="font-bold text-gray-600">Check back soon for exclusive party content and rallies</p>
                 </div>
-            {% endif %}
-        </div>
-    </section>
+                {% endif %}
+            </div>
 
-    
-    <!-- Latest News Section -->
-    <section class="mt-8 border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] overflow-hidden">
-        <!-- Header -->
-        <div class="bg-roots-red text-white px-6 py-4 flex items-center justify-between border-b-4 border-roots-black">
-            <h2 class="text-2xl md:text-3xl font-black uppercase flex items-center gap-3">
-                <span class="w-10 h-10 bg-white text-roots-red flex items-center justify-center rounded-none border-2 border-roots-black">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+            <!-- Video Info -->
+            <div>
+                <h3 class="font-black text-2xl md:text-3xl uppercase mb-4 leading-tight">
+                    {{ party_video.title }}
+                </h3>
+                {% if party_video.description %}
+                <p class="font-bold text-base md:text-lg mb-6 leading-relaxed border-l-2 border-roots-red pl-4">
+                    {{ party_video.description|linebreaksbr }}
+                </p>
+                {% endif %}
+
+                {% if party_video.video_url %}
+                <a href="{{ party_video.video_url }}" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 bg-red-600 text-white font-bold uppercase px-6 py-3 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
+                    <span>Watch on YouTube</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                        <path
+                            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                     </svg>
-                </span>
-                Roots Newswire
-            </h2>
-            <a href="/news/" class="inline-flex items-center gap-2 bg-white text-roots-red px-4 py-2 font-black uppercase text-sm border-2 border-roots-black hover:bg-roots-black hover:text-white transition-all">
-                View All
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <!-- Placeholder when no video is set -->
+        <div class="text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
+            <div
+                class="w-20 h-20 mx-auto mb-4 bg-roots-red border-2 border-roots-black flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-10 h-10 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
                 </svg>
-            </a>
+            </div>
+            <h3 class="font-black text-2xl uppercase mb-2">Party Video Coming Soon</h3>
+            <p class="font-bold text-gray-600">Check back soon for exclusive party content and rallies</p>
         </div>
-        
-        <!-- News Grid -->
-        <div class="p-6 md:p-8">
-            {% if latest_posts %}
-                <div class="grid md:grid-cols-3 gap-6">
-                    {% for post in latest_posts %}
-                    <a href="/news/{{ post.slug }}/" class="group block bg-gray-50 border-4 border-roots-black hover:border-roots-red hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#1a1a1a] transition-all duration-300 overflow-hidden">
-                        <!-- Image Placeholder -->
-                        <div class="h-40 bg-gray-200 border-b-4 border-roots-black overflow-hidden relative">
-                            {% if post.image %}
-                                <img src="{% cropped_thumbnail post 'cropping' %}" alt="{{ post.title }}" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500">
-                            {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-100 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-16 h-16 text-gray-400">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-                                    </svg>
-                                </div>
-                            {% endif %}
-                            <!-- Category Badge -->
-                            <span class="absolute top-3 left-3 bg-roots-red text-white px-3 py-1 font-black uppercase text-xs border-2 border-roots-black shadow-[2px_2px_0px_0px_#000]">
-                                {{ post.get_category_display }}
-                            </span>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div class="p-4">
-                            <h3 class="font-black text-lg md:text-xl leading-tight mb-3 group-hover:text-roots-red transition-colors">
-                                {{ post.title }}
-                            </h3>
-                            <p class="text-sm text-gray-600 font-medium leading-relaxed mb-4">
-                                {{ post.excerpt|truncatewords:18 }}
-                            </p>
-                            <!-- Date -->
-                            <div class="flex items-center gap-2 text-xs font-mono font-bold text-gray-400 uppercase">
-                                <div class="w-2 h-2 bg-roots-red rounded-full"></div>
-                                {{ post.created_at|date:"d.m.Y" }}
-                            </div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center py-12 border-4 border-dashed border-gray-300 bg-gray-50">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 border-4 border-roots-black flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-400">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-black text-xl uppercase mb-2 text-gray-500">No News Yet</h3>
-                    <p class="text-gray-400 font-bold">Check back soon for the latest updates!</p>
-                </div>
-            {% endif %}
-        </div>
-    </section>
-    
-    <!-- Quick Links -->
-    <div class="grid grid-cols-2 gap-4">
-        <a href="/manifesto/marijuana/" class="border-2 border-roots-black p-4 bg-roots-red text-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 mb-2">
-               <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
-               <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />
+        {% endif %}
+    </div>
+</section>
+
+
+<!-- Latest News Section -->
+<section class="mt-8 border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] overflow-hidden">
+    <!-- Header -->
+    <div class="bg-roots-red text-white px-6 py-4 flex items-center justify-between border-b-4 border-roots-black">
+        <h2 class="text-2xl md:text-3xl font-black uppercase flex items-center gap-3">
+            <span
+                class="w-10 h-10 bg-white text-roots-red flex items-center justify-center rounded-none border-2 border-roots-black">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+                </svg>
+            </span>
+            Roots Newswire
+        </h2>
+        <a href="/news/"
+            class="inline-flex items-center gap-2 bg-white text-roots-red px-4 py-2 font-black uppercase text-sm border-2 border-roots-black hover:bg-roots-black hover:text-white transition-all">
+            View All
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
+                stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
-            <h3 class="font-black uppercase text-2xl leading-none mb-1">Weed</h3>
-            <p class="font-bold text-sm leading-tight">A multibillion-shilling industry to pay off our debts.</p>
-        </a>
-        <a href="/manifesto/snake-farming/" class="border-2 border-roots-black p-4 bg-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#E60000] transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 mb-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .663-.658v0c0-.355-.186-.676-.401-.959a1.58 1.58 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
-            </svg>
-            <h3 class="font-black uppercase text-2xl leading-none mb-1">Snakes</h3>
-            <p class="font-bold text-sm leading-tight">Snake Farming: A Billion-Shilling Anti-Venom Industry for Kenya.</p>
         </a>
     </div>
-    
-    <!-- CTA -->
+
+    <!-- News Grid -->
+    <div class="p-6 md:p-8">
+        {% if latest_posts %}
+        <div class="grid md:grid-cols-3 gap-6">
+            {% for post in latest_posts %}
+            <a href="/news/{{ post.slug }}/"
+                class="group block bg-gray-50 border-4 border-roots-black hover:border-roots-red hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#1a1a1a] transition-all duration-300 overflow-hidden">
+                <!-- Image Placeholder -->
+                <div class="h-40 bg-gray-200 border-b-4 border-roots-black overflow-hidden relative">
+                    {% if post.image %}
+                    <img src="{% cropped_thumbnail post 'cropping' %}" alt="{{ post.title }}"
+                        class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500">
+                    {% else %}
+                    <div
+                        class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                            stroke="currentColor" class="w-16 h-16 text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <!-- Category Badge -->
+                    <span
+                        class="absolute top-3 left-3 bg-roots-red text-white px-3 py-1 font-black uppercase text-xs border-2 border-roots-black shadow-[2px_2px_0px_0px_#000]">
+                        {{ post.get_category_display }}
+                    </span>
+                </div>
+
+                <!-- Content -->
+                <div class="p-4">
+                    <h3
+                        class="font-black text-lg md:text-xl leading-tight mb-3 group-hover:text-roots-red transition-colors">
+                        {{ post.title }}
+                    </h3>
+                    <p class="text-sm text-gray-600 font-medium leading-relaxed mb-4">
+                        {{ post.excerpt|truncatewords:18 }}
+                    </p>
+                    <!-- Date -->
+                    <div class="flex items-center gap-2 text-xs font-mono font-bold text-gray-400 uppercase">
+                        <div class="w-2 h-2 bg-roots-red rounded-full"></div>
+                        {{ post.created_at|date:"d.m.Y" }}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12 border-4 border-dashed border-gray-300 bg-gray-50">
+            <div
+                class="w-16 h-16 mx-auto mb-4 bg-gray-200 border-4 border-roots-black flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-8 h-8 text-gray-400">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+                </svg>
+            </div>
+            <h3 class="font-black text-xl uppercase mb-2 text-gray-500">No News Yet</h3>
+            <p class="text-gray-400 font-bold">Check back soon for the latest updates!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Quick Links -->
+<div class="grid grid-cols-2 gap-4">
+    <a href="/manifesto/marijuana/"
+        class="border-2 border-roots-black p-4 bg-roots-red text-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-12 h-12 mb-2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />
+        </svg>
+        <h3 class="font-black uppercase text-2xl leading-none mb-1">Weed</h3>
+        <p class="font-bold text-sm leading-tight">A multibillion-shilling industry to pay off our debts.</p>
+    </a>
+    <a href="/manifesto/snake-farming/"
+        class="border-2 border-roots-black p-4 bg-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#E60000] transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-12 h-12 mb-2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .663-.658v0c0-.355-.186-.676-.401-.959a1.58 1.58 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
+        </svg>
+        <h3 class="font-black uppercase text-2xl leading-none mb-1">Snakes</h3>
+        <p class="font-bold text-sm leading-tight">Snake Farming: A Billion-Shilling Anti-Venom Industry for Kenya.</p>
+    </a>
+</div>
+
+<!-- CTA -->
 
 </div>
 
@@ -379,80 +448,141 @@
     .blink {
         animation: blink 1s step-end infinite;
     }
+
     @keyframes blink {
-        50% { opacity: 0; }
+        50% {
+            opacity: 0;
+        }
     }
+
     .outline-text {
-        -webkit-text-stroke: 3px #1a1a1a; 
+        -webkit-text-stroke: 3px #1a1a1a;
         color: #E60000;
     }
+
     /* Palpate (Heartbeat) Animation */
     @keyframes palpate {
-        0% { transform: scale(1); }
-        25% { transform: scale(1.1); }
-        35% { transform: scale(1); }
-        45% { transform: scale(1.1); }
-        60% { transform: scale(1); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(1);
+        }
+
+        25% {
+            transform: scale(1.1);
+        }
+
+        35% {
+            transform: scale(1);
+        }
+
+        45% {
+            transform: scale(1.1);
+        }
+
+        60% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
     }
+
     .animate-palpate {
         animation: palpate 2s infinite ease-in-out;
     }
+
     /* Shake Animation */
     @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-        20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+            transform: translateX(-5px);
+        }
+
+        20%,
+        40%,
+        60%,
+        80% {
+            transform: translateX(5px);
+        }
     }
+
     .shake-active {
-        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
     }
 </style>
 <!-- Welcome Modal -->
-<div id="welcome-modal" class="hidden fixed inset-0 z-[70] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="bg-white border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] p-6 max-w-lg w-full relative transform scale-100 transition-transform animate-[bounce_0.5s_ease-out]">
+<div id="welcome-modal"
+    class="hidden fixed inset-0 z-[70] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div
+        class="bg-white border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] p-6 max-w-lg w-full relative transform scale-100 transition-transform animate-[bounce_0.5s_ease-out]">
         <!-- Close Button (X) -->
-        <button onclick="closeWelcomeModal()" class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-20">
+        <button onclick="closeWelcomeModal()"
+            class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-20">
             X
         </button>
-        
+
         <div class="text-center mb-6">
-             <div class="w-24 h-24 mx-auto border-4 border-roots-black rounded-full overflow-hidden bg-white flex items-center justify-center p-1 mb-4">
+            <div
+                class="w-24 h-24 mx-auto border-4 border-roots-black rounded-full overflow-hidden bg-white flex items-center justify-center p-1 mb-4">
                 <img src="/static/images/logo.png" alt="Logo" class="w-full h-full object-contain">
             </div>
-            <h2 class="text-4xl font-black uppercase mb-2 border-b-4 border-roots-black inline-block bg-roots-black text-white px-2 transform -rotate-2">Karibu Comrade!</h2>
+            <h2
+                class="text-4xl font-black uppercase mb-2 border-b-4 border-roots-black inline-block bg-roots-black text-white px-2 transform -rotate-2">
+                Karibu Comrade!</h2>
         </div>
 
         <p class="font-bold text-lg mb-4 uppercase text-center">
             Welcome to the official digital headquarters of The Roots Party.
         </p>
-        
+
         <div class="bg-gray-100 border-4 border-roots-black p-4 mb-6">
             <p class="font-bold mb-2 uppercase">Our Agenda:</p>
             <ul class="list-none font-bold space-y-2 uppercase text-sm">
                 <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                    </svg>
                     Legalize Marijuana
                 </li>
                 <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056" />
+                    </svg>
                     Snake Farming
                 </li>
                 <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+                    </svg>
                     Hang The Corrupt
                 </li>
             </ul>
         </div>
-        
-        <button onclick="closeWelcomeModal()" class="brutal-btn w-full text-xl hover:bg-roots-black hover:text-white transition-colors">
+
+        <button onclick="closeWelcomeModal()"
+            class="brutal-btn w-full text-xl hover:bg-roots-black hover:text-white transition-colors">
             TINGIZA MTI
         </button>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         if (!localStorage.getItem('roots_visited')) {
             const modal = document.getElementById('welcome-modal');
             modal.classList.remove('hidden');
@@ -462,13 +592,13 @@
         // Logo shake on click
         const logo = document.getElementById('roots-logo');
         if (logo) {
-            logo.addEventListener('click', function() {
+            logo.addEventListener('click', function () {
                 // Remove the class if it exists to restart the animation
                 logo.classList.remove('shake-active');
-                
+
                 // Trigger reflow to restart css animation
                 void logo.offsetWidth;
-                
+
                 // Add the class back
                 logo.classList.add('shake-active');
             });
@@ -485,18 +615,18 @@
             slides.forEach(slide => {
                 slide.style.opacity = '0';
             });
-            
+
             // Remove active state from all dots
             dots.forEach(dot => {
                 dot.classList.remove('bg-roots-red');
                 dot.classList.add('bg-white');
             });
-            
+
             // Show current slide
             if (slides[index]) {
                 slides[index].style.opacity = '1';
             }
-            
+
             // Highlight current dot
             if (dots[index]) {
                 dots[index].classList.remove('bg-white');
@@ -521,7 +651,7 @@
         if (slides.length > 0) {
             showSlide(0);
             startAutoRotate();
-            
+
             // Pause on hover
             const carouselContainer = document.querySelector('.carousel-container');
             if (carouselContainer) {
@@ -531,14 +661,14 @@
         }
 
         // Make functions globally accessible
-        window.changeSlide = function(direction) {
+        window.changeSlide = function (direction) {
             stopAutoRotate();
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             showSlide(currentSlide);
             startAutoRotate();
         };
 
-        window.goToSlide = function(index) {
+        window.goToSlide = function (index) {
             stopAutoRotate();
             currentSlide = index;
             showSlide(currentSlide);
@@ -555,27 +685,25 @@
     function playHomeVideo() {
         const overlay = document.getElementById('video-overlay');
         const player = document.getElementById('video-player');
-        
+
         if (overlay && player) {
             overlay.classList.add('hidden');
             player.classList.remove('hidden');
-            
+
             // Handle Iframe Autoplay
             const iframe = player.querySelector('iframe');
-            if(iframe && iframe.dataset.src) {
+            if (iframe && iframe.dataset.src) {
                 // Check if url already has params
                 const char = iframe.dataset.src.includes('?') ? '&' : '?';
                 iframe.src = iframe.dataset.src + char + "autoplay=1";
             }
-            
+
             // Handle Native Video Play
             const vid = player.querySelector('video');
-            if(vid) vid.play();
+            if (vid) vid.play();
         }
     }
 
 </script>
 
 {% endblock %}
-
-

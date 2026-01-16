@@ -327,13 +327,16 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 
-def contact(request):
-    """Contact form view"""
+async def contact(request):
+    """Contact form view (Async)"""
     success = False
     
     if request.method == 'POST':
         form = ContactForm(request.POST)
-        if form.is_valid():
+        # Form validation touches DB if unique checks exist, so wrap it just in case
+        is_valid = await sync_to_async(form.is_valid)()
+        
+        if is_valid:
             # Get form data
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
@@ -341,8 +344,8 @@ def contact(request):
             subject_choice = form.cleaned_data['subject']
             message_text = form.cleaned_data['message']
             
-            # Save to database
-            ContactMessage.objects.create(
+            # Save to database (Async)
+            await sync_to_async(ContactMessage.objects.create)(
                 name=name,
                 email=email,
                 phone=phone,
@@ -350,7 +353,7 @@ def contact(request):
                 message=message_text
             )
             
-            # Also try to send email notification
+            # Send email notification (Async)
             subject_display = dict(form.fields['subject'].choices).get(subject_choice, subject_choice)
             email_subject = f"[Roots Party Contact] {subject_display} - from {name}"
             email_body = f"""
@@ -370,7 +373,7 @@ View all messages at: /admin/core/contactmessage/
             """
             
             try:
-                send_mail(
+                await sync_to_async(send_mail)(
                     email_subject,
                     email_body,
                     settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else email,
@@ -378,7 +381,7 @@ View all messages at: /admin/core/contactmessage/
                     fail_silently=True,
                 )
             except Exception:
-                pass  # Silently fail if email not configured
+                pass
             
             success = True
             form = ContactForm()  # Reset form
@@ -544,3 +547,66 @@ def terms_of_service(request):
 def cookie_policy(request):
     """View for Cookie Policy"""
     return render(request, 'core/cookie_policy.html')
+
+from .models import Constituency, Aspirant
+
+def mp_list(request):
+    """List of counties for MP selection"""
+    # Only show counties that have constituencies populated
+    from django.db.models import Count, Q
+    
+    # Annotate with count of active MP aspirants
+    counties = County.objects.annotate(
+        c_count=Count('constituencies', distinct=True),
+        aspirant_count=Count('aspirants', filter=Q(aspirants__is_active=True, aspirants__role='mp'), distinct=True)
+    ).filter(c_count__gt=0).order_by('name')
+    
+    return render(request, 'core/mp_list.html', {'counties': counties})
+
+def mp_county_detail(request, slug):
+    """List constituencies in a county"""
+    from django.db.models import Prefetch
+    county = get_object_or_404(County, slug=slug)
+    
+    # Prefetch active MP candidates
+    active_mps = Aspirant.objects.filter(is_active=True, role='mp')
+    constituencies = county.constituencies.prefetch_related(
+        Prefetch('aspirants', queryset=active_mps, to_attr='active_mps')
+    ).order_by('name')
+    
+    return render(request, 'core/mp_county_detail.html', {
+        'county': county,
+        'constituencies': constituencies
+    })
+
+def mp_candidate_detail(request, constituency_slug):
+    """Detail view for MP Candidate (Now Aspirant type MP)"""
+    constituency = get_object_or_404(Constituency, slug=constituency_slug)
+    # Get the active MP aspirant
+    candidate = Aspirant.objects.filter(constituency=constituency, role='mp', is_active=True).first()
+    
+    return render(request, 'core/mp_candidate_detail.html', {
+        'constituency': constituency,
+        'candidate': candidate
+    })
+
+def aspirant_list(request):
+    """List all aspirants with filtering"""
+    role = request.GET.get('role', 'all')
+    aspirants = Aspirant.objects.filter(is_active=True)
+    
+    if role != 'all':
+        aspirants = aspirants.filter(role=role)
+        
+    # Order by role priority then name
+    # We can't easily order by choice display, so we rely on model ordering
+    
+    return render(request, 'core/aspirant_list.html', {
+        'aspirants': aspirants,
+        'current_role': role
+    })
+
+def aspirant_detail(request, aspirant_id):
+    """Generic detail view for any aspirant"""
+    aspirant = get_object_or_404(Aspirant, id=aspirant_id)
+    return render(request, 'core/aspirant_detail.html', {'aspirant': aspirant})

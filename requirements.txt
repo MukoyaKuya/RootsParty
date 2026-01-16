@@ -118,3 +118,8 @@ virtualenv==20.35.4
 whitenoise==6.11.0
 zope.event==6.1
 zope.interface==8.1.1
+django-image-cropping==1.7
+easy-thumbnails
+djangorestframework
+django-filter
+

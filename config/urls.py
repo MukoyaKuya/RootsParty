@@ -92,11 +92,21 @@ urlpatterns += [
     path('counties/', core_views.counties, name='counties'),
     path('counties/map/', core_views.county_map, name='county_map'),
     path('counties/<slug:slug>/', core_views.county_detail, name='county_detail'),
+    # Aspirants
+    path('aspirants/', core_views.aspirant_list, name='aspirant_list'),
+    path('aspirants/<int:aspirant_id>/', core_views.aspirant_detail, name='aspirant_detail'),
+
+    # MP Roles
+    path('roles/mp/', core_views.mp_list, name='mp_list'),
+    path('roles/mp/<slug:county_slug>/', core_views.mp_county_detail, name='mp_county_detail'),
+    path('roles/mp/constituency/<slug:constituency_slug>/', core_views.mp_candidate_detail, name='mp_candidate_detail'),
     
     # Legal Pages
     path('privacy-policy/', core_views.privacy_policy, name='privacy_policy'),
     path('terms-of-service/', core_views.terms_of_service, name='terms_of_service'),
     path('cookie-policy/', core_views.cookie_policy, name='cookie_policy'),
+    # API
+    path('api/v1/', include('core.api.urls')),
 ]
 
 from django.conf import settings

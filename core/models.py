@@ -446,6 +446,18 @@ class LeadershipRole(models.Model):
 
         return self.video_url
 
+    def get_aspirant_role_key(self):
+        """Map leadership role slug to aspirant role choice"""
+        slug_map = {
+            'president': 'president',
+            'governor': 'governor',
+            'senator': 'senator',
+            'woman-rep': 'woman_rep',
+            'mp': 'mp',
+            'mca': 'mca',
+        }
+        return slug_map.get(self.slug)
+
 
 class CarouselImage(models.Model):
     """Model for homepage carousel images"""
@@ -464,3 +476,95 @@ class CarouselImage(models.Model):
     
     def __str__(self):
         return self.title
+
+class Constituency(models.Model):
+    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='constituencies')
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Constituencies'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            # Ensure unique slug by appending county name if needed
+            base_slug = slugify(self.name)
+            self.slug = base_slug
+            
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} ({self.county.name})"
+
+
+class Aspirant(models.Model):
+    ROLE_CHOICES = (
+        ('president', 'President'),
+        ('governor', 'Governor'),
+        ('senator', 'Senator'),
+        ('woman_rep', 'Woman Representative'),
+        ('mp', 'Member of Parliament'),
+        ('mca', 'Member of County Assembly'),
+    )
+    
+    name = models.CharField(max_length=200)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='mp')
+    
+    # Jurisdiction
+    county = models.ForeignKey(County, on_delete=models.SET_NULL, null=True, blank=True, related_name='aspirants', help_text="Required for Governor, Senator, Woman Rep")
+    constituency = models.ForeignKey(Constituency, on_delete=models.SET_NULL, null=True, blank=True, related_name='aspirants', help_text="Required for MP")
+    ward = models.CharField(max_length=200, blank=True, help_text="Required for MCA")
+    
+    # Media
+    profile_image = models.ImageField(upload_to='aspirants/', blank=True, null=True, help_text="Candidate Photo")
+    from image_cropping import ImageRatioField
+    cropping = ImageRatioField('profile_image', '400x400', help_text="Crop for optimal display (Square)")
+    
+    description = models.TextField(blank=True, help_text="Short bio or description")
+    video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo link")
+    
+    # Detailed profile content
+    from ckeditor.fields import RichTextField
+    manifesto = RichTextField(blank=True, help_text="Candidate's specific manifesto")
+    
+    social_handle_twitter = models.CharField(max_length=100, blank=True)
+    social_handle_facebook = models.CharField(max_length=100, blank=True)
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['role', 'name']
+
+    def __str__(self):
+        ctx = ""
+        if self.constituency: ctx = f" ({self.constituency.name})"
+        elif self.county: ctx = f" ({self.county.name})"
+        return f"{self.name} - {self.get_role_display()}{ctx}"
+
+    def get_embed_url(self):
+        """Convert standard YouTube/Vimeo URLs to embed URLs"""
+        if not self.video_url:
+            return None
+        
+        import re
+        youtube_regex = (
+            r'(?:https?:\/\/)?(?:www\.)?'
+            r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
+            r'([a-zA-Z0-9_-]{11})'
+        )
+        match = re.search(youtube_regex, self.video_url)
+        if match:
+            video_id = match.group(1)
+            return f"https://www.youtube.com/embed/{video_id}?rel=0"
+            
+        if 'vimeo.com' in self.video_url:
+             video_id = self.video_url.split('/')[-1]
+             if video_id.isdigit():
+                 return f"https://player.vimeo.com/video/{video_id}"
+
+        return self.video_url
+
+        return self.video_url
