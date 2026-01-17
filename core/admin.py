@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage
 
 class LeaderImageInline(admin.TabularInline):
     model = LeaderImage
@@ -277,4 +277,11 @@ class AspirantAdmin(ImageCroppingMixin, admin.ModelAdmin):
             'fields': ('social_handle_twitter', 'social_handle_facebook')
         }),
     )
+
+@admin.register(FloatingImage)
+class FloatingImageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'position', 'is_active', 'created_at')
+    list_filter = ('position', 'is_active')
+    list_editable = ('is_active',)
+    search_fields = ('name',)
 

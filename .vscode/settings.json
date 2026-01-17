@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "**/templates/**/*.html": "django-html",
+        "**/templates/**/*.txt": "django-txt"
+    },
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
+    "[django-html]": {
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": true,
+            "strings": true
+        }
+    }
+}

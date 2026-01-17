@@ -1,4 +1,4 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole, CarouselImage
+from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole, CarouselImage, FloatingImage
 from users.models import Member
 from django.core.cache import cache
 
@@ -36,6 +36,9 @@ def home(request):
     
     # Get active carousel images
     carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order', '-created_at')
+    
+    # Get active floating hero image
+    floating_image = FloatingImage.objects.filter(is_active=True, position='hero_right').first()
 
     context = {
         'featured_posts': featured_posts,
@@ -43,6 +46,7 @@ def home(request):
         'video': video,
         'party_video': video,  # For the party video section
         'carousel_images': carousel_images,
+        'floating_image': floating_image,
         **stats
     }
     

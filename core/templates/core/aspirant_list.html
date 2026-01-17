@@ -122,7 +122,7 @@
                 <!-- Image Section -->
                 <div class="aspect-square border-b-4 border-roots-black overflow-hidden relative">
                     {% if aspirant.profile_image %}
-                    <img src="{% cropped_thumbnail aspirant 'cropping' %}" alt="{{ aspirant.name }}"
+                    <img src="{{ aspirant.profile_image.url }}" alt="{{ aspirant.name }}"
                         class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500">
                     <!-- Red Overlay on Hover -->
                     <div

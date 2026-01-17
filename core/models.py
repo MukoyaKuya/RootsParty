@@ -568,3 +568,23 @@ class Aspirant(models.Model):
         return self.video_url
 
         return self.video_url
+
+
+class FloatingImage(models.Model):
+    """Floating images for hero section"""
+    POSITION_CHOICES = (
+        ('hero_right', 'Hero Section (Right)'),
+        ('hero_left', 'Hero Section (Left)'),
+    )
+    
+    name = models.CharField(max_length=100, help_text="Internal name for identification")
+    image = models.ImageField(upload_to='floating/', help_text="Use transparent PNG for best results")
+    position = models.CharField(max_length=20, choices=POSITION_CHOICES, default='hero_right')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.name} ({self.get_position_display()})"
