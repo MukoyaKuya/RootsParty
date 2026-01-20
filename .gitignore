@@ -3,6 +3,18 @@ __pycache__/
 *.pyc
 db.sqlite3
 .env
+.env.local
+.env.*.local
+*.env
+env.yaml
 .DS_Store
 staticfiles/
 media/
+
+# Secret files
+secrets/
+*.pem
+*.key
+*.cert
+service-account*.json
+
