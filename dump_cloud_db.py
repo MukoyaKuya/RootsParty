@@ -7,7 +7,14 @@ from pathlib import Path
 
 # Setup Django setup
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-os.environ['DATABASE_URL'] = "postgresql://neondb_owner:npg_aPjBTZvw8cD2@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Set env var for Django to pick up
+if not os.environ.get('DATABASE_URL'):
+     print("Warning: DATABASE_URL not found in environment, Django settings might fail if not configured elsewhere.")
 
 django.setup()
 

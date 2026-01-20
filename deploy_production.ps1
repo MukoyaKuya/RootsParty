@@ -38,15 +38,18 @@ Write-Host ""
 Write-Host "[2/8] Generating Production Secrets..." -ForegroundColor Yellow
 Write-Host ""
 
-$SECRET_KEY = "zRJDe4J1iFBclPm02nMepyA0y1hDXD7DsVOqLNcIlPGjXdAFOkQnu_2RhV3S0PsecRE"
-Write-Host "✅ Using pre-generated SECRET_KEY" -ForegroundColor Green
-Write-Host "   SECRET_KEY: $SECRET_KEY" -ForegroundColor Gray
+$SECRET_KEY = $env:SECRET_KEY
+if (-not $SECRET_KEY) {
+    Write-Host "⚠️ SECRET_KEY not found in environment" -ForegroundColor Yellow
+}
 Write-Host ""
 
 # Step 3: Database Credentials (Configured)
 Write-Host "[3/8] Database Credentials" -ForegroundColor Yellow
-$DATABASE_URL = "postgresql://neondb_owner:npg_cpnAUgjQ95VO@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-Write-Host "✅ Database URL configured" -ForegroundColor Green
+$DATABASE_URL = $env:DATABASE_URL
+if (-not $DATABASE_URL) {
+    Write-Host "⚠️ DATABASE_URL not found in environment" -ForegroundColor Yellow
+}
 Write-Host ""
 
 
@@ -107,7 +110,6 @@ gcloud run deploy $SERVICE_NAME `
     --platform managed `
     --region $REGION `
     --allow-unauthenticated `
-    --env-vars-file "env.yaml" `
     --memory 512Mi `
     --cpu 1 `
     --max-instances 10 `

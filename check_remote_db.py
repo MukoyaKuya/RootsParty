@@ -1,10 +1,16 @@
 import os
 import dj_database_url
 import psycopg2
+from dotenv import load_dotenv
 
-DATABASE_URL = "postgresql://neondb_owner:npg_cpnAUgjQ95VO@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+load_dotenv()
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 try:
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL environment variable is not set")
+
     print(f"Connecting to {DATABASE_URL[:20]}...")
     config = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     

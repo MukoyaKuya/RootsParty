@@ -1,9 +1,15 @@
 import os
 import django
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Setup Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-os.environ["DATABASE_URL"] = "postgresql://neondb_owner:npg_aPjBTZvw8cD2@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+if not os.environ.get("DATABASE_URL"):
+    raise ValueError("DATABASE_URL must be set in .env")
 django.setup()
 
 from core.models import PageContent
