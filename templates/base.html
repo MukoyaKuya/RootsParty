@@ -24,8 +24,32 @@
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="apple-touch-icon" href="/static/images/logo-192.png">
 
-    <!-- Tailwind CSS (Static) -->
-    <link rel="stylesheet" href="{% static 'css/input.css' %}">
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        roots: {
+                            black: '#000000',
+                            red: '#E60000',
+                            white: '#FFFFFF',
+                            green: '#22c55e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Oswald', 'system-ui', 'sans-serif'],
+                        display: ['Oswald', 'system-ui', 'sans-serif'],
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                        '4': '4px',
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
         body {
