@@ -2,16 +2,18 @@
 module.exports = {
   content: [
     './templates/**/*.html',
-    './**/forms.py',
-    './**/views.py',
+    './core/templates/**/*.html',
+    './users/templates/**/*.html',
+    './finance/templates/**/*.html',
   ],
   theme: {
     extend: {
       colors: {
         roots: {
-          black: '#1a1a1a',
+          black: '#000000',
           red: '#E60000',
           white: '#FFFFFF',
+          green: '#22c55e',
         }
       },
       fontFamily: {
@@ -22,7 +24,7 @@ module.exports = {
         '3': '3px',
         '4': '4px',
       }
-    },
+    }
   },
   plugins: [],
 }

@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Roots Party - TINGIZA MTI{% endblock %}</title>
 
-    <!-- Google Fonts: Oswald -->
+    <!-- Google Fonts: Oswald (Optimized) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
-    <!-- HTMX -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"
+    <!-- HTMX (Deferred) -->
+    <script defer src="https://unpkg.com/htmx.org@1.9.10"
         integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
         crossorigin="anonymous"></script>
 
@@ -23,32 +24,8 @@
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="apple-touch-icon" href="/static/images/logo-192.png">
 
-    <!-- Tailwind CSS (CDN for Dev) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        roots: {
-                            black: '#000000',
-                            red: '#E60000',
-                            white: '#FFFFFF',
-                            green: '#22c55e',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Oswald', 'system-ui', 'sans-serif'],
-                        display: ['Oswald', 'system-ui', 'sans-serif'],
-                    },
-                    borderWidth: {
-                        '3': '3px',
-                        '4': '4px',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (Static) -->
+    <link rel="stylesheet" href="{% static 'css/input.css' %}">
 
     <style>
         body {
@@ -283,25 +260,12 @@
     </nav>
 
     <style>
-        .grid-bg {
-            background-size: 40px 40px;
-            background-image:
-                linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(100%);
-            }
-
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        .animate-marquee {
-            animation: marquee 40s linear infinite;
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 
@@ -490,24 +454,8 @@
 
     {% block extra_js %}{% endblock %}
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed: ', error);
-                    });
-            });
-        }
-
-        // Ensure CSRF token is sent with HTMX requests
-        document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-        });
-    </script>
+    <!-- Service Worker & HTMX Config (Deferred) -->
+    <script defer src="{% static 'js/app.js' %}"></script>
 
 
 </body>

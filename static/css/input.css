@@ -1,3 +1,99 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom Tailwind Configuration */
+@layer utilities {
+    /* Roots Colors */
+    .bg-roots-white { background-color: #FFFFFF; }
+    .bg-roots-black { background-color: #000000; }
+    .bg-roots-red { background-color: #E60000; }
+    .bg-roots-green { background-color: #22c55e; }
+    
+    .text-roots-white { color: #FFFFFF; }
+    .text-roots-black { color: #000000; }
+    .text-roots-red { color: #E60000; }
+    .text-roots-green { color: #22c55e; }
+    
+    .border-roots-white { border-color: #FFFFFF; }
+    .border-roots-black { border-color: #000000; }
+    .border-roots-red { border-color: #E60000; }
+    .border-roots-green { border-color: #22c55e; }
+    
+    /* Border Widths */
+    .border-3 { border-width: 3px; }
+    .border-4 { border-width: 4px; }
+    .border-t-8 { border-top-width: 8px; }
+    .border-b-4 { border-bottom-width: 4px; }
+    .border-r-4 { border-right-width: 4px; }
+    .border-l-4 { border-left-width: 4px; }
+}
+
+/* Custom Styles */
+body {
+    background-color: #FFFFFF;
+    color: #000000;
+    font-family: 'Oswald', sans-serif;
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline-block;
+}
+
+.htmx-request.htmx-indicator {
+    display: inline-block;
+}
+
+/* Brutalist Utilities */
+.brutal-border {
+    border: 4px solid #000000;
+}
+
+.brutal-btn {
+    background-color: #E60000;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: 4px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    transition: all 0.1s;
+}
+
+.brutal-btn:active {
+    box-shadow: 0px 0px 0px #000000;
+    transform: translate(4px, 4px);
+}
+
+.grid-bg {
+    background-size: 40px 40px;
+    background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-marquee {
+    animation: marquee 40s linear infinite;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

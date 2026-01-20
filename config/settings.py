@@ -304,6 +304,16 @@ STORAGES = {
 if DEBUG:
     STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
+# WhiteNoise Configuration for Performance
+WHITENOISE_COMPRESS_OFFLINE = True  # Pre-compress static files
+WHITENOISE_COMPRESS_OFFLINE_MANIFEST = "staticfiles.json"
+WHITENOISE_USE_FINDERS = DEBUG  # Only use finders in development
+WHITENOISE_MAX_AGE = 31536000  # 1 year cache for static files (immutable)
+WHITENOISE_ALLOW_ALL_ORIGINS = False  # Security: only allow same-origin
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz', 'bz2', 'tbz', 'xz', 'br', 'swf', 'flv', 'woff', 'woff2')
+WHITENOISE_ADD_HEADERS_FUNCTION = None  # Use default headers
+
+
 # Persistent Storage (Google Cloud Storage) for production
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 if GS_BUCKET_NAME:
