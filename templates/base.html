@@ -1,5 +1,6 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
 
 <head>
     <meta charset="UTF-8">
@@ -19,6 +20,7 @@
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#1a1a1a">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="apple-touch-icon" href="/static/images/logo-192.png">
 
     <!-- Tailwind CSS (CDN for Dev) -->
@@ -29,7 +31,7 @@
                 extend: {
                     colors: {
                         roots: {
-                            black: '#1a1a1a',
+                            black: '#000000',
                             red: '#E60000',
                             white: '#FFFFFF',
                             green: '#22c55e',
@@ -51,7 +53,7 @@
     <style>
         body {
             background-color: #FFFFFF;
-            color: #1a1a1a;
+            color: #000000;
             font-family: 'Oswald', sans-serif;
         }
 
@@ -69,7 +71,7 @@
 
         /* Brutalist Utilities */
         .brutal-border {
-            border: 4px solid #1a1a1a;
+            border: 4px solid #000000;
         }
 
         .brutal-btn {
@@ -78,20 +80,20 @@
             font-weight: 700;
             text-transform: uppercase;
             padding: 12px 24px;
-            border: 4px solid #1a1a1a;
-            box-shadow: 4px 4px 0px #1a1a1a;
+            border: 4px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
             transition: all 0.1s;
         }
 
         .brutal-btn:active {
-            box-shadow: 0px 0px 0px #1a1a1a;
+            box-shadow: 0px 0px 0px #000000;
             transform: translate(4px, 4px);
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="bg-roots-white text-roots-black min-h-screen grid-bg">
+<body class="bg-roots-white text-roots-black min-h-screen grid-bg overflow-x-hidden">
 
     <!-- Global Loader -->
     <div id="global-loader" class="htmx-indicator fixed top-4 right-4 z-[60]">
@@ -108,7 +110,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-md mx-auto p-4 mt-12 md:max-w-none md:ml-64 md:mt-20 md:p-12 md:mr-0 transition-all">
+    <main class="max-w-md mx-auto p-4 mt-12 md:max-w-none xl:ml-64 md:mt-20 md:p-12 md:mr-0 transition-all">
         {% if messages %}
         <div class="mb-8 space-y-4">
             {% for message in messages %}
@@ -126,7 +128,7 @@
 
     <!-- Desktop Sidebar (Visible on md+) -->
     <nav
-        class="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 bg-roots-black border-r-4 border-roots-black z-[60] pt-20">
+        class="hidden xl:flex flex-col fixed left-0 top-0 h-full w-64 bg-roots-black border-r-4 border-roots-black z-[60] pt-20">
         <div class="px-6 pb-6">
             <h2 class="text-white font-black uppercase text-4xl tracking-tighter leading-none">
                 Roots<br><span class="text-roots-red">Party</span>
@@ -153,6 +155,8 @@
                 </svg>
                 <span class="font-bold uppercase tracking-widest text-lg">About</span>
             </a>
+
+
 
 
             <a href="/events/"
@@ -194,15 +198,24 @@
                 </svg>
                 <span class="font-bold uppercase tracking-widest text-lg">Resources</span>
             </a>
+
+            <a href="/join/"
+                class="group flex items-center px-6 py-4 text-roots-red bg-roots-black hover:bg-roots-red hover:text-white transition-all border-b border-gray-800 border-l-4 border-l-roots-red">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                    stroke="currentColor" class="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                </svg>
+                <span class="font-black uppercase tracking-widest text-lg">JOIN PARTY</span>
+            </a>
         </div>
     </nav>
 
     <!-- Mobile Sticky Bottom Navigation (Visible on < md) -->
     <nav
-        class="md:hidden fixed bottom-0 left-0 w-full bg-roots-white border-t-4 border-roots-black z-40 overflow-hidden">
+        class="xl:hidden fixed bottom-0 left-0 w-full bg-roots-white border-t-4 border-roots-black z-40 overflow-hidden">
         <div class="flex items-stretch overflow-x-auto h-20 w-full snap-x snap-mandatory scrollbar-hide">
             <a href="/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -211,7 +224,7 @@
                 <span class="text-[9px] font-black uppercase tracking-widest">Home</span>
             </a>
             <a href="/about/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -219,9 +232,18 @@
                 </svg>
                 <span class="text-[9px] font-black uppercase tracking-widest">About</span>
             </a>
+            
+            <a href="/join/"
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black bg-roots-black/5 text-roots-red hover:bg-roots-red hover:text-white transition-all duration-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                    stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                </svg>
+                <span class="text-[9px] font-black uppercase tracking-widest">JOIN</span>
+            </a>
 
             <a href="/events/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -230,7 +252,7 @@
                 <span class="text-[9px] font-black uppercase tracking-widest">Rallies</span>
             </a>
             <a href="/donate/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -239,7 +261,7 @@
                 <span class="text-[9px] font-black uppercase tracking-widest">Fund</span>
             </a>
             <a href="/shop/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -248,7 +270,7 @@
                 <span class="text-[9px] font-black uppercase tracking-widest">Shop</span>
             </a>
             <a href="/resources/"
-                class="snap-start min-w-[20%] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
+                class="snap-start flex-1 min-w-[70px] flex-shrink-0 group flex flex-col items-center justify-center border-r-2 border-roots-black hover:bg-roots-black hover:text-white transition-all duration-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -264,8 +286,8 @@
         .grid-bg {
             background-size: 40px 40px;
             background-image:
-                linear-gradient(to right, rgba(26, 26, 26, 0.1) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(26, 26, 26, 0.1) 1px, transparent 1px);
+                linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
         }
 
         @keyframes marquee {
@@ -285,25 +307,25 @@
 
     <!-- Official Footer -->
     <footer
-        class="bg-roots-black text-white border-t-8 border-roots-red mt-auto relative overflow-hidden md:ml-64 transition-all">
+        class="bg-roots-black text-white border-t-8 border-roots-red mt-auto relative overflow-hidden xl:ml-64 transition-all">
         <!-- Newsletter Section -->
         <div class="border-b-4 border-white/20">
             <div class="container mx-auto px-6 md:px-12 py-12">
                 <div class="lg:flex items-center justify-between gap-12">
-                    <div class="max-w-2xl mb-8 lg:mb-0">
-                        <h3 class="text-3xl md:text-4xl font-black uppercase mb-3 leading-none">Sign up for our
+                    <div class="max-w-2xl mb-8 lg:mb-0 w-full">
+                        <h3 class="text-2xl md:text-4xl font-black uppercase mb-3 leading-none">Sign up for our
                             newsletter!</h3>
-                        <p class="font-bold text-gray-400 text-lg">Get the latest updates from the movement directly to
+                        <p class="font-bold text-gray-400 text-base md:text-lg">Get the latest updates from the movement directly to
                             your inbox.</p>
                     </div>
                     <form hx-post="{% url 'subscribe' %}" hx-swap="outerHTML"
-                        class="flex-1 w-full max-w-lg flex gap-0 shrink-0">
+                        class="flex-1 w-full max-w-lg flex flex-col sm:flex-row gap-2 sm:gap-0 shrink-0">
                         {% csrf_token %}
                         <input type="email" name="email" placeholder="Enter your email"
                             class="w-full bg-white text-roots-black px-6 py-4 font-bold uppercase focus:outline-none border-4 border-transparent focus:border-roots-red min-w-0"
                             required aria-label="Email Address">
                         <button type="submit"
-                            class="bg-roots-red text-white px-6 md:px-8 py-4 font-black uppercase border-4 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap">
+                            class="bg-roots-red text-white px-6 md:px-8 py-4 font-black uppercase border-4 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap w-full sm:w-auto">
                             Sign Up
                         </button>
                     </form>
@@ -486,12 +508,7 @@
             event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
         });
     </script>
-    <!-- Floating Action Button (FAB) -->
-    <a href="{% url 'join' %}"
-        class="fixed bottom-6 right-6 z-50 bg-roots-red text-white w-16 h-16 rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:scale-110 active:scale-95 transition-all md:bottom-12 md:right-12"
-        aria-label="Join Now">
-        <span class="font-black text-xs uppercase text-center leading-none">Join<br>Now</span>
-    </a>
+
 
 </body>
 

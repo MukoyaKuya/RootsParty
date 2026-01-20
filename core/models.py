@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 class Leader(models.Model):
     name = models.CharField(max_length=100)
@@ -16,7 +17,6 @@ class Leader(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -90,7 +90,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     location = models.CharField(max_length=200)
-    date = models.DateTimeField()
+    date = models.DateTimeField(db_index=True)
     image = models.ImageField(upload_to='events/', blank=True, null=True)
     description = models.TextField(blank=True)
     is_completed = models.BooleanField(default=False)
@@ -101,7 +101,6 @@ class Event(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
         
@@ -130,13 +129,12 @@ class Vendor(models.Model):
     image = models.ImageField(upload_to='vendors/', blank=True, null=True, help_text="Shop Logo or Banner")
     contact_phone = models.CharField(max_length=20, blank=True)
     contact_email = models.EmailField(blank=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, db_index=True)
     is_verified = models.BooleanField(default=False, help_text="Verified/Official Roots Party vendor")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -154,7 +152,6 @@ class Product(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
         
@@ -241,7 +238,7 @@ class BlogPost(models.Model):
     
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='news')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='news', db_index=True)
     excerpt = models.TextField(max_length=300, help_text="Short summary for list views")
     content = models.TextField(help_text="Full article content (supports markdown)")
     image = models.ImageField(upload_to='blog/', blank=True, null=True)
@@ -252,8 +249,8 @@ class BlogPost(models.Model):
     video_url = models.URLField(blank=True, null=True, help_text="YouTube or Vimeo URL")
     video_file = models.FileField(upload_to='blog/videos/', blank=True, null=True, help_text="Upload video file (MP4, etc.)")
     author = models.CharField(max_length=100, default="Roots Party Media")
-    is_featured = models.BooleanField(default=False, help_text="Show on homepage")
-    is_published = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False, help_text="Show on homepage", db_index=True)
+    is_published = models.BooleanField(default=True, db_index=True)
     views = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -265,7 +262,6 @@ class BlogPost(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
         
@@ -318,7 +314,6 @@ class County(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -409,7 +404,6 @@ class LeadershipRole(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
@@ -510,7 +504,7 @@ class Aspirant(models.Model):
     )
     
     name = models.CharField(max_length=200)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='mp')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='mp', db_index=True)
     
     # Jurisdiction
     county = models.ForeignKey(County, on_delete=models.SET_NULL, null=True, blank=True, related_name='aspirants', help_text="Required for Governor, Senator, Woman Rep")
@@ -532,7 +526,7 @@ class Aspirant(models.Model):
     social_handle_twitter = models.CharField(max_length=100, blank=True)
     social_handle_facebook = models.CharField(max_length=100, blank=True)
     
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
@@ -564,8 +558,6 @@ class Aspirant(models.Model):
              video_id = self.video_url.split('/')[-1]
              if video_id.isdigit():
                  return f"https://player.vimeo.com/video/{video_id}"
-
-        return self.video_url
 
         return self.video_url
 

@@ -9,6 +9,17 @@ load_dotenv()
 import mimetypes
 mimetypes.add_type("image/jpeg", ".jfif", True)
 
+# Google Cloud Logging (Production Only)
+if os.environ.get('GOOGLE_CLOUD_PROJECT'):
+    try:
+        import google.cloud.logging
+        client = google.cloud.logging.Client()
+        client.setup_logging()
+        print("✅ Google Cloud Logging configured")
+    except Exception as e:
+        print(f"⚠️ Google Cloud Logging setup failed: {e}")
+
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,19 +30,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bs0uensq%3k++r0epml1$6csr=q56nq8=@jpl-dv^hngh5^=5+')
+# In production, SECRET_KEY must be set via environment variable
+_secret_key = os.environ.get('SECRET_KEY')
+if not _secret_key:
+    if os.environ.get('DEBUG', 'False') == 'True':
+        # Only allow insecure key in explicit debug mode
+        _secret_key = 'django-insecure-dev-only-key-do-not-use-in-production'
+    else:
+        raise ValueError("SECRET_KEY environment variable must be set in production!")
+SECRET_KEY = _secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+# Defaults to False for safety - must explicitly set DEBUG=True for development
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+# ALLOWED_HOSTS must be configured properly
+_allowed_hosts = os.environ.get('ALLOWED_HOSTS')
+if not _allowed_hosts:
+    if DEBUG:
+        ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.localhost']
+    else:
+        raise ValueError("ALLOWED_HOSTS environment variable must be set in production!")
+else:
+    ALLOWED_HOSTS = _allowed_hosts.split(',')
+
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://rootsparty.co.ke,http://127.0.0.1:8080,https://roots-party-1073897174388.europe-north1.run.app').split(',')
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,6 +88,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',  # Anonymous users: 100 requests per hour
+        'user': '1000/hour',  # Authenticated users: 1000 requests per hour
+    }
 }
 
 # Image Cropping Settings
@@ -87,12 +124,47 @@ CACHES = {
 }
 
 # Proxy & Security Settings (Critical for Cloud Run + Nginx)
+
+# Proxy & Security Settings (Critical for Cloud Run + Nginx)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
+
+if not DEBUG:
+    # Force HTTPS
+    SECURE_SSL_REDIRECT = True
+    # HSTS Settings
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Secure Cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# Content Security Policy (CSP) Configuration
+if not DEBUG:
+    # Strict CSP for production
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com")
+    CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com")
+    CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
+    CSP_IMG_SRC = ("'self'", "data:", "https://storage.googleapis.com")
+    CSP_CONNECT_SRC = ("'self'",)
+    CSP_FRAME_ANCESTORS = ("'self'",)
+    CSP_BASE_URI = ("'self'",)
+    CSP_FORM_ACTION = ("'self'",)
+else:
+    # Relaxed CSP for development
+    CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", "'unsafe-eval'")
+    CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com")
+    CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com")
+    CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
+    CSP_IMG_SRC = ("'self'", "data:", "https://storage.googleapis.com")
+
 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',  # Content Security Policy
     'whitenoise.middleware.WhiteNoiseMiddleware', # Add whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
 
@@ -228,6 +300,10 @@ STORAGES = {
     },
 }
 
+# Use standard static storage in development/tests to avoid manifest errors
+if DEBUG:
+    STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
 # Persistent Storage (Google Cloud Storage) for production
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 if GS_BUCKET_NAME:
@@ -256,68 +332,208 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Roots Party <info@roo
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'info@rootsparty.co.ke')
 
 # Jazzmin Configuration
-# Jazzmin Configuration
-JAZZMIN_SETTINGS = {
-    "site_title": "ROOTS PARTY",
-    "site_header": "ROOTS PARTY",
-    "site_brand": "ROOTS ADMIN",
-    "welcome_sign": "Welcome to the Roots Party Command Center",
-    "copyright": "Roots Party of Kenya",
-    "search_model": ["core.Leader", "users.Member"],
-    "topmenu_links": [
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "View Site", "url": "/", "new_window": True},
-        {"name": "Analytics Dashboard", "url": "/analytics/", "new_window": False},
-    ],
-    "show_ui_builder": False,
+# Unfold Admin Configuration
+from django.urls import reverse_lazy
+from django.templatetags.static import static
+
+UNFOLD = {
+    "SITE_TITLE": "ROOTS PARTY",
+    "SITE_HEADER": "ROOTS PARTY",
+    "SITE_URL": "/",
+    "DASHBOARD_CALLBACK": "core.views.dashboard_callback",
+    
+    # Site Logo
+    "SITE_LOGO": lambda request: static("images/roots_party_logo.png"),
+    
+    # Theme: Roots Red/Black/White
+    "COLORS": {
+        "primary": {
+            "50": "254 242 242",
+            "100": "254 226 226",
+            "200": "254 202 202",
+            "300": "252 165 165",
+            "400": "248 113 113",
+            "500": "239 68 68",    # Base Red
+            "600": "220 38 38",
+            "700": "185 28 28",
+            "800": "153 27 27",
+            "900": "127 29 29",
+            "950": "69 10 10",
+        },
+    },
+    
+    "THEME": "dark",
     
     # Custom CSS
-    "custom_css": "css/admin_custom.css",
-    "custom_js": None,
+    "STYLES": [
+        lambda request: static("css/admin_custom.css"),
+    ],
     
-    # Icons
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        "core.Leader": "fas fa-user-tie",
-        "core.Event": "fas fa-calendar-alt",
-        "core.Product": "fas fa-tshirt",
-        "core.ManifestoItem": "fas fa-scroll",
-        "core.GalleryPost": "fas fa-images",
-        "core.ContactMessage": "fas fa-envelope",
-        "core.BlogPost": "fas fa-newspaper",
-        "core.County": "fas fa-map-marker-alt",
-        "users.Member": "fas fa-users",
-        "finance.Donation": "fas fa-hand-holding-usd",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Navigation",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                    {
+                        "title": "View Site",
+                        "icon": "public",
+                        "link": "/",
+                        "new_tab": True,
+                    },
+                    {
+                        "title": "Analytics",
+                        "icon": "analytics",
+                        "link": "/analytics/",
+                    },
+                ],
+            },
+            {
+                "title": "Content Management",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Blog Posts",
+                        "icon": "article",
+                        "link": reverse_lazy("admin:core_blogpost_changelist"),
+                    },
+                    {
+                        "title": "Page Content",
+                        "icon": "description",
+                        "link": reverse_lazy("admin:core_pagecontent_changelist"),
+                    },
+                    {
+                        "title": "Gallery",
+                        "icon": "collections",
+                        "link": reverse_lazy("admin:core_gallerypost_changelist"),
+                    },
+                    {
+                        "title": "Manifesto",
+                        "icon": "menu_book",
+                        "link": reverse_lazy("admin:core_manifestoitem_changelist"),
+                    },
+                    {
+                        "title": "Home Videos",
+                        "icon": "videocam",
+                        "link": reverse_lazy("admin:core_homevideo_changelist"),
+                    },
+                     {
+                        "title": "Carousel Images",
+                        "icon": "view_carousel",
+                        "link": reverse_lazy("admin:core_carouselimage_changelist"),
+                    },
+                    {
+                        "title": "Floating Images",
+                        "icon": "image",
+                        "link": reverse_lazy("admin:core_floatingimage_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "People & Party",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Leaders",
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:core_leader_changelist"),
+                    },
+                     {
+                        "title": "Leadership Roles",
+                        "icon": "badge",
+                        "link": reverse_lazy("admin:core_leadershiprole_changelist"),
+                    },
+                    {
+                        "title": "Aspirants",
+                        "icon": "person_search",
+                        "link": reverse_lazy("admin:core_aspirant_changelist"),
+                    },
+                    {
+                        "title": "Members",
+                        "icon": "person",
+                        "link": reverse_lazy("admin:users_member_changelist"),
+                    },
+                    {
+                        "title": "Coordinators (Applicants)",
+                        "icon": "assignment_ind",
+                        "link": reverse_lazy("admin:users_coordinatorapplicant_changelist"),
+                    },
+                    {
+                        "title": "Constituencies",
+                        "icon": "map",
+                        "link": reverse_lazy("admin:core_constituency_changelist"),
+                    },
+                    {
+                        "title": "Counties",
+                        "icon": "location_on",
+                        "link": reverse_lazy("admin:core_county_changelist"),
+                    },
+                ],
+            },
+             {
+                "title": "Operations & Commerce",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Events",
+                        "icon": "event",
+                        "link": reverse_lazy("admin:core_event_changelist"),
+                    },
+                    {
+                        "title": "Gate Passes",
+                        "icon": "qr_code",
+                        "link": reverse_lazy("admin:core_gatepass_changelist"),
+                    },
+                    {
+                        "title": "Vendors",
+                        "icon": "store",
+                        "link": reverse_lazy("admin:core_vendor_changelist"),
+                    },
+                    {
+                        "title": "Products",
+                        "icon": "shopping_bag",
+                        "link": reverse_lazy("admin:core_product_changelist"),
+                    },
+                    {
+                         "title": "Donations",
+                         "icon": "paid",
+                         "link": reverse_lazy("admin:finance_donation_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "System & Settings",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Users & Groups",
+                        "icon": "settings_accessibility",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                     {
+                        "title": "Contact Messages",
+                        "icon": "mail",
+                        "link": reverse_lazy("admin:core_contactmessage_changelist"),
+                    },
+                    {
+                        "title": "Newsletter Subscribers",
+                        "icon": "forward_to_inbox",
+                        "link": reverse_lazy("admin:core_newslettersubscriber_changelist"),
+                    },
+                    {
+                        "title": "Resources (Docs)",
+                        "icon": "folder",
+                        "link": reverse_lazy("admin:core_resource_changelist"),
+                    },
+                ],
+            },
+        ],
     },
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": False,
-    "brand_colour": "navbar-danger",
-    "accent": "accent-danger",
-    "navbar": "navbar-dark",
-    "no_navbar_border": True,
-    "navbar_fixed": False,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-danger",
-    "sidebar_nav_small_text": False,
-    "theme": "flatly",
-    "dark_mode_theme": "darkly",
-    "button_classes": {
-        "primary": "btn-danger",
-        "secondary": "btn-outline-danger",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
 }

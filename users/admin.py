@@ -1,8 +1,9 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import Member, CoordinatorApplicant
 
 @admin.register(Member)
-class MemberAdmin(admin.ModelAdmin):
+class MemberAdmin(ModelAdmin):
     list_display = ('full_name', 'id_number', 'phone_number', 'county', 'created_at')
     list_filter = ('created_at', 'county')
     search_fields = ('full_name', 'id_number', 'phone_number')
@@ -13,7 +14,7 @@ class MemberAdmin(admin.ModelAdmin):
         return super().get_queryset(request).filter(is_coordinator_applicant=False)
 
 @admin.register(CoordinatorApplicant)
-class CoordinatorApplicantAdmin(admin.ModelAdmin):
+class CoordinatorApplicantAdmin(ModelAdmin):
     list_display = ('full_name', 'id_number', 'phone_number', 'county', 'created_at')
     list_filter = ('created_at', 'county')
     search_fields = ('full_name', 'id_number', 'phone_number')

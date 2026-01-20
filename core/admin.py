@@ -1,12 +1,14 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.decorators import display
 from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage
 
-class LeaderImageInline(admin.TabularInline):
+class LeaderImageInline(TabularInline):
     model = LeaderImage
     extra = 1
 
 @admin.register(LeadershipRole)
-class LeadershipRoleAdmin(admin.ModelAdmin):
+class LeadershipRoleAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'updated_at')
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title', 'description')
@@ -23,32 +25,32 @@ class LeadershipRoleAdmin(admin.ModelAdmin):
     )
 
 @admin.register(Leader)
-class LeaderAdmin(admin.ModelAdmin):
+class LeaderAdmin(ModelAdmin):
     list_display = ('name', 'role', 'order')
     inlines = [LeaderImageInline]
 
-class EvidenceInline(admin.TabularInline):
+class EvidenceInline(TabularInline):
     model = ManifestoEvidence
     extra = 1
 
 @admin.register(ManifestoItem)
-class ManifestoAdmin(admin.ModelAdmin):
+class ManifestoAdmin(ModelAdmin):
     list_display = ('title', 'slug', 'order')
     prepopulated_fields = {'slug': ('title',)}
     inlines = [EvidenceInline]
 
-class PostImageInline(admin.TabularInline):
+class PostImageInline(TabularInline):
     model = PostImage
     extra = 1
     max_num = 7
 
 @admin.register(GalleryPost)
-class GalleryAdmin(admin.ModelAdmin):
+class GalleryAdmin(ModelAdmin):
     list_display = ('title', 'created_at')
     inlines = [PostImageInline]
 
 @admin.register(GatePass)
-class GatePassAdmin(admin.ModelAdmin):
+class GatePassAdmin(ModelAdmin):
     list_display = ('code', 'event_info', 'created_at')
     list_filter = ('event__is_completed', 'event', 'created_at')
     search_fields = ('code', 'event__title')
@@ -81,28 +83,39 @@ class GatePassAdmin(admin.ModelAdmin):
         deleted_count, _ = queryset.filter(event__is_completed=True).delete()
         self.message_user(request, f"Deleted {deleted_count} gate passes for completed events.")
 
-class GatePassInline(admin.TabularInline):
+class GatePassInline(TabularInline):
     model = GatePass
     extra = 0
     readonly_fields = ('code', 'created_at')
     can_delete = False
 
 @admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'location', 'date', 'is_completed', 'gate_pass_downloads')
+class EventAdmin(ModelAdmin):
+    @display(
+        description="Status",
+        ordering="is_completed",
+        label={
+            True: "Completed",
+            False: "Upcoming",
+        }
+    )
+    def display_status(self, obj):
+        return obj.is_completed
+
+    list_display = ('title', 'location', 'date', 'display_status', 'gate_pass_downloads')
     list_filter = ('is_completed', 'date')
     search_fields = ('title', 'location')
     prepopulated_fields = {'slug': ('title',)}
     inlines = [GatePassInline]
 
-class ProductInline(admin.TabularInline):
+class ProductInline(TabularInline):
     model = Product
     extra = 1
     fields = ('name', 'slug', 'price', 'is_available', 'image')
     prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Vendor)
-class VendorAdmin(admin.ModelAdmin):
+class VendorAdmin(ModelAdmin):
     list_display = ('name', 'contact_email', 'is_active', 'is_verified', 'created_at')
     list_filter = ('is_active', 'is_verified', 'created_at')
     search_fields = ('name', 'description')
@@ -111,22 +124,33 @@ class VendorAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
     list_display = ('name', 'vendor', 'price', 'is_available')
     list_filter = ('is_available', 'vendor')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Resource)
-class ResourceAdmin(admin.ModelAdmin):
+class ResourceAdmin(ModelAdmin):
     list_display = ('title', 'uploaded_at', 'is_public')
     list_filter = ('is_public', 'uploaded_at')
     search_fields = ('title', 'description')
 
 
 @admin.register(ContactMessage)
-class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'subject', 'is_read', 'created_at')
+class ContactMessageAdmin(ModelAdmin):
+    @display(
+        description="Status",
+        ordering="is_read",
+        label={
+            True: "Read",
+            False: "Unread",
+        }
+    )
+    def display_status(self, obj):
+        return obj.is_read
+
+    list_display = ('name', 'email', 'subject', 'display_status', 'created_at')
     list_filter = ('is_read', 'subject', 'created_at')
     search_fields = ('name', 'email', 'message')
     readonly_fields = ('name', 'email', 'phone', 'subject', 'message', 'created_at')
@@ -168,11 +192,22 @@ from image_cropping import ImageCroppingMixin
 
 @admin.register(BlogPost)
 class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ('title', 'category', 'author', 'is_featured', 'is_published', 'views', 'created_at')
+    @display(
+        description="Published",
+        ordering="is_published",
+        label={
+            True: "Published",
+            False: "Draft",
+        }
+    )
+    def display_published(self, obj):
+        return obj.is_published
+
+    list_display = ('title', 'category', 'author', 'is_featured', 'display_published', 'views', 'created_at')
     list_filter = ('category', 'is_featured', 'is_published', 'created_at')
     search_fields = ('title', 'excerpt', 'content')
     prepopulated_fields = {'slug': ('title',)}
-    list_editable = ('is_featured', 'is_published')
+    list_editable = ('is_featured',)
     ordering = ['-created_at']
     
     fieldsets = (
@@ -189,7 +224,7 @@ class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
 
 @admin.register(County)
-class CountyAdmin(admin.ModelAdmin):
+class CountyAdmin(ModelAdmin):
     list_display = ('name', 'code', 'presence_status', 'coordinator_name', 'members_count', 'offices_count')
     list_filter = ('presence_status',)
     search_fields = ('name', 'coordinator_name')
@@ -210,19 +245,19 @@ class CountyAdmin(admin.ModelAdmin):
     )
 
 @admin.register(PageContent)
-class PageContentAdmin(admin.ModelAdmin):
+class PageContentAdmin(ModelAdmin):
     list_display = ('page_name', 'title', 'kpi_value')
     search_fields = ('page_name', 'title', 'content')
 
 @admin.register(HomeVideo)
-class HomeVideoAdmin(admin.ModelAdmin):
+class HomeVideoAdmin(ModelAdmin):
     list_display = ('title', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
     search_fields = ('title', 'description')
     list_editable = ('is_active',)
 
 @admin.register(NewsletterSubscriber)
-class NewsletterSubscriberAdmin(admin.ModelAdmin):
+class NewsletterSubscriberAdmin(ModelAdmin):
     list_display = ('email', 'created_at', 'is_active')
     list_filter = ('is_active', 'created_at')
     search_fields = ('email',)
@@ -245,7 +280,7 @@ class CarouselImageAdmin(ImageCroppingMixin, admin.ModelAdmin):
         js = ('js/admin_crop_preview.js',)
 
 @admin.register(Constituency)
-class ConstituencyAdmin(admin.ModelAdmin):
+class ConstituencyAdmin(ModelAdmin):
     list_display = ('name', 'county', 'slug')
     list_filter = ('county',)
     search_fields = ('name', 'county__name')
@@ -279,7 +314,7 @@ class AspirantAdmin(ImageCroppingMixin, admin.ModelAdmin):
     )
 
 @admin.register(FloatingImage)
-class FloatingImageAdmin(admin.ModelAdmin):
+class FloatingImageAdmin(ModelAdmin):
     list_display = ('name', 'position', 'is_active', 'created_at')
     list_filter = ('position', 'is_active')
     list_editable = ('is_active',)

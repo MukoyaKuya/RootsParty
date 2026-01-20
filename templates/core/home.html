@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load cropping %}
+{% load cropping thumbnail %}
 
 
 
@@ -7,7 +7,7 @@
 <div class="-mt-6 mb-24 space-y-8">
 
     <!-- Hero Header -->
-    <header class="relative overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100">
+    <header class="relative bg-gradient-to-br from-white via-gray-50 to-gray-100">
         <!-- Subtle Background Pattern (very light) -->
         <div class="absolute inset-0 opacity-[0.02]"
             style="background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px); background-size: 40px 40px;">
@@ -15,19 +15,19 @@
 
         <!-- Main Hero Content -->
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-0 md:pt-0 md:pb-0">
-            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
+            <div class="grid xl:grid-cols-2 gap-8 md:gap-12 items-start">
 
                 <!-- Left Column: Message -->
-                <div class="text-center md:text-left order-1 md:order-1">
+                <div class="text-center xl:text-left order-1 md:order-1">
                     <!-- Logo + Badge (Mobile: centered, Desktop: left) -->
-                    <div class="flex items-center justify-center md:justify-start gap-4 mb-6">
+                    <div class="flex items-center justify-center xl:justify-start gap-4 mb-6">
                         <img src="/static/images/logo.png" alt="Roots Party Logo"
                             class="w-32 h-32 md:w-44 md:h-44 object-contain drop-shadow-lg">
                     </div>
 
                     <!-- Main Headline -->
                     <h1
-                        class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-[0.9] mb-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
+                        class="text-[clamp(2.5rem,8vw,4.5rem)] lg:text-7xl font-black uppercase leading-[0.9] mb-4 flex items-center justify-center xl:justify-start flex-wrap gap-2 text-center xl:text-left">
                         <span class="text-roots-black">Roots</span>
                         <span class="text-roots-red">Party</span>
                         <!-- Verified Badge -->
@@ -41,7 +41,7 @@
 
                     <!-- Manifesto Statement (The Why) -->
                     <p
-                        class="text-xl md:text-2xl font-black uppercase tracking-wide text-roots-black mb-4 leading-tight">
+                        class="text-[clamp(1.125rem,4vw,1.5rem)] md:text-2xl font-black uppercase tracking-wide text-roots-black mb-4 leading-tight">
                         A Production Economy for a Free Kenya
                     </p>
 
@@ -53,7 +53,7 @@
                     </p>
 
                     <!-- CTAs -->
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
                         <a href="{% url 'join' %}"
                             class="inline-flex items-center justify-center gap-3 bg-roots-red text-white px-8 py-4 font-black text-lg uppercase tracking-wider border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -76,13 +76,15 @@
                 </div>
 
                 <!-- Right Column: Leader Image / Floating Image -->
-                <div class="relative order-2 md:order-2 flex justify-center md:justify-end md:-mt-6">
+                <div class="relative order-2 md:order-2 flex justify-center xl:justify-end md:-mt-6">
                     {% if floating_image %}
                     <div class="relative">
                         <!-- Image Container -->
-                        <div class="relative w-96 h-[450px] md:w-[550px] md:h-[650px] md:-mt-10 animate-float">
-                            <img src="{{ floating_image.image.url }}" alt="{{ floating_image.name }}"
+                        <div class="relative w-[80vw] max-w-[320px] h-[400px] xl:max-w-none xl:w-[550px] xl:h-[650px] md:-mt-10 animate-float">
+                            {% if floating_image.image %}
+                            <img src="{% thumbnail floating_image.image 600x700 %}" alt="{{ floating_image.name }}"
                                 class="w-full h-full object-contain drop-shadow-2xl">
+                            {% endif %}
                         </div>
 
                         <!-- Quote Badge (if leader image) -->
@@ -97,7 +99,7 @@
                     {% else %}
                     <!-- Placeholder with Party Message -->
                     <div
-                        class="relative w-72 h-80 md:w-96 md:h-[400px] bg-gradient-to-br from-roots-red to-red-700 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col items-center justify-center text-white p-8 text-center">
+                        class="relative w-[80vw] max-w-[320px] h-80 md:w-96 md:h-[400px] bg-gradient-to-br from-roots-red to-red-700 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col items-center justify-center text-white p-8 text-center mx-auto md:mx-0">
                         <img src="/static/images/logo.png" alt="Roots Party Logo"
                             class="w-32 h-32 object-contain mb-6 drop-shadow-lg animate-palpate">
                         <p class="text-2xl font-black uppercase leading-tight mb-4">Tingiza Mti!</p>
@@ -120,7 +122,7 @@
     <section class="mt-0 border-t-2 border-roots-black bg-white overflow-hidden">
         <!-- Header -->
         <div class="bg-roots-red text-white px-6 py-8 border-b-4 border-roots-black">
-            <h2 class="text-5xl md:text-6xl font-black uppercase text-center leading-none mb-4 tracking-tight">
+            <h2 class="text-[clamp(2rem,6vw,3.75rem)] md:text-6xl font-black uppercase text-center leading-none mb-4 tracking-tight">
                 What We Stand For
             </h2>
             <p class="text-center font-bold text-xl uppercase tracking-widest text-black">
@@ -136,8 +138,10 @@
                 {% for image in carousel_images %}
                 <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000"
                     data-slide="{{ forloop.counter0 }}">
-                    <img src="{{ image.image.url }}" alt="{{ image.title }}" class="w-full h-full object-cover"
+                    {% if image.image %}
+                    <img src="{% thumbnail image.image 1200x520 crop %}" alt="{{ image.title }}" class="w-full h-full object-cover" loading="lazy"
                         onerror="this.src='/static/images/logo.png'; this.classList.add('object-contain', 'p-8');">
+                    {% endif %}
                 </div>
                 {% endfor %}
 
@@ -172,7 +176,7 @@
             <div class="pt-8">
                 <div class="text-center mb-12">
                     <span
-                        class="bg-roots-black text-white px-10 py-4 font-black text-3xl md:text-5xl uppercase border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] inline-block transform -rotate-1">
+                        class="bg-roots-black text-white px-4 py-3 md:px-10 md:py-4 font-black text-[clamp(1.5rem,5vw,3rem)] md:text-5xl uppercase border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] inline-block transform -rotate-1 max-w-full leading-tight">
                         Why Elevate Roots Champions?
                     </span>
                 </div>

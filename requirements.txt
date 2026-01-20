@@ -39,6 +39,7 @@ google-api-python-client==2.187.0
 google-auth==2.43.0
 google-auth-httplib2==0.2.1
 google-cloud-core==2.5.0
+google-cloud-logging==3.11.4
 google-cloud-storage==3.7.0
 google-crc32c==1.7.1
 google-generativeai==0.8.5
@@ -123,3 +124,5 @@ easy-thumbnails
 djangorestframework
 django-filter
 
+
+django-unfold

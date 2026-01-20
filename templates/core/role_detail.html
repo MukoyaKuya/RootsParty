@@ -50,20 +50,28 @@
     
     <!-- Header -->
     <div class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] p-8">
-        <!-- Moved Back Link Up -->
         
-        <div class="flex flex-col md:flex-row items-center gap-6">
-            <div class="w-24 h-24 bg-roots-red border-4 border-roots-black flex items-center justify-center text-white shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ role.icon_svg_path }}" />
-                </svg>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="w-24 h-24 bg-roots-red border-4 border-roots-black flex items-center justify-center text-white shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ role.icon_svg_path }}" />
+                    </svg>
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-6xl font-black uppercase leading-none mb-2">
+                        {{ role.title }}
+                    </h1>
+                    <p class="font-bold text-xl text-gray-500 uppercase tracking-widest">Leadership Profile</p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-4xl md:text-6xl font-black uppercase leading-none mb-2">
-                    {{ role.title }}
-                </h1>
-                <p class="font-bold text-xl text-gray-500 uppercase tracking-widest">Leadership Profile</p>
-            </div>
+
+            {% if role.get_aspirant_role_key %}
+            <!-- Circular View All Button -->
+            <a href="{% url 'aspirant_list' %}?role={{ role.get_aspirant_role_key }}" class="shrink-0 w-24 h-24 md:w-28 md:h-28 bg-roots-red border-4 border-roots-black rounded-full flex items-center justify-center text-center p-2 text-white font-black uppercase text-xs md:text-sm leading-tight shadow-[2px_2px_0px_0px_#000] hover:scale-110 hover:-rotate-3 transition-transform group">
+                <span class="group-hover:underline decoration-2 underline-offset-2">View<br>Aspirants</span>
+            </a>
+            {% endif %}
         </div>
     </div>
 
@@ -125,20 +133,7 @@
         </p>
     </div>
 
-    {% if role.get_aspirant_role_key %}
-    <!-- Active Aspirants CTA -->
-    <div class="border-4 border-roots-black bg-white p-8 shadow-[8px_8px_0px_0px_#1a1a1a] text-center">
-        <h2 class="text-3xl font-black uppercase mb-4">
-            Meet The Aspirants
-        </h2>
-        <p class="font-bold text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            View the list of approved candidates running for {{ role.title }} on the Roots Party ticket.
-        </p>
-        <a href="{% url 'aspirant_list' %}?role={{ role.get_aspirant_role_key }}" class="inline-block bg-roots-black text-white px-8 py-4 text-xl font-black uppercase tracking-widest border-2 border-roots-black hover:bg-roots-red hover:border-roots-red transition-colors shadow-[4px_4px_0px_0px_#E60000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
-            View Approved Aspirants &rarr;
-        </a>
-    </div>
-    {% endif %}
+
 
 </div>
 {% endblock %}

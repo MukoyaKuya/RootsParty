@@ -1,19 +1,40 @@
-from .models import Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, HomeVideo, GatePass, LeadershipRole, CarouselImage, FloatingImage
-from users.models import Member
-from django.core.cache import cache
-
+# Standard library imports
 import io
 import os
 import random
 import string
+
+# Third-party imports
 import qrcode
-from django.conf import settings
-from django.http import FileResponse, HttpResponseNotAllowed
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import inch
-from reportlab.lib.utils import ImageReader
+from reportlab.lib.utils import ImageReader, simpleSplit
+
+# Django imports
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.db.models import Sum, Count, Case, When, Value, IntegerField, F, Prefetch, Q
+from django.http import FileResponse, HttpResponseNotAllowed
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+from asgiref.sync import sync_to_async
+
+# Local imports
+from .forms import ContactForm, NewsletterForm
+from .models import (
+    Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, 
+    HomeVideo, GatePass, LeadershipRole, CarouselImage, FloatingImage,
+    GalleryPost, Event, Product, Resource, Vendor, ContactMessage, 
+    NewsletterSubscriber, Constituency, Aspirant
+)
+from users.models import Member
+from finance.models import Donation
+
 
 def home(request):
     # Try to get stats from cache
@@ -84,13 +105,12 @@ def manifesto(request):
     items = ManifestoItem.objects.all()
     return render(request, 'core/manifesto.html', {'items': items})
 
-from django.shortcuts import render, get_object_or_404
 
 def manifesto_detail(request, slug):
     item = get_object_or_404(ManifestoItem, slug=slug)
     return render(request, 'core/manifesto_detail.html', {'item': item})
 
-from .models import GalleryPost
+
 def gallery(request):
     posts = GalleryPost.objects.prefetch_related('images').all()
     return render(request, 'core/gallery.html', {'posts': posts})
@@ -114,8 +134,6 @@ def manifesto_list(request):
     ]
     return render(request, 'partials/manifesto_list.html', {'commandments': commandments})
 
-from .models import Event
-from django.utils import timezone
 
 def events(request):
     upcoming_events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
@@ -201,9 +219,9 @@ def download_gate_pass(request, event_id):
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     GatePass.objects.create(event=event, code=code)
     
-    # Increment download count (keep for stats)
-    event.gate_pass_downloads += 1
-    event.save(update_fields=['gate_pass_downloads'])
+    # Increment download count atomically (keeps for stats)
+    from django.db.models import F
+    Event.objects.filter(pk=event.pk).update(gate_pass_downloads=F('gate_pass_downloads') + 1)
     
     p.setFont("Courier-Bold", 24)
     p.setFillColor(colors.HexColor('#1a1a1a'))
@@ -239,7 +257,6 @@ def download_gate_pass(request, event_id):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename=f'gate_pass_{event.slug}.pdf')
 
-from .models import Product, Resource, Vendor
  
 def shop(request):
     """List all active vendors (shops)"""
@@ -268,46 +285,48 @@ def resources(request):
     docs = Resource.objects.filter(is_public=True)
     return render(request, 'core/resources.html', {'docs': docs})
 
-from django.contrib.admin.views.decorators import staff_member_required
-from users.models import Member
-from finance.models import Donation
-from django.db.models import Sum, Count
 
 @staff_member_required
 def dashboard(request):
-    # --- MEMBERSHIP STATS ---
-    # Total Members (excluding coordinators for this count if desired, or total people)
-    # Let's count actual members distinct from coordinator applicants if they are mutually exclusive in intent
-    total_members = Member.objects.filter(is_coordinator_applicant=False).count()
-    total_coordinators = Member.objects.filter(is_coordinator_applicant=True).count()
+    # Try to get stats from cache
+    dashboard_stats = cache.get('dashboard_stats')
     
-    # Growth Stats
-    today = timezone.now().date()
-    week_ago = today - timezone.timedelta(days=7)
-    
-    new_members_today = Member.objects.filter(created_at__date=today, is_coordinator_applicant=False).count()
-    new_members_week = Member.objects.filter(created_at__date__gte=week_ago, is_coordinator_applicant=False).count()
-    
-    
-    # --- FINANCIALS ---
-    interest_stats = Member.objects.filter(is_coordinator_applicant=False).values('special_interest').annotate(count=Count('special_interest')).order_by('-count')
-    
-    # --- FINANCIALS ---
-    total_donations_amount = Donation.objects.filter(status='PENDING').aggregate(Sum('amount'))['amount__sum'] or 0
-    # Note: In real app, we filter by 'COMPLETED'. Using PENDING for mock data visibility.
-    
-    upcoming_events_count = Event.objects.filter(date__gte=timezone.now()).count()
+    if not dashboard_stats:
+        # --- MEMBERSHIP STATS ---
+        # Total Members (excluding coordinators for this count if desired, or total people)
+        # Let's count actual members distinct from coordinator applicants if they are mutually exclusive in intent
+        total_members = Member.objects.filter(is_coordinator_applicant=False).count()
+        total_coordinators = Member.objects.filter(is_coordinator_applicant=True).count()
+        
+        # Growth Stats
+        today = timezone.now().date()
+        week_ago = today - timezone.timedelta(days=7)
+        
+        new_members_today = Member.objects.filter(created_at__date=today, is_coordinator_applicant=False).count()
+        new_members_week = Member.objects.filter(created_at__date__gte=week_ago, is_coordinator_applicant=False).count()
+        
+        # --- FINANCIALS ---
+        total_donations_amount = Donation.objects.filter(status='PENDING').aggregate(Sum('amount'))['amount__sum'] or 0
+        # Note: In real app, we filter by 'COMPLETED'. Using PENDING for mock data visibility.
+        
+        upcoming_events_count = Event.objects.filter(date__gte=timezone.now()).count()
+        
+        dashboard_stats = {
+            'total_members': total_members,
+            'total_coordinators': total_coordinators,
+            'new_members_today': new_members_today,
+            'new_members_week': new_members_week,
+            'total_donations_amount': total_donations_amount,
+            'upcoming_events_count': upcoming_events_count,
+        }
+        # Cache for 15 minutes
+        cache.set('dashboard_stats', dashboard_stats, 60 * 15)
     
     recent_members = Member.objects.filter(is_coordinator_applicant=False).order_by('-created_at')[:5]
     recent_donations = Donation.objects.order_by('-created_at')[:5]
     
     context = {
-        'total_members': total_members,
-        'total_coordinators': total_coordinators,
-        'new_members_today': new_members_today,
-        'new_members_week': new_members_week,
-        'total_donations_amount': total_donations_amount,
-        'upcoming_events_count': upcoming_events_count,
+        **dashboard_stats,
         'recent_members': recent_members,
         'recent_donations': recent_donations,
     }
@@ -325,11 +344,6 @@ def cannabis_country_detail(request, country_slug):
         'other_countries': other_countries
     })
 
-from .forms import ContactForm
-from .models import ContactMessage
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib import messages
 
 async def contact(request):
     """Contact form view (Async)"""
@@ -398,8 +412,6 @@ View all messages at: /admin/core/contactmessage/
     })
 
 
-from .models import NewsletterSubscriber
-from .forms import NewsletterForm
 
 def subscribe(request):
     """Newsletter subscription view (HTMX)"""
@@ -461,9 +473,8 @@ def blog_detail(request, slug):
     """View single blog post"""
     post = get_object_or_404(BlogPost, slug=slug, is_published=True)
     
-    # Increment view count
-    post.views += 1
-    post.save(update_fields=['views'])
+    # Increment view count atomically to prevent race conditions
+    BlogPost.objects.filter(pk=post.pk).update(views=F('views') + 1)
     
     # Related posts (same category)
     related_posts = BlogPost.objects.filter(
@@ -477,7 +488,6 @@ def blog_detail(request, slug):
     })
 
 
-from django.db.models import Case, When, Value, IntegerField
 
 def counties(request):
     """View county presence map"""
@@ -552,12 +562,10 @@ def cookie_policy(request):
     """View for Cookie Policy"""
     return render(request, 'core/cookie_policy.html')
 
-from .models import Constituency, Aspirant
 
 def mp_list(request):
     """List of counties for MP selection"""
     # Only show counties that have constituencies populated
-    from django.db.models import Count, Q
     
     # Annotate with count of active MP aspirants
     counties = County.objects.annotate(
@@ -569,7 +577,6 @@ def mp_list(request):
 
 def mp_county_detail(request, slug):
     """List constituencies in a county"""
-    from django.db.models import Prefetch
     county = get_object_or_404(County, slug=slug)
     
     # Prefetch active MP candidates
@@ -614,3 +621,50 @@ def aspirant_detail(request, aspirant_id):
     """Generic detail view for any aspirant"""
     aspirant = get_object_or_404(Aspirant, id=aspirant_id)
     return render(request, 'core/aspirant_detail.html', {'aspirant': aspirant})
+
+def dashboard_callback(request, context):
+    """
+    Callback to provide custom context to the Unfold admin dashboard.
+    """
+    from .models import Event, ContactMessage
+    from users.models import Member
+    from finance.models import Donation
+    from django.db.models import Sum
+
+    # Calculate stats
+    total_members = Member.objects.count()
+    total_donations = Donation.objects.filter(status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or 0
+    upcoming_events = Event.objects.filter(date__gte=timezone.now()).count()
+    unread_messages = ContactMessage.objects.filter(is_read=False).count()
+
+    context.update({
+        "custom_title": "Roots Party Control Panel",
+        "kpi": [
+            {
+                "title": "Total Members",
+                "metric": f"{total_members:,}",
+                "footer": "Registered members",
+                "icon": "groups",
+            },
+            {
+                "title": "Total Donations",
+                "metric": f"KES {total_donations:,.0f}",
+                "footer": "Completed transactions",
+                "icon": "payments",
+            },
+             {
+                "title": "Upcoming Events",
+                "metric": upcoming_events,
+                "footer": "Scheduled rallies & meetings",
+                "icon": "event",
+            },
+            {
+                "title": "Unread Messages",
+                "metric": unread_messages,
+                "footer": "Inbox",
+                "icon": "mark_email_unread",
+            },
+        ]
+    })
+    return context
+

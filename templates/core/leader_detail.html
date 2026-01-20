@@ -14,7 +14,13 @@
         <div class="relative w-64 h-64 flex-shrink-0">
             <div class="absolute inset-0 border-4 border-roots-black transform rotate-6 bg-roots-black"></div>
             <div class="absolute inset-0 border-4 border-roots-black bg-white overflow-hidden">
+                {% if leader.image %}
                 <img src="{{ leader.image.url }}" alt="{{ leader.name }}" class="w-full h-full object-cover">
+                {% else %}
+                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span class="text-4xl">👤</span>
+                </div>
+                {% endif %}
             </div>
         </div>
         
@@ -58,7 +64,9 @@
             {% for item in leader.gallery.all %}
             <div class="border-4 border-roots-black p-2 bg-white shadow-[8px_8px_0px_0px_#1a1a1a]">
                 <div class="aspect-w-4 aspect-h-3 border-4 border-roots-black mb-2 overflow-hidden">
+                    {% if item.image %}
                     <img src="{{ item.image.url }}" alt="{{ item.caption }}" class="object-cover w-full h-full hover:scale-110 transition-transform duration-500">
+                    {% endif %}
                 </div>
                 {% if item.caption %}
                 <p class="font-bold uppercase text-center text-sm py-2">

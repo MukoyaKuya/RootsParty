@@ -81,7 +81,7 @@
         
         <div class="max-w-6xl mx-auto relative z-10">
             <h2 class="text-4xl md:text-6xl font-black uppercase text-center mb-2 animate-pulse">The Hemp Engine</h2>
-            <p class="text-center font-bold text-xl uppercase tracking-widest mb-10 opacity-90">Select a Reality to Unlock</p>
+            <p class="text-center font-bold text-xl uppercase tracking-widest mb-10 opacity-90">Simulate Your Wealth</p>
 
             <div class="grid lg:grid-cols-3 gap-6">
                 <!-- Scenario 1: The Debt Killer -->
@@ -155,6 +155,89 @@
             <p class="text-center text-white/60 text-xs font-bold uppercase mt-8 font-mono">
                 *Estimates based on $1350/Tonne Market Price & 4 Tonnes/Acre Yield.
             </p>
+            </p>
+
+            <!-- My Farm Calculator Section -->
+            <div id="calculator-section" class="mt-16 bg-white text-roots-black border-4 border-roots-black p-8 shadow-[12px_12px_0px_0px_#1a1a1a] relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 text-9xl opacity-5">🌱</div>
+                
+                <h3 class="text-3xl md:text-4xl font-black uppercase text-center mb-8">
+                    The "My Farm" Calculator
+                    <span class="block text-lg text-roots-red font-bold mt-2">Stop Losing Money. Start Growing Gold.</span>
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    
+                    <!-- Input Area -->
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block font-black uppercase text-lg mb-2">Land Size (Acres)</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="land-size" min="0.5" max="50" step="0.5" value="1" 
+                                    class="w-full h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-roots-red"
+                                    oninput="calculateWealth()">
+                                <input type="number" id="land-input" value="1" 
+                                    class="w-24 border-4 border-roots-black p-2 font-black text-xl text-center"
+                                    oninput="syncSlider()">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-black uppercase text-lg mb-2">Comparing Against:</label>
+                            <select id="current-crop" class="w-full border-4 border-roots-black p-3 font-bold text-lg bg-gray-50 focus:outline-none focus:border-roots-red transition-colors"
+                                onchange="calculateWealth()">
+                                <option value="40000">Maize (KES 40k/acre)</option>
+                                <option value="25000">Beans (KES 25k/acre)</option>
+                                <option value="80000">Sugarcane (KES 80k/acre - 18mo)</option>
+                                <option value="0">Nothing (I have idle land)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Result Area -->
+                    <div class="bg-roots-black text-white p-6 border-4 border-white/20 relative">
+                        <div class="absolute -top-4 -right-4 bg-roots-red text-white font-black px-4 py-2 uppercase text-sm transform rotate-3">
+                            Projected Annual Profit
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center opacity-70">
+                                <span class="font-bold uppercase">Current Earnings:</span>
+                                <span class="font-mono text-xl" id="current-earnings">KES 40,000</span>
+                            </div>
+                            
+                            <div class="border-t border-white/20 pt-4">
+                                <p class="font-black uppercase text-roots-green mb-1 text-lg">Hemp Earnings (2 Seasons):</p>
+                                <p class="font-black text-5xl md:text-6xl text-roots-green leading-none tracking-tight" id="hemp-earnings">
+                                    KES 696,000
+                                </p>
+                            </div>
+
+                            <div class="bg-white/10 p-4 rounded mt-4">
+                                <p class="text-center font-bold uppercase text-sm mb-1">Your Potential Gain</p>
+                                <p class="text-center font-black text-3xl text-yellow-400" id="potential-gain">
+                                    + KES 656,000
+                                </p>
+                            </div>
+                            
+                            <p class="text-[10px] text-center opacity-50 uppercase tracking-widest">
+                                *Estimates based on KES 150/kg stalk price & seed revenue. Excluding input costs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="shareResult()" class="inline-flex items-center gap-2 bg-roots-red text-white px-8 py-3 font-black uppercase border-4 border-transparent hover:bg-white hover:text-roots-red hover:border-roots-red transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                        </svg>
+                        Share My Projection
+                    </button>
+                    <p id="share-msg" class="text-roots-green font-bold text-sm mt-2 hidden">Copied to clipboard!</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -178,10 +261,56 @@
         } else if (type === 'farmer') {
             document.getElementById('res-farmer').classList.remove('hidden');
             document.getElementById('btn-farmer').innerText = "WEALTH UNLOCKED";
+            // Scroll to calculator
+            document.getElementById('calculator-section').scrollIntoView({behavior: 'smooth'});
         } else if (type === 'jobs') {
             document.getElementById('res-jobs').classList.remove('hidden');
             document.getElementById('btn-jobs').innerText = "IGNITED";
         }
+    }
+
+    // Calculator Logic
+    const HEMP_REVENUE_PER_ACRE = 696000; // Base estimate
+
+    function calculateWealth() {
+        const acres = parseFloat(document.getElementById('land-size').value);
+        const cropValue = parseInt(document.getElementById('current-crop').value);
+        
+        // Update number input
+        document.getElementById('land-input').value = acres;
+
+        // Calculations
+        const currentTotal = acres * cropValue;
+        const hempTotal = acres * HEMP_REVENUE_PER_ACRE;
+        const gain = hempTotal - currentTotal;
+
+        // Animation / Formatting
+        animateValue("current-earnings", currentTotal);
+        animateValue("hemp-earnings", hempTotal);
+        animateValue("potential-gain", gain, true);
+    }
+
+    function syncSlider() {
+        const val = document.getElementById('land-input').value;
+        document.getElementById('land-size').value = val;
+        calculateWealth();
+    }
+
+    function animateValue(id, value, showPlus=false) {
+        const el = document.getElementById(id);
+        const formatted = "KES " + value.toLocaleString();
+        el.innerText = (showPlus && value > 0 ? "+ " : "") + formatted;
+    }
+
+    function shareResult() {
+        const gain = document.getElementById('potential-gain').innerText;
+        const text = `I just calculated my potential Green Gold wealth. I could be earning ${gain} more with Roots Party! #TingizaMti #RootsParty`;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const msg = document.getElementById('share-msg');
+            msg.classList.remove('hidden');
+            setTimeout(() => msg.classList.add('hidden'), 3000);
+        });
     }
 </script>
 {% endblock %}

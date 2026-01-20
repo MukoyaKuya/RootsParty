@@ -2,7 +2,7 @@ import os
 import dj_database_url
 import psycopg2
 
-DATABASE_URL = "postgresql://neondb_owner:npg_aPjBTZvw8cD2@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+DATABASE_URL = "postgresql://neondb_owner:npg_cpnAUgjQ95VO@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
 try:
     print(f"Connecting to {DATABASE_URL[:20]}...")

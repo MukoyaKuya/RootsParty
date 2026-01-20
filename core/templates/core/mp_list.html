@@ -3,16 +3,27 @@
 {% block content %}
 <div class="py-12 bg-white dark:bg-zinc-900 border-b border-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl font-black uppercase tracking-tighter mb-4">
-                PARLIAMENTARY ASPIRANTS
-            </h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Select a county to view our parliamentary candidates across the 290 constituencies.
-            </p>
-            <div class="mt-8">
-                <a href="{% url 'aspirant_list' %}?role=mp" class="inline-block bg-black text-white px-8 py-3 text-lg font-black uppercase tracking-widest border-2 border-black hover:bg-red-600 hover:border-red-600 transition-colors">
-                    View Approved Aspirants &rarr;
+        <!-- Header Box -->
+        <div class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] p-8 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="w-24 h-24 bg-roots-red border-4 border-roots-black flex items-center justify-center text-white shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                        </svg>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl md:text-5xl font-black uppercase leading-none mb-2">
+                            Parliamentary
+                            <span class="block text-roots-red">Aspirants</span>
+                        </h1>
+                        <p class="font-bold text-lg text-gray-500 uppercase tracking-widest">Select A County to View Candidates</p>
+                    </div>
+                </div>
+
+                <!-- Circular View All Button -->
+                <a href="{% url 'aspirant_list' %}?role=mp" class="shrink-0 w-24 h-24 md:w-28 md:h-28 bg-roots-red border-4 border-roots-black rounded-full flex items-center justify-center text-center p-2 text-white font-black uppercase text-xs md:text-sm leading-tight shadow-[2px_2px_0px_0px_#000] hover:scale-110 hover:-rotate-3 transition-transform group">
+                    <span class="group-hover:underline decoration-2 underline-offset-2">View<br>Aspirants</span>
                 </a>
             </div>
         </div>

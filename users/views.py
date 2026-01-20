@@ -1,15 +1,10 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib import messages
-from .models import Member
-from django.db import IntegrityError, transaction
+# Standard library imports
+import io
+import os
 import random
 from datetime import datetime
-from django.contrib.auth.decorators import user_passes_test
 
-from core.models import County
-
-# Optional imports for membership card generation
+# Third-party imports
 try:
     import qrcode
     from PIL import Image, ImageDraw, ImageFont
@@ -22,18 +17,21 @@ try:
 except ImportError as e:
     print(f"WARNING: Card generation libraries not available: {e}")
     QRCODE_AVAILABLE = False
-    
-import io
-import os
-from django.conf import settings
 
-from django.shortcuts import render, redirect
+# Django imports
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.db import IntegrityError, transaction
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
+
+# Local imports
 from .forms import JoinForm
 from .models import Member
 from core.models import County
-from django.db import transaction
 
 def get_client_ip(group, request):
     """
@@ -156,6 +154,7 @@ def check_id_number(request):
     return HttpResponse('')
 
 @user_passes_test(lambda u: u.is_superuser)
+@require_http_methods(["POST"])
 def seed_members_view(request):
     try:
         target_count = 75000
@@ -206,8 +205,11 @@ def seed_members_view(request):
             <p><strong>Total: {new_total} / {target_count}</strong></p>
             <p>Remaining: {remaining}</p>
             <p><em>Auto-refreshing in 1 second to continue...</em></p>
+            <form id="autoForm" method="POST" action="">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{request.META.get('CSRF_COOKIE', '')}">
+            </form>
             <script>
-                setTimeout(function(){{ window.location.reload(); }}, 1000);
+                setTimeout(function() {{ document.getElementById('autoForm').submit(); }}, 1000);
             </script>
         """)
 
