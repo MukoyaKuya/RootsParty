@@ -1,0 +1,30 @@
+{% load static %}
+<div class="image-crop-widget" data-field-name="{{ name }}" data-crop-ratio="{{ crop_width }}/{{ crop_height }}" data-crop-width="{{ crop_width }}" data-crop-height="{{ crop_height }}">
+    <div style="margin-bottom: 15px;">
+        <label for="{{ field_id }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Upload Image:</label>
+        <input type="file" name="{{ name }}" id="{{ field_id }}" accept="image/*" class="image-upload-input">
+    </div>
+    
+    {% if image_url %}
+    <div class="existing-image-container" style="margin-top: 15px; margin-bottom: 15px;">
+        <p style="font-weight: bold; margin-bottom: 5px;">Current image:</p>
+        <img src="{{ image_url }}" alt="Current" class="existing-image" style="max-width: 400px; height: auto; border: 2px solid #ddd; padding: 5px; border-radius: 4px;">
+    </div>
+    {% endif %}
+    
+    <div class="image-preview-container" style="display: none; margin-top: 15px;">
+        <p style="font-weight: bold; margin-bottom: 10px;">Crop your image:</p>
+        <div style="position: relative; display: inline-block; max-width: 800px; border: 2px solid #ddd; padding: 5px; border-radius: 4px; background: #f9f9f9;">
+            <img id="crop-image-{{ field_id }}" src="" alt="Preview" style="max-width: 800px; width: auto; height: auto; display: block; visibility: visible;">
+        </div>
+        <div id="crop-coords-{{ field_id }}" style="display: block;">
+            <input type="hidden" name="{{ name }}_crop_x" id="{{ field_id }}_crop_x" value="">
+            <input type="hidden" name="{{ name }}_crop_y" id="{{ field_id }}_crop_y" value="">
+            <input type="hidden" name="{{ name }}_crop_w" id="{{ field_id }}_crop_w" value="">
+            <input type="hidden" name="{{ name }}_crop_h" id="{{ field_id }}_crop_h" value="">
+        </div>
+        <div style="margin-top: 10px; color: #666; font-size: 13px; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+            <p style="margin: 0;"><strong>Instructions:</strong> Drag the corners or edges of the selection box to adjust the crop area. The image will be automatically cropped to {{ crop_width }}x{{ crop_height }}px (16:9 ratio) when you save.</p>
+        </div>
+    </div>
+</div>

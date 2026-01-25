@@ -426,10 +426,10 @@
             <a href="/news/{{ post.slug }}/"
                 class="group block bg-gray-50 border-4 border-roots-black rounded-lg hover:border-roots-red hover:-translate-y-1 hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all duration-300 overflow-hidden">
                 <!-- Image Placeholder -->
-                <div class="h-40 bg-gray-200 border-b-4 border-roots-black overflow-hidden relative">
+                <div class="aspect-video bg-black border-b-4 border-roots-black overflow-hidden relative">
                     {% if post.image %}
-                    <img src="{% cropped_thumbnail post 'cropping' %}" alt="{{ post.title }}"
-                        class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                        class="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-500">
                     {% else %}
                     <div
                         class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-100 flex items-center justify-center">

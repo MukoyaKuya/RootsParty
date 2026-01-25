@@ -190,12 +190,14 @@ class ContactMessageAdmin(ModelAdmin):
 
 
 from image_cropping import ImageCroppingMixin
+from .widgets import ImageCropFieldWidget
+from .utils.image_processing import crop_image
 
 # Import SiteSettings after models are loaded
 from .models_site_settings import SiteSettings
 
 @admin.register(BlogPost)
-class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
+class BlogPostAdmin(ImageCroppingMixin, ModelAdmin):
     @display(
         description="Published",
         ordering="is_published",
@@ -219,12 +221,82 @@ class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
             'fields': ('title', 'slug', 'category', 'author')
         }),
         ('Content', {
-            'fields': ('excerpt', 'content', 'image', 'cropping', 'video_url', 'video_file')
+            'fields': ('excerpt', 'content', 'image', 'video_url', 'video_file')
         }),
         ('Publishing', {
             'fields': ('is_featured', 'is_published')
         }),
     )
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Use custom ImageCropFieldWidget for image fields"""
+        from django.db import models
+        
+        # Call parent's parent to skip ImageCroppingMixin's override
+        if isinstance(db_field, models.ImageField) and db_field.name == 'image':
+            # Skip ImageCroppingMixin and go directly to ModelAdmin
+            formfield = ModelAdmin.formfield_for_dbfield(self, db_field, request, **kwargs)
+            # Override with our custom widget
+            formfield.widget = ImageCropFieldWidget(
+                crop_ratio='16/9',
+                crop_width=800,
+                crop_height=450
+            )
+            return formfield
+        
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
+    
+    def save_model(self, request, obj, form, change):
+        """Crop the image if crop coordinates are provided"""
+        # Get crop coordinates from form data
+        crop_x = request.POST.get('image_crop_x')
+        crop_y = request.POST.get('image_crop_y')
+        crop_w = request.POST.get('image_crop_w')
+        crop_h = request.POST.get('image_crop_h')
+        
+        # Save first to get the image file
+        super().save_model(request, obj, form, change)
+        
+        # If we have crop coordinates and an image file, crop it
+        if crop_x and crop_y and crop_w and crop_h:
+            # Check if there's a new image file being uploaded
+            if 'image' in request.FILES:
+                image_file = request.FILES['image']
+            elif obj.image and hasattr(obj.image, 'file'):
+                image_file = obj.image.file
+                if hasattr(image_file, 'seek'):
+                    image_file.seek(0)
+            else:
+                image_file = None
+            
+            if image_file:
+                try:
+                    # Crop the image
+                    cropped_file = crop_image(
+                        image_file,
+                        float(crop_x),
+                        float(crop_y),
+                        float(crop_w),
+                        float(crop_h),
+                        output_size=(800, 450)  # Target size for blog posts
+                    )
+                    
+                    # Replace the original image with cropped version
+                    obj.image.save(obj.image.name, cropped_file, save=True)
+                except Exception as e:
+                    # Log error but don't fail the save
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.error(f"Error cropping image: {e}")
+    
+    class Media:
+        js = (
+            'image_cropping/js/src/jquery.Jcrop.min.js',
+            'js/admin_image_crop.js',
+        )
+        css = {
+            'all': ('image_cropping/css/jquery.Jcrop.min.css',)
+        }
 
 
 @admin.register(County)
@@ -267,7 +339,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):
     search_fields = ('email',)
 
 @admin.register(CarouselImage)
-class CarouselImageAdmin(ImageCroppingMixin, admin.ModelAdmin):
+class CarouselImageAdmin(ImageCroppingMixin, ModelAdmin):
     list_display = ('title', 'order', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
     list_editable = ('order', 'is_active')
@@ -279,9 +351,24 @@ class CarouselImageAdmin(ImageCroppingMixin, admin.ModelAdmin):
             'fields': ('title', 'image', 'cropping', 'order', 'is_active')
         }),
     )
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Ensure ImageCropWidget is used for cropping fields"""
+        from image_cropping.fields import ImageRatioField
+        from image_cropping.widgets import ImageCropWidget
+        
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        
+        if isinstance(db_field, ImageRatioField):
+            formfield.widget = ImageCropWidget()
+        
+        return formfield
 
     class Media:
         js = ('js/admin_crop_preview.js',)
+        css = {
+            'all': ('image_cropping/css/jquery.Jcrop.min.css',)
+        }
 
 @admin.register(Constituency)
 class ConstituencyAdmin(ModelAdmin):
@@ -291,7 +378,7 @@ class ConstituencyAdmin(ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Aspirant)
-class AspirantAdmin(ImageCroppingMixin, admin.ModelAdmin):
+class AspirantAdmin(ImageCroppingMixin, ModelAdmin):
     list_display = ('name', 'role', 'county', 'constituency', 'is_active')
     list_filter = ('role', 'is_active', 'county', 'constituency__county')
     search_fields = ('name', 'county__name', 'constituency__name', 'description')
@@ -316,6 +403,18 @@ class AspirantAdmin(ImageCroppingMixin, admin.ModelAdmin):
             'fields': ('social_handle_twitter', 'social_handle_facebook')
         }),
     )
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Ensure ImageCropWidget is used for cropping fields"""
+        from image_cropping.fields import ImageRatioField
+        from image_cropping.widgets import ImageCropWidget
+        
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        
+        if isinstance(db_field, ImageRatioField):
+            formfield.widget = ImageCropWidget()
+        
+        return formfield
 
 @admin.register(FloatingImage)
 class FloatingImageAdmin(ModelAdmin):
@@ -343,6 +442,18 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
         obj, created = SiteSettings.objects.get_or_create(pk=1)
         return obj
     
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Ensure ImageCropWidget is used for cropping fields"""
+        from image_cropping.fields import ImageRatioField
+        from image_cropping.widgets import ImageCropWidget
+        
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        
+        if isinstance(db_field, ImageRatioField):
+            formfield.widget = ImageCropWidget()
+        
+        return formfield
+    
     list_display = ('site_name', 'site_tagline', 'updated_at')
     fieldsets = (
         ('Logo Settings', {
@@ -367,4 +478,7 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
     
     class Media:
         js = ('js/admin_crop_preview.js',)
+        css = {
+            'all': ('image_cropping/css/jquery.Jcrop.min.css',)
+        }
 
