@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage
+from .models_site_settings import SiteSettings
 
 class LeaderImageInline(TabularInline):
     model = LeaderImage
@@ -190,6 +191,9 @@ class ContactMessageAdmin(ModelAdmin):
 
 from image_cropping import ImageCroppingMixin
 
+# Import SiteSettings after models are loaded
+from .models_site_settings import SiteSettings
+
 @admin.register(BlogPost)
 class BlogPostAdmin(ImageCroppingMixin, admin.ModelAdmin):
     @display(
@@ -319,4 +323,48 @@ class FloatingImageAdmin(ModelAdmin):
     list_filter = ('position', 'is_active')
     list_editable = ('is_active',)
     search_fields = ('name',)
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
+    """
+    Admin interface for site-wide settings including logo upload.
+    This is a singleton - only one instance exists.
+    """
+    def has_add_permission(self, request):
+        # Only allow one instance
+        return not SiteSettings.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        # Prevent deletion of the singleton
+        return False
+    
+    def get_object(self, request, object_id=None, from_field=None):
+        # Always return the singleton instance
+        obj, created = SiteSettings.objects.get_or_create(pk=1)
+        return obj
+    
+    list_display = ('site_name', 'site_tagline', 'updated_at')
+    fieldsets = (
+        ('Logo Settings', {
+            'fields': ('logo', 'logo_cropping', 'logo_square'),
+            'description': 'Upload the main party logo. The logo will be displayed on the homepage and throughout the site. If no logo is uploaded, the default static logo will be used.'
+        }),
+        ('Site Information', {
+            'fields': ('site_name', 'site_tagline')
+        }),
+        ('Contact Information', {
+            'fields': ('contact_email', 'contact_phone')
+        }),
+        ('Social Media', {
+            'fields': ('twitter_handle', 'facebook_url', 'youtube_url'),
+            'classes': ('collapse',)
+        }),
+        ('Carousel Settings', {
+            'fields': ('carousel_duration',),
+            'description': 'Set how long each carousel image is displayed (in milliseconds). Default is 8000ms (8 seconds). Minimum is 2000ms (2 seconds).'
+        }),
+    )
+    
+    class Media:
+        js = ('js/admin_crop_preview.js',)
 

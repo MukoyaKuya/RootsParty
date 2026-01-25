@@ -8,7 +8,7 @@
         <h1 class="text-4xl md:text-5xl font-black uppercase mb-2">Membership Registration</h1>
         <p class="text-xl text-gray-400">Join the movement. Become a Comrade.</p>
         
-        <div class="mt-8 p-6 border-4 border-roots-red bg-roots-red/10 rounded-none transform -rotate-1 shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] inline-block text-left transition-transform hover:rotate-0">
+        <div class="mt-8 p-6 border-4 border-roots-red bg-roots-red/10 rounded-lg transform -rotate-1 shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] inline-block text-left transition-transform hover:rotate-0">
             <p class="text-roots-red font-black uppercase tracking-widest text-lg mb-2">📢 Important Directive</p>
             <p class="text-base font-bold">You can also register via ORPP Portal or dial: <span class="font-mono bg-black text-roots-red px-2 py-1 rounded-none ml-2 text-lg">*509#</span></p>
         </div>
@@ -16,7 +16,7 @@
 
     <!-- Main Form -->
     <!-- Main Form -->
-    <div class="bg-roots-card border-4 border-roots-black p-6 md:p-12 shadow-[16px_16px_0px_0px_rgba(230,0,0,1)] relative overflow-hidden bg-white">
+    <div class="bg-roots-card border-4 border-roots-black p-6 md:p-12 rounded-xl shadow-[4px_4px_0px_0px_rgba(230,0,0,1)] relative overflow-hidden bg-white">
         <!-- Decorative bg element -->
         <div class="absolute top-0 right-0 w-64 h-64 bg-roots-red/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
 
@@ -27,36 +27,36 @@
             <div class="relative group">
                 <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
                 <h2 class="text-2xl font-black uppercase text-roots-black mb-6 flex items-center">
-                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">1</span> 
+                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">1</span> 
                     Personal Information
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Surname *</label>
-                        <input type="text" name="surname" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="KAMAU">
+                        <input type="text" name="surname" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg" placeholder="KAMAU">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Other Names *</label>
-                        <input type="text" name="other_names" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="JOHN PETER">
+                        <input type="text" name="other_names" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg" placeholder="JOHN PETER">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Date of Birth *</label>
-                        <input type="date" name="date_of_birth" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase">
+                        <input type="date" name="date_of_birth" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase rounded-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">ID / Passport Number *</label>
                         <input type="text" name="id_number" required 
                                hx-get="/check-id/" hx-trigger="keyup changed delay:500ms" hx-target="#id-error"
-                               class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="12345678">
+                               class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg" placeholder="12345678">
                         <div id="id-error"></div>
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Email</label>
-                        <input type="email" name="email" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="COMRADE@EXAMPLE.COM">
+                        <input type="email" name="email" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg" placeholder="COMRADE@EXAMPLE.COM">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Mobile Number *</label>
-                        <input type="tel" name="phone_number" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="0712 345 678">
+                        <input type="tel" name="phone_number" required class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg" placeholder="0712 345 678">
                     </div>
                 </div>
             </div>
@@ -65,21 +65,21 @@
             <div class="relative group mt-12">
                 <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
                 <h2 class="text-2xl font-black uppercase text-roots-black mb-6 flex items-center">
-                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">2</span>
+                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">2</span>
                     Demographics
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Occupation</label>
-                        <input type="text" name="occupation" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400">
+                        <input type="text" name="occupation" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Ethnicity</label>
-                        <input type="text" name="ethnicity" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400">
+                        <input type="text" name="ethnicity" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Gender</label>
-                        <select name="sex" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
+                        <select name="sex" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none rounded-lg bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -88,7 +88,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Special Interest</label>
-                        <select name="special_interest" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
+                        <select name="special_interest" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none rounded-lg bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
                             <option value="None">None</option>
                             <option value="Youth">Youth (18-35)</option>
                             <option value="Women">Women</option>
@@ -103,14 +103,14 @@
             <div class="relative group mt-12">
                 <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
                 <h2 class="text-2xl font-black uppercase text-roots-black mb-6 flex items-center">
-                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">3</span>
+                    <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">3</span>
                     Location Details
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- County -->
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">County *</label>
-                        <select name="county" id="field-county" required onchange="fetchConstituencies(this.value)" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
+                        <select name="county" id="field-county" required onchange="fetchConstituencies(this.value)" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none rounded-lg bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat">
                             <option value="">Select County</option>
                             {% for county in counties %}
                                 <option value="{{ county.id }}" data-name="{{ county.name }}">{{ county.name }}</option>
@@ -121,7 +121,7 @@
                     <!-- Constituency -->
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Constituency *</label>
-                        <select name="constituency" id="field-constituency" required onchange="fetchWards(this.value)" disabled class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
+                        <select name="constituency" id="field-constituency" required onchange="fetchWards(this.value)" disabled class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none rounded-lg bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
                             <option value="">Select Constituency</option>
                         </select>
                          <!-- Skeleton Loader -->
@@ -131,7 +131,7 @@
                     <!-- Ward -->
                     <div>
                         <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Ward *</label>
-                        <select name="ward" id="field-ward" required disabled class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
+                        <select name="ward" id="field-ward" required disabled class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(230,0,0,1)] transition-all uppercase appearance-none rounded-lg bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
                             <option value="">Select Ward</option>
                         </select>
                          <div id="loader-ward" class="hidden w-full h-[64px] bg-gray-200 animate-pulse border-4 border-gray-300"></div>
@@ -152,7 +152,7 @@
                     {{ form.confirm_email_hidden }}
                 </div>
 
-                <label class="flex items-start gap-4 cursor-pointer group mt-8 bg-gray-50 border-4 border-roots-black p-4 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all">
+                <label class="flex items-start gap-4 cursor-pointer group mt-8 bg-gray-50 border-4 border-roots-black p-4 rounded-lg hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                     <input type="checkbox" required class="mt-1 w-6 h-6 rounded-none border-4 border-roots-black text-roots-red focus:ring-0 checked:bg-roots-red">
                     <span class="text-sm text-black font-bold">
                         By registering, I agree to the <a href="#" class="text-roots-red hover:underline">Constitution of the Roots Party</a> and pledge to support the legalization of hemp for economic liberation.
@@ -160,7 +160,7 @@
                 </label>
 
                 <div class="mt-8">
-                    <button type="submit" class="w-full bg-roots-red border-4 border-roots-black text-white font-black uppercase py-5 rounded-none tracking-widest text-2xl shadow-[8px_8px_0px_0px_rgba(26,26,26,1)] hover:shadow-[12px_12px_0px_0px_rgba(26,26,26,1)] hover:-translate-y-1 hover:-translate-x-1 active:translate-y-0 active:translate-x-0 active:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] transition-all">
+                    <button type="submit" class="w-full bg-roots-red border-4 border-roots-black text-white font-black uppercase py-5 rounded-lg tracking-widest text-2xl shadow-[3px_3px_0px_0px_rgba(26,26,26,1)] hover:shadow-[3px_3px_0px_0px_rgba(26,26,26,1)] hover:-translate-y-1 hover:-translate-x-1 active:translate-y-0 active:translate-x-0 active:shadow-[2px_2px_0px_0px_rgba(26,26,26,1)] transition-all">
                         Register As Member
                     </button>
                     <p class="text-center text-xs text-gray-500 mt-4">

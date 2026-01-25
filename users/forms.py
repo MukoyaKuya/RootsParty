@@ -2,6 +2,11 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import Member
 from core.models import County
+from core.utils.validators import (
+    validate_kenyan_phone_number,
+    validate_kenyan_id_number,
+    validate_email
+)
 
 class JoinForm(forms.ModelForm):
     # Security Fields
@@ -31,8 +36,30 @@ class JoinForm(forms.ModelForm):
 
     def clean_id_number(self):
         id_number = self.cleaned_data.get('id_number')
-        if not id_number.isdigit():
-             raise ValidationError("ID Number must contain only digits.")
-        if Member.objects.filter(id_number=id_number).exists():
-             raise ValidationError("Comrade with this ID Number already registered!")
-        return id_number
+        # Use centralized validation utility
+        try:
+            validated_id = validate_kenyan_id_number(id_number)
+        except ValidationError as e:
+            raise ValidationError(str(e))
+        
+        # Check for duplicates
+        if Member.objects.filter(id_number=validated_id).exists():
+            raise ValidationError("Comrade with this ID Number already registered!")
+        return validated_id
+    
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        # Use centralized validation utility
+        try:
+            return validate_kenyan_phone_number(phone_number)
+        except ValidationError as e:
+            raise ValidationError(str(e))
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            try:
+                return validate_email(email)
+            except ValidationError as e:
+                raise ValidationError(str(e))
+        return email

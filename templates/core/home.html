@@ -21,8 +21,13 @@
                 <div class="text-center xl:text-left order-1 md:order-1">
                     <!-- Logo + Badge (Mobile: centered, Desktop: left) -->
                     <div class="flex items-center justify-center xl:justify-start gap-4 mb-6">
+                        {% if site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="Roots Party Logo"
+                            class="w-32 h-32 md:w-44 md:h-44 object-contain drop-shadow-lg">
+                        {% else %}
                         <img src="/static/images/logo.png" alt="Roots Party Logo"
                             class="w-32 h-32 md:w-44 md:h-44 object-contain drop-shadow-lg">
+                        {% endif %}
                     </div>
 
                     <!-- Main Headline -->
@@ -55,7 +60,7 @@
                     <!-- CTAs -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
                         <a href="{% url 'join' %}"
-                            class="inline-flex items-center justify-center gap-3 bg-roots-red text-white px-8 py-4 font-black text-lg uppercase tracking-wider border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all">
+                            class="inline-flex items-center justify-center gap-3 bg-roots-red text-white px-8 py-4 font-black text-lg uppercase tracking-wider border-4 border-roots-black rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -64,7 +69,7 @@
                             Join the Movement
                         </a>
                         <a href="{% url 'manifesto' %}"
-                            class="inline-flex items-center justify-center gap-3 bg-white text-roots-black px-8 py-4 font-black text-lg uppercase tracking-wider border-4 border-roots-black shadow-[6px_6px_0px_0px_#E60000] hover:bg-roots-black hover:text-white hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all">
+                            class="inline-flex items-center justify-center gap-3 bg-white text-roots-black px-8 py-4 font-black text-lg uppercase tracking-wider border-4 border-roots-black rounded-lg shadow-[3px_3px_0px_0px_#E60000] hover:bg-roots-black hover:text-white hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -89,7 +94,7 @@
 
                         <!-- Quote Badge (if leader image) -->
                         <div
-                            class="absolute bottom-16 -left-2 md:-left-4 bg-roots-black text-white p-3 max-w-[220px] border-2 border-roots-red shadow-[3px_3px_0px_0px_#E60000] transform -rotate-2">
+                            class="absolute bottom-16 -left-2 md:-left-4 bg-roots-black text-white p-3 max-w-[220px] border-2 border-roots-red rounded-lg shadow-[2px_2px_0px_0px_#E60000] transform -rotate-2">
                             <p class="text-xs font-bold italic leading-snug">
                                 "Power belongs to the people who produce."
                             </p>
@@ -99,9 +104,14 @@
                     {% else %}
                     <!-- Placeholder with Party Message -->
                     <div
-                        class="relative w-[80vw] max-w-[320px] h-80 md:w-96 md:h-[400px] bg-gradient-to-br from-roots-red to-red-700 border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col items-center justify-center text-white p-8 text-center mx-auto md:mx-0">
+                        class="relative w-[80vw] max-w-[320px] h-80 md:w-96 md:h-[400px] bg-gradient-to-br from-roots-red to-red-700 border-4 border-roots-black rounded-xl shadow-[3px_3px_0px_0px_#1a1a1a] flex flex-col items-center justify-center text-white p-8 text-center mx-auto md:mx-0">
+                        {% if site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="Roots Party Logo"
+                            class="w-32 h-32 object-contain mb-6 drop-shadow-lg animate-palpate">
+                        {% else %}
                         <img src="/static/images/logo.png" alt="Roots Party Logo"
                             class="w-32 h-32 object-contain mb-6 drop-shadow-lg animate-palpate">
+                        {% endif %}
                         <p class="text-2xl font-black uppercase leading-tight mb-4">Tingiza Mti!</p>
                         <p class="text-sm font-bold opacity-90">"Shake the Tree" — Join the movement for economic
                             liberation.</p>
@@ -136,11 +146,11 @@
             <div class="carousel-container relative h-64 md:h-[500px]">
                 <!-- Carousel Slides -->
                 {% for image in carousel_images %}
-                <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000"
+                <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000 overflow-hidden"
                     data-slide="{{ forloop.counter0 }}">
                     {% if image.image %}
                     <img src="{% thumbnail image.image 1200x520 crop %}" alt="{{ image.title }}" class="w-full h-full object-cover" loading="lazy"
-                        onerror="this.src='/static/images/logo.png'; this.classList.add('object-contain', 'p-8');">
+                        onerror="this.src='{% if site_settings.logo %}{{ site_settings.logo.url }}{% else %}/static/images/logo.png{% endif %}'; this.classList.add('object-contain', 'p-8');">
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -152,7 +162,7 @@
             <div class="flex justify-center gap-3 py-4 bg-white border-t-4 border-roots-black">
                 {% for image in carousel_images %}
                 <button onclick="goToSlide({{ forloop.counter0 }})"
-                    class="carousel-dot w-4 h-4 border-2 border-roots-black bg-white transition-all shadow-[2px_2px_0px_0px_#1a1a1a]"
+                    class="carousel-dot w-4 h-4 border-2 border-roots-black bg-white transition-all rounded-full shadow-[1px_1px_0px_0px_#1a1a1a]"
                     data-dot="{{ forloop.counter0 }}"></button>
                 {% endfor %}
             </div>
@@ -176,7 +186,7 @@
             <div class="pt-8">
                 <div class="text-center mb-12">
                     <span
-                        class="bg-roots-black text-white px-4 py-3 md:px-10 md:py-4 font-black text-[clamp(1.5rem,5vw,3rem)] md:text-5xl uppercase border-4 border-roots-red shadow-[8px_8px_0px_0px_#E60000] inline-block transform -rotate-1 max-w-full leading-tight">
+                        class="bg-roots-black text-white px-4 py-3 md:px-10 md:py-4 font-black text-[clamp(1.5rem,5vw,3rem)] md:text-5xl uppercase border-4 border-roots-red rounded-lg shadow-[3px_3px_0px_0px_#E60000] inline-block transform -rotate-1 max-w-full leading-tight">
                         Why Elevate Roots Champions?
                     </span>
                 </div>
@@ -184,9 +194,9 @@
                 <div class="grid md:grid-cols-3 gap-8 mt-8">
                     <!-- President -->
                     <a href="{% url 'role_detail' 'president' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -204,9 +214,9 @@
 
                     <!-- Governor -->
                     <a href="{% url 'role_detail' 'governor' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -223,9 +233,9 @@
 
                     <!-- Senator -->
                     <a href="{% url 'role_detail' 'senator' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -242,9 +252,9 @@
 
                     <!-- Woman Rep -->
                     <a href="{% url 'role_detail' 'woman-rep' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -261,9 +271,9 @@
 
                     <!-- MPs -->
                     <a href="{% url 'role_detail' 'mp' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -280,9 +290,9 @@
 
                     <!-- MCAs -->
                     <a href="{% url 'role_detail' 'mca' %}"
-                        class="block border-2 border-roots-black bg-white p-6 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all group h-full relative z-10">
+                        class="block border-2 border-roots-black bg-white p-6 rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all group h-full relative z-10">
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black mb-4 group-hover:scale-110 transition-transform">
+                            class="flex items-center justify-center w-16 h-16 bg-roots-red border-2 border-roots-black rounded-lg mb-4 group-hover:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                                 stroke="currentColor" class="w-10 h-10 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -303,7 +313,7 @@
 </section>
 
 <!-- Party Video Section -->
-<section class="mt-8 border-2 border-roots-black bg-white shadow-[3px_3px_0px_0px_rgba(26,26,26,1)] overflow-hidden">
+<section class="mt-8 border-2 border-roots-black bg-white rounded-xl shadow-[2px_2px_0px_0px_rgba(26,26,26,1)] overflow-hidden">
     <div class="bg-roots-black text-white px-6 py-4 flex items-center justify-between border-b-2 border-roots-black">
         <h2 class="text-3xl md:text-4xl font-black uppercase flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -320,7 +330,7 @@
         <div class="grid md:grid-cols-2 gap-8 items-start">
             <!-- Video Player -->
             <div
-                class="relative w-full aspect-video bg-gray-900 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] overflow-hidden">
+                class="relative w-full aspect-video bg-gray-900 border-2 border-roots-black rounded-lg shadow-[2px_2px_0px_0px_#1a1a1a] overflow-hidden">
                 {% if party_video.video_url %}
                 <iframe src="{{ party_video.get_embed_url }}" title="{{ party_video.title }}" class="w-full h-full"
                     frameborder="0"
@@ -354,7 +364,7 @@
 
                 {% if party_video.video_url %}
                 <a href="{{ party_video.video_url }}" target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 bg-red-600 text-white font-bold uppercase px-6 py-3 border-2 border-roots-black shadow-[2px_2px_0px_0px_#1a1a1a] hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
+                    class="inline-flex items-center gap-2 bg-red-600 text-white font-bold uppercase px-6 py-3 border-2 border-roots-black rounded-lg shadow-[2px_2px_0px_0px_#1a1a1a] hover:shadow-[2px_2px_0px_0px_#1a1a1a] transition-all">
                     <span>Watch on YouTube</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
                         <path
@@ -384,12 +394,12 @@
 
 
 <!-- Latest News Section -->
-<section class="mt-8 border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#E60000] overflow-hidden">
+<section class="mt-8 border-4 border-roots-black bg-white rounded-xl shadow-[3px_3px_0px_0px_#E60000] overflow-hidden">
     <!-- Header -->
     <div class="bg-roots-red text-white px-6 py-4 flex items-center justify-between border-b-4 border-roots-black">
         <h2 class="text-2xl md:text-3xl font-black uppercase flex items-center gap-3">
             <span
-                class="w-10 h-10 bg-white text-roots-red flex items-center justify-center rounded-none border-2 border-roots-black">
+                class="w-10 h-10 bg-white text-roots-red flex items-center justify-center rounded-lg border-2 border-roots-black">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -414,7 +424,7 @@
         <div class="grid md:grid-cols-3 gap-6">
             {% for post in latest_posts %}
             <a href="/news/{{ post.slug }}/"
-                class="group block bg-gray-50 border-4 border-roots-black hover:border-roots-red hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#1a1a1a] transition-all duration-300 overflow-hidden">
+                class="group block bg-gray-50 border-4 border-roots-black rounded-lg hover:border-roots-red hover:-translate-y-1 hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all duration-300 overflow-hidden">
                 <!-- Image Placeholder -->
                 <div class="h-40 bg-gray-200 border-b-4 border-roots-black overflow-hidden relative">
                     {% if post.image %}
@@ -432,7 +442,7 @@
                     {% endif %}
                     <!-- Category Badge -->
                     <span
-                        class="absolute top-3 left-3 bg-roots-red text-white px-3 py-1 font-black uppercase text-xs border-2 border-roots-black shadow-[2px_2px_0px_0px_#000]">
+                        class="absolute top-3 left-3 bg-roots-red text-white px-3 py-1 font-black uppercase text-xs border-2 border-roots-black rounded-md shadow-[1px_1px_0px_0px_#000]">
                         {{ post.get_category_display }}
                     </span>
                 </div>
@@ -475,7 +485,7 @@
 <!-- Quick Links -->
 <div class="grid grid-cols-2 gap-4">
     <a href="/manifesto/marijuana/"
-        class="border-2 border-roots-black p-4 bg-roots-red text-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#1a1a1a] transition-all">
+        class="border-2 border-roots-black p-4 bg-roots-red text-white flex flex-col items-center text-center rounded-lg hover:shadow-[2px_2px_0px_0px_#1a1a1a] transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
             class="w-12 h-12 mb-2">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -487,7 +497,7 @@
         <p class="font-bold text-sm leading-tight">A multibillion-shilling industry to pay off our debts.</p>
     </a>
     <a href="/manifesto/snake-farming/"
-        class="border-2 border-roots-black p-4 bg-white flex flex-col items-center text-center hover:shadow-[3px_3px_0px_0px_#E60000] transition-all">
+        class="border-2 border-roots-black p-4 bg-white flex flex-col items-center text-center rounded-lg hover:shadow-[2px_2px_0px_0px_#E60000] transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
             class="w-12 h-12 mb-2">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -594,22 +604,45 @@
     .shake-active {
         animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
     }
+
+    /* Carousel Zoom Animation */
+    @keyframes carouselZoom {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.15);
+        }
+    }
+
+    .carousel-slide {
+        z-index: 1;
+    }
+
+    .carousel-slide img {
+        will-change: transform;
+        transform-origin: center center;
+    }
 </style>
 <!-- Welcome Modal -->
 <div id="welcome-modal"
     class="hidden fixed inset-0 z-[70] items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
     <div
-        class="bg-white border-4 border-roots-black shadow-[16px_16px_0px_0px_#E60000] p-6 max-w-lg w-full relative transform scale-100 transition-transform animate-[bounce_0.5s_ease-out]">
+        class="bg-white border-4 border-roots-black rounded-xl shadow-[4px_4px_0px_0px_#E60000] p-6 max-w-lg w-full relative transform scale-100 transition-transform animate-[bounce_0.5s_ease-out]">
         <!-- Close Button (X) -->
         <button onclick="closeWelcomeModal()"
-            class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform shadow-[4px_4px_0px_0px_#1a1a1a] z-20">
+            class="absolute -top-6 -right-6 bg-roots-red text-white border-4 border-roots-black h-12 w-12 flex items-center justify-center font-black text-xl hover:scale-110 transition-transform rounded-lg shadow-[2px_2px_0px_0px_#1a1a1a] z-20">
             X
         </button>
 
         <div class="text-center mb-6">
             <div
                 class="w-24 h-24 mx-auto border-4 border-roots-black rounded-full overflow-hidden bg-white flex items-center justify-center p-1 mb-4">
+                {% if site_settings.logo %}
+                <img src="{{ site_settings.logo.url }}" alt="Logo" class="w-full h-full object-contain">
+                {% else %}
                 <img src="/static/images/logo.png" alt="Logo" class="w-full h-full object-contain">
+                {% endif %}
             </div>
             <h2
                 class="text-4xl font-black uppercase mb-2 border-b-4 border-roots-black inline-block bg-roots-black text-white px-2 transform -rotate-2">
@@ -682,14 +715,63 @@
 
         // Carousel functionality
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-slide');
-        const dots = document.querySelectorAll('.carousel-dot');
+        let slides = [];
+        let dots = [];
         let autoRotateInterval;
+        
+        // Get carousel duration from site settings (default to 8000ms if not set)
+        const carouselDuration = {{ site_settings.carousel_duration|default:8000 }};
+        // Ensure minimum duration of 2000ms (2 seconds)
+        const duration = Math.max(carouselDuration, 2000);
+        
+        // Set CSS variable for zoom animation duration
+        document.documentElement.style.setProperty('--carousel-duration', duration + 'ms');
+
+        // Initialize carousel elements
+        function initCarousel() {
+            slides = Array.from(document.querySelectorAll('.carousel-slide'));
+            dots = Array.from(document.querySelectorAll('.carousel-dot'));
+            
+            // Filter out slides without images
+            slides = slides.filter(slide => slide.querySelector('img') !== null);
+            
+            console.log('Carousel initialized with', slides.length, 'slides');
+            
+            if (slides.length > 0) {
+                showSlide(0);
+                
+                // Only auto-rotate if there are multiple slides
+                if (slides.length > 1) {
+                    startAutoRotate();
+
+                    // Pause on hover
+                    const carouselContainer = document.querySelector('.carousel-container');
+                    if (carouselContainer) {
+                        carouselContainer.addEventListener('mouseenter', stopAutoRotate);
+                        carouselContainer.addEventListener('mouseleave', startAutoRotate);
+                    }
+                }
+            }
+        }
 
         function showSlide(index) {
-            // Hide all slides
-            slides.forEach(slide => {
+            // Ensure index is within bounds
+            if (slides.length === 0) return;
+            
+            const safeIndex = ((index % slides.length) + slides.length) % slides.length;
+            
+            // Hide all slides and reset their images
+            slides.forEach((slide, i) => {
                 slide.style.opacity = '0';
+                slide.style.zIndex = '1';
+                const img = slide.querySelector('img');
+                if (img) {
+                    // Reset animation for hidden slides
+                    img.style.animation = 'none';
+                    img.style.transform = 'scale(1)';
+                    // Force reflow to reset animation
+                    void img.offsetWidth;
+                }
             });
 
             // Remove active state from all dots
@@ -699,56 +781,65 @@
             });
 
             // Show current slide
-            if (slides[index]) {
-                slides[index].style.opacity = '1';
+            if (slides[safeIndex]) {
+                slides[safeIndex].style.opacity = '1';
+                slides[safeIndex].style.zIndex = '10';
+                const img = slides[safeIndex].querySelector('img');
+                if (img) {
+                    // Restart zoom animation for the new slide
+                    img.style.animation = `carouselZoom ${duration}ms linear forwards`;
+                }
             }
 
             // Highlight current dot
-            if (dots[index]) {
-                dots[index].classList.remove('bg-white');
-                dots[index].classList.add('bg-roots-red');
+            if (dots[safeIndex]) {
+                dots[safeIndex].classList.remove('bg-white');
+                dots[safeIndex].classList.add('bg-roots-red');
             }
+            
+            currentSlide = safeIndex;
         }
 
         function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
+            if (slides.length === 0) return;
+            const nextIndex = (currentSlide + 1) % slides.length;
+            showSlide(nextIndex);
         }
 
         function startAutoRotate() {
-            autoRotateInterval = setInterval(nextSlide, 8000); // Change every 8 seconds
+            if (slides.length <= 1) return;
+            stopAutoRotate(); // Clear any existing interval
+            autoRotateInterval = setInterval(nextSlide, duration);
         }
 
         function stopAutoRotate() {
-            clearInterval(autoRotateInterval);
-        }
-
-        // Initialize carousel
-        if (slides.length > 0) {
-            showSlide(0);
-            startAutoRotate();
-
-            // Pause on hover
-            const carouselContainer = document.querySelector('.carousel-container');
-            if (carouselContainer) {
-                carouselContainer.addEventListener('mouseenter', stopAutoRotate);
-                carouselContainer.addEventListener('mouseleave', startAutoRotate);
+            if (autoRotateInterval) {
+                clearInterval(autoRotateInterval);
+                autoRotateInterval = null;
             }
         }
 
+        // Initialize carousel after DOM is ready
+        initCarousel();
+
         // Make functions globally accessible
         window.changeSlide = function (direction) {
+            if (slides.length === 0) return;
             stopAutoRotate();
-            currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            showSlide(currentSlide);
-            startAutoRotate();
+            const nextIndex = (currentSlide + direction + slides.length) % slides.length;
+            showSlide(nextIndex);
+            if (slides.length > 1) {
+                startAutoRotate();
+            }
         };
 
         window.goToSlide = function (index) {
+            if (slides.length === 0) return;
             stopAutoRotate();
-            currentSlide = index;
-            showSlide(currentSlide);
-            startAutoRotate();
+            showSlide(index);
+            if (slides.length > 1) {
+                startAutoRotate();
+            }
         };
     });
 

@@ -105,12 +105,26 @@ urlpatterns += [
     path('privacy-policy/', core_views.privacy_policy, name='privacy_policy'),
     path('terms-of-service/', core_views.terms_of_service, name='terms_of_service'),
     path('cookie-policy/', core_views.cookie_policy, name='cookie_policy'),
-    # API
+    # API with versioning
     path('api/v1/', include('core.api.urls')),
 ]
 
 from django.conf import settings
 from django.conf.urls.static import static
+
+# API Documentation
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
+urlpatterns += [
+    # API Documentation
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

@@ -6,9 +6,9 @@
 <div class="mt-8 mb-24 max-w-7xl mx-auto px-4">
     
     <!-- Vendor Header -->
-    <div class="mb-16 border-6 border-roots-black bg-white shadow-[12px_12px_0px_0px_#1a1a1a] overflow-hidden">
+    <div class="mb-16 border-6 border-roots-black bg-white rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a] overflow-hidden">
         {% if vendor.image %}
-        <div class="h-80 border-b-6 border-roots-black overflow-hidden relative">
+        <div class="h-80 border-b-6 border-roots-black overflow-hidden relative rounded-t-lg">
             <img src="{{ vendor.image.url }}" alt="{{ vendor.name }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             <div class="absolute bottom-8 left-8 right-8">
@@ -61,9 +61,9 @@
     
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {% for product in products %}
-        <a href="{% url 'product_detail' vendor.slug product.slug %}" class="border-4 border-roots-black bg-white shadow-[8px_8px_0px_0px_#1a1a1a] flex flex-col group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[12px_12px_0px_0px_#E60000] transition-all">
+        <a href="{% url 'product_detail' vendor.slug product.slug %}" class="border-4 border-roots-black bg-white rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a] flex flex-col group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[3px_3px_0px_0px_#E60000] transition-all">
             
-            <div class="h-64 border-b-4 border-roots-black overflow-hidden relative">
+            <div class="h-64 border-b-4 border-roots-black overflow-hidden relative rounded-t-lg">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 {% else %}
@@ -71,7 +71,7 @@
                     📦
                 </div>
                 {% endif %}
-                <div class="absolute top-2 right-2 bg-roots-red text-white font-black text-lg px-3 py-1 border-2 border-roots-black rotate-3 shadow-md">
+                <div class="absolute top-2 right-2 bg-roots-red text-white font-black text-lg px-3 py-1 border-2 border-roots-black rounded-md rotate-3 shadow-md">
                     KES {{ product.price|floatformat:0 }}
                 </div>
             </div>
@@ -84,7 +84,7 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-24 border-4 border-dashed border-roots-black bg-gray-50">
+    <div class="text-center py-24 border-4 border-dashed border-roots-black bg-gray-50 rounded-lg">
         <div class="text-6xl mb-4">📭</div>
         <h2 class="text-3xl font-black uppercase mb-2">No Products Yet</h2>
         <p class="font-bold text-lg opacity-70">This vendor is still stocking up.</p>

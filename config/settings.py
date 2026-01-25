@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'finance',
     'rest_framework',
     'django_filters',
+    'drf_spectacular',  # API documentation
 ]
 
 REST_FRAMEWORK = {
@@ -95,7 +96,20 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/hour',  # Anonymous users: 100 requests per hour
         'user': '1000/hour',  # Authenticated users: 1000 requests per hour
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}
+
+# DRF Spectacular Settings (API Documentation)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Roots Party API',
+    'DESCRIPTION': 'API documentation for the Roots Party of Kenya platform',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': '/api/v[0-9]',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
 }
 
 # Image Cropping Settings
@@ -189,6 +203,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.site_settings',  # Make site settings available globally
             ],
         },
     },
@@ -522,6 +537,11 @@ UNFOLD = {
                 "title": "System & Settings",
                 "separator": True,
                 "items": [
+                    {
+                        "title": "Site Settings & Logo",
+                        "icon": "settings",
+                        "link": reverse_lazy("admin:core_sitesettings_change", args=[1]),
+                    },
                     {
                         "title": "Users & Groups",
                         "icon": "settings_accessibility",

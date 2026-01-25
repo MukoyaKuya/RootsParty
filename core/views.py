@@ -68,6 +68,7 @@ def home(request):
         'party_video': video,  # For the party video section
         'carousel_images': carousel_images,
         'floating_image': floating_image,
+        # site_settings is automatically available via context processor
         **stats
     }
     
