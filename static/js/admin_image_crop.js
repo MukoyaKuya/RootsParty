@@ -202,48 +202,79 @@
                         });
                         
                         // Initialize Jcrop with proper dimensions
-                        try {
-                            // Ensure image is ready and visible
-                            $previewImg.css({
-                                'display': 'block',
-                                'visibility': 'visible',
-                                'opacity': '1',
-                                'position': 'relative',
-                                'z-index': '1'
-                            });
-                            
-                            $previewImg.Jcrop({
-                                aspectRatio: cropRatio,
-                                setSelect: [initX, initY, initX + initWidth, initY + initHeight],
-                                onSelect: updateCropCoords,
-                                onChange: updateCropCoords,
-                                bgColor: 'black',
-                                bgOpacity: 0.4,
-                                minSize: [100, 100 / cropRatio],
-                                trueSize: [actualImageWidth, actualImageHeight],
-                                allowSelect: true,
-                                allowMove: true,
-                                allowResize: true
-                            }, function() {
-                                jcropApi = this;
-                                console.log('Jcrop initialized successfully');
-                                console.log('Jcrop API:', this);
+                        // Wait a bit more to ensure everything is ready
+                        setTimeout(function() {
+                            try {
+                                // Ensure image is ready and visible
+                                $previewImg.css({
+                                    'display': 'block',
+                                    'visibility': 'visible',
+                                    'opacity': '1',
+                                    'pointer-events': 'auto'
+                                });
                                 
-                                // Update coordinates with initial selection
-                                try {
-                                    var coords = this.tellSelect();
-                                    console.log('Initial crop coordinates:', coords);
-                                    if (coords && coords.w > 0 && coords.h > 0) {
-                                        updateCropCoords(coords);
+                                // Clear any existing Jcrop instance completely
+                                if (jcropApi) {
+                                    try {
+                                        jcropApi.destroy();
+                                    } catch(e) {
+                                        console.log('Error destroying Jcrop:', e);
                                     }
-                                } catch(e) {
-                                    console.error('Error getting initial crop coordinates:', e);
+                                    jcropApi = null;
                                 }
-                            });
-                        } catch(e) {
-                            console.error('Error initializing Jcrop:', e);
-                            console.error('Error details:', e.message, e.stack);
-                        }
+                                
+                                // Remove all Jcrop DOM elements
+                                $previewImg.siblings('.jcrop-holder').remove();
+                                $previewImg.parent().find('.jcrop-holder').remove();
+                                $previewImg.closest('.image-preview-container').find('.jcrop-holder').remove();
+                                
+                                // Verify Jcrop is available
+                                if (typeof $.fn.Jcrop === 'undefined') {
+                                    console.error('Jcrop not available when trying to initialize');
+                                    return;
+                                }
+                                
+                                // Initialize Jcrop
+                                var jcropOptions = {
+                                    aspectRatio: cropRatio,
+                                    setSelect: [initX, initY, initX + initWidth, initY + initHeight],
+                                    onSelect: updateCropCoords,
+                                    onChange: updateCropCoords,
+                                    bgColor: 'black',
+                                    bgOpacity: 0.4,
+                                    minSize: [100, Math.round(100 / cropRatio)],
+                                    trueSize: [actualImageWidth, actualImageHeight]
+                                };
+                                
+                                console.log('Initializing Jcrop with options:', jcropOptions);
+                                console.log('Image element:', $previewImg[0]);
+                                console.log('Image src:', $previewImg.attr('src'));
+                                
+                                $previewImg.Jcrop(jcropOptions, function() {
+                                    jcropApi = this;
+                                    console.log('Jcrop initialized successfully');
+                                    console.log('Jcrop API:', this);
+                                    
+                                    // Verify it's working
+                                    try {
+                                        var testCoords = this.tellSelect();
+                                        console.log('Test coordinates from Jcrop:', testCoords);
+                                        if (testCoords && testCoords.w > 0 && testCoords.h > 0) {
+                                            updateCropCoords(testCoords);
+                                            console.log('Crop tool is ready and draggable');
+                                        } else {
+                                            console.warn('Jcrop initialized but coordinates are invalid');
+                                        }
+                                    } catch(e) {
+                                        console.error('Error getting coordinates from Jcrop:', e);
+                                    }
+                                });
+                            } catch(e) {
+                                console.error('Error initializing Jcrop:', e);
+                                console.error('Error message:', e.message);
+                                console.error('Error stack:', e.stack);
+                            }
+                        }, 200); // Increased delay to ensure everything is ready
                     };
                     
                     // Small delay to ensure image is rendered
