@@ -48,12 +48,13 @@
         var actualImageHeight = null;
         
         function updateCropCoords(c) {
-            // Jcrop returns coordinates in displayed size when trueSize is set
-            // But we need to ensure they're in actual image size
-            var coords = c;
+            // When trueSize is set, Jcrop returns coordinates in actual image size
+            // So we can use them directly
+            if (!c || c.w <= 0 || c.h <= 0) {
+                return; // Invalid coordinates
+            }
             
-            // If we have actual dimensions and trueSize was set, coordinates should already be in actual size
-            // But let's verify and scale if needed
+            // Scale coordinates from displayed size to actual image size
             if (actualImageWidth && actualImageHeight) {
                 var displayedWidth = $previewImg.width() || $previewImg.outerWidth();
                 var displayedHeight = $previewImg.height() || $previewImg.outerHeight();
@@ -65,20 +66,31 @@
                     var scaleX = actualImageWidth / displayedWidth;
                     var scaleY = actualImageHeight / displayedHeight;
                     
-                    coords = {
+                    var coords = {
                         x: c.x * scaleX,
                         y: c.y * scaleY,
                         w: c.w * scaleX,
                         h: c.h * scaleY
                     };
-                    console.log('Scaled coordinates:', coords, 'from displayed:', c, 'scale:', scaleX, scaleY);
+                    
+                    $('#' + fieldId + '_crop_x').val(Math.round(coords.x));
+                    $('#' + fieldId + '_crop_y').val(Math.round(coords.y));
+                    $('#' + fieldId + '_crop_w').val(Math.round(coords.w));
+                    $('#' + fieldId + '_crop_h').val(Math.round(coords.h));
+                } else {
+                    // Same size, use coordinates directly
+                    $('#' + fieldId + '_crop_x').val(Math.round(c.x));
+                    $('#' + fieldId + '_crop_y').val(Math.round(c.y));
+                    $('#' + fieldId + '_crop_w').val(Math.round(c.w));
+                    $('#' + fieldId + '_crop_h').val(Math.round(c.h));
                 }
+            } else {
+                // Fallback: use coordinates as-is
+                $('#' + fieldId + '_crop_x').val(Math.round(c.x));
+                $('#' + fieldId + '_crop_y').val(Math.round(c.y));
+                $('#' + fieldId + '_crop_w').val(Math.round(c.w));
+                $('#' + fieldId + '_crop_h').val(Math.round(c.h));
             }
-            
-            $('#' + fieldId + '_crop_x').val(Math.round(coords.x));
-            $('#' + fieldId + '_crop_y').val(Math.round(coords.y));
-            $('#' + fieldId + '_crop_w').val(Math.round(coords.w));
-            $('#' + fieldId + '_crop_h').val(Math.round(coords.h));
         }
         
         function initCrop(imageSrc) {
@@ -191,6 +203,15 @@
                         
                         // Initialize Jcrop with proper dimensions
                         try {
+                            // Ensure image is ready and visible
+                            $previewImg.css({
+                                'display': 'block',
+                                'visibility': 'visible',
+                                'opacity': '1',
+                                'position': 'relative',
+                                'z-index': '1'
+                            });
+                            
                             $previewImg.Jcrop({
                                 aspectRatio: cropRatio,
                                 setSelect: [initX, initY, initX + initWidth, initY + initHeight],
@@ -199,10 +220,15 @@
                                 bgColor: 'black',
                                 bgOpacity: 0.4,
                                 minSize: [100, 100 / cropRatio],
-                                trueSize: [actualImageWidth, actualImageHeight]
+                                trueSize: [actualImageWidth, actualImageHeight],
+                                allowSelect: true,
+                                allowMove: true,
+                                allowResize: true
                             }, function() {
                                 jcropApi = this;
                                 console.log('Jcrop initialized successfully');
+                                console.log('Jcrop API:', this);
+                                
                                 // Update coordinates with initial selection
                                 try {
                                     var coords = this.tellSelect();
@@ -216,6 +242,7 @@
                             });
                         } catch(e) {
                             console.error('Error initializing Jcrop:', e);
+                            console.error('Error details:', e.message, e.stack);
                         }
                     };
                     

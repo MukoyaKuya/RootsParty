@@ -15,7 +15,7 @@
     <div class="image-preview-container" style="display: none; margin-top: 15px;">
         <p style="font-weight: bold; margin-bottom: 10px;">Crop your image:</p>
         <div style="position: relative; display: inline-block; max-width: 800px; border: 2px solid #ddd; padding: 5px; border-radius: 4px; background: #f9f9f9;">
-            <img id="crop-image-{{ field_id }}" src="" alt="Preview" style="max-width: 800px; width: auto; height: auto; display: block; visibility: visible;">
+            <img id="crop-image-{{ field_id }}" src="" alt="Preview" style="max-width: 800px; width: auto; height: auto; display: block; visibility: visible; position: relative; z-index: 1;">
         </div>
         <div id="crop-coords-{{ field_id }}" style="display: block;">
             <input type="hidden" name="{{ name }}_crop_x" id="{{ field_id }}_crop_x" value="">
