@@ -1,8 +1,7 @@
 """
-Image processing utilities using OpenCV
+Image processing utilities using Pillow (PIL)
 """
-import cv2
-import numpy as np
+from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
@@ -10,7 +9,7 @@ import sys
 
 def crop_image(image_file, x, y, width, height, output_size=None):
     """
-    Crop an image using OpenCV
+    Crop an image using Pillow (PIL)
     
     Args:
         image_file: Django uploaded file or file path
@@ -27,23 +26,21 @@ def crop_image(image_file, x, y, width, height, output_size=None):
     if hasattr(image_file, 'read'):
         # It's a file-like object
         image_file.seek(0)  # Reset file pointer
-        image_data = image_file.read()
-        # Convert bytes to numpy array
-        nparr = np.frombuffer(image_data, np.uint8)
-        # Decode image
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        img = Image.open(image_file)
+        # Convert to RGB if necessary (handles RGBA, P, etc.)
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
     else:
         # It's a file path (string or Path object)
-        img = cv2.imread(str(image_file))
+        img = Image.open(str(image_file))
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
     
     if img is None:
         raise ValueError("Could not read image file")
     
-    # Convert BGR to RGB (OpenCV uses BGR by default)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    
     # Get image dimensions
-    img_height, img_width = img.shape[:2]
+    img_width, img_height = img.size
     
     # Ensure crop coordinates are within image bounds
     x = max(0, int(x))
@@ -51,26 +48,27 @@ def crop_image(image_file, x, y, width, height, output_size=None):
     width = min(int(width), img_width - x)
     height = min(int(height), img_height - y)
     
-    # Crop the image
-    cropped_img = img[y:y+height, x:x+width]
+    # Ensure valid dimensions
+    if width <= 0 or height <= 0:
+        raise ValueError(f"Invalid crop dimensions: {width}x{height}")
+    
+    # Crop the image (Pillow uses (left, top, right, bottom) format)
+    left = x
+    top = y
+    right = x + width
+    bottom = y + height
+    
+    cropped_img = img.crop((left, top, right, bottom))
     
     # Resize if output_size is specified
     if output_size:
         target_width, target_height = output_size
-        cropped_img = cv2.resize(cropped_img, (target_width, target_height), interpolation=cv2.INTER_LANCZOS4)
+        # Use LANCZOS resampling for high quality
+        cropped_img = cropped_img.resize((target_width, target_height), Image.Resampling.LANCZOS)
     
-    # Convert RGB back to BGR for encoding
-    cropped_img_bgr = cv2.cvtColor(cropped_img, cv2.COLOR_RGB2BGR)
-    
-    # Encode image to JPEG
-    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
-    success, encoded_img = cv2.imencode('.jpg', cropped_img_bgr, encode_param)
-    
-    if not success:
-        raise ValueError("Failed to encode image")
-    
-    # Convert to bytes
-    output = BytesIO(encoded_img.tobytes())
+    # Save to BytesIO as JPEG
+    output = BytesIO()
+    cropped_img.save(output, format='JPEG', quality=85, optimize=True)
     output.seek(0)
     
     # Create InMemoryUploadedFile
@@ -81,11 +79,15 @@ def crop_image(image_file, x, y, width, height, output_size=None):
     else:
         filename = f"{filename}_cropped.jpg"
     
+    # Get file size
+    output_size_bytes = len(output.getvalue())
+    output.seek(0)
+    
     return InMemoryUploadedFile(
         output,
         'ImageField',
         filename,
         'image/jpeg',
-        sys.getsizeof(output),
+        output_size_bytes,
         None
     )
