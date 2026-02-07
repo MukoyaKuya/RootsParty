@@ -980,19 +980,29 @@ def download_aspirants_list_pdf(request):
         ]]
         
         for asp in aspirants:
-            # Photo - Handle gracefully for production compatibility
+            # Photo - Support both local filesystem and Google Cloud Storage
             photo_cell = ""
             if asp.photo:
                 try:
-                    # Try to use the file path if available
+                    # Try local file path first (development)
                     if hasattr(asp.photo, 'path'):
                         photo_path = asp.photo.path
                         if os.path.exists(photo_path):
                             photo_cell = ReportLabImage(photo_path, width=30, height=30)
                 except (NotImplementedError, FileNotFoundError, AttributeError):
-                    # In production (Cloud Run), photo.path may not be available
-                    # Skip photo if we can't access it
-                    pass
+                    # In production (Cloud Storage), download photo from URL
+                    try:
+                        import urllib.request
+                        photo_url = asp.photo.url
+                        if photo_url:
+                            # Fetch image from URL
+                            with urllib.request.urlopen(photo_url, timeout=5) as response:
+                                image_data = response.read()
+                                # Create image from bytes
+                                photo_cell = ReportLabImage(io.BytesIO(image_data), width=30, height=30)
+                    except Exception:
+                        # Skip photo if download fails
+                        pass
             
             # Jurisdiction Logic
             jurisdiction = ""
