@@ -921,8 +921,8 @@ def download_aspirants_list_pdf(request):
     # --- Cover Page ---
     elements.append(Spacer(1, 60)) # Vertical centering spacing mainly
     
-    # Logo
-    logo_path = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'roots_logo_circle.png')
+    # Logo - Use STATIC_ROOT for production compatibility
+    logo_path = os.path.join(settings.STATIC_ROOT, 'images', 'roots_logo_circle.png')
     if os.path.exists(logo_path):
         im = ReportLabImage(logo_path, width=150, height=150)
         im.hAlign = 'CENTER'
