@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage, AspirantRegistration
 from .models_site_settings import SiteSettings
 
 class LeaderImageInline(TabularInline):
@@ -481,4 +481,13 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
         css = {
             'all': ('image_cropping/css/jquery.Jcrop.min.css',)
         }
+
+
+@admin.register(AspirantRegistration)
+class AspirantRegistrationAdmin(ModelAdmin):
+    list_display = ('surname', 'other_names', 'position', 'membership_status', 'created_at')
+    list_filter = ('position', 'membership_status', 'created_at')
+    search_fields = ('surname', 'other_names', 'id_number', 'phone_number')
+    ordering = ['-created_at']
+
 

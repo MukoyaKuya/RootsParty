@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-black uppercase text-roots-black mb-2">Aspirant Registration</h2>
+            <div class="w-24 h-2 bg-roots-red mx-auto mb-4"></div>
+            <p class="text-xl font-bold text-gray-600">Join the movement and vie for a leadership position.</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="bg-white border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] p-8 md:p-12 relative overflow-hidden">
+            <!-- Decorative Corner -->
+            <div class="absolute top-0 right-0 w-16 h-16 bg-roots-red border-l-4 border-b-4 border-roots-black"></div>
+
+            <form method="post" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Personal Information -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
+                        <h3 class="text-xl font-black uppercase text-roots-black">Personal Information</h3>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">ID Number <span class="text-roots-red">*</span></label>
+                            {{ form.id_number }}
+                            {{ form.id_number.errors }}
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">Surname <span class="text-roots-red">*</span></label>
+                            {{ form.surname }}
+                            {{ form.surname.errors }}
+                        </div>
+                        <div class="col-span-2 space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">Other Names <span class="text-roots-red">*</span></label>
+                            {{ form.other_names }}
+                            {{ form.other_names.errors }}
+                        </div>
+                        <div class="col-span-2 space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">Phone Number <span class="text-roots-red">*</span></label>
+                            {{ form.phone_number }}
+                            <p class="text-xs text-gray-500 font-bold">This phone number will be used for OTP verification and receiving important SMS notifications.</p>
+                            {{ form.phone_number.errors }}
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">Date of Birth <span class="text-roots-red">*</span></label>
+                            {{ form.date_of_birth }}
+                            {{ form.date_of_birth.errors }}
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700">Email Address (Optional)</label>
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-2 border-dashed border-gray-200" />
+
+                <!-- Position of Interest -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
+                        <h3 class="text-xl font-black uppercase text-roots-black">Position of Interest</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <label class="block font-bold text-sm uppercase text-gray-700">Select Position <span class="text-roots-red">*</span></label>
+                        {{ form.position }}
+                        {{ form.position.errors }}
+                        
+                        <!-- Fee Info (Dynamic mostly, but static hints for now based on model) -->
+                        <div class="bg-gray-100 p-4 border-l-4 border-roots-black text-sm font-bold">
+                            <p>Governor: KES 10,000</p>
+                            <p>Senator: KES 5,000</p>
+                            <p>Woman Representative: KES 5,000</p>
+                            <p>Member of Parliament (MP): KES 5,000</p>
+                            <p>Member of County Assembly (MCA): KES 2,000</p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-2 border-dashed border-gray-200" />
+
+                <!-- Additional Details -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
+                        <h3 class="text-xl font-black uppercase text-roots-black">Additional Details</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700 mb-2">Are you a current elected leader?</label>
+                            <div class="flex gap-6">
+                                {% for radio in form.is_incumbent %}
+                                <label class="flex items-center gap-2 cursor-pointer group">
+                                    {{ radio.tag }}
+                                    <div class="w-6 h-6 border-4 border-roots-black rounded-full flex items-center justify-center group-hover:border-roots-green peer-checked:bg-roots-green peer-checked:border-roots-green transition-all">
+                                        <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                    </div>
+                                    <span class="font-bold text-gray-700 group-hover:text-black">{{ radio.choice_label }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block font-bold text-sm uppercase text-gray-700 mb-2">Party Membership Status</label>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                {% for radio in form.membership_status %}
+                                <label class="cursor-pointer">
+                                    {{ radio.tag }}
+                                    <div class="peer-checked:bg-roots-green/10 peer-checked:border-roots-green border-4 border-gray-200 p-4 rounded-lg hover:border-roots-black transition-all">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-5 h-5 rounded-full border-4 border-roots-black flex items-center justify-center">
+                                                 <!-- Simple radio visual logic needed here if not using default -->
+                                            </div>
+                                            <span class="font-bold uppercase text-sm">{{ radio.choice_label }}</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <p class="text-xs text-roots-green font-bold mt-2">Dial *509# to confirm membership</p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-2 border-dashed border-gray-200" />
+
+                <!-- Declaration -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
+                        <h3 class="text-xl font-black uppercase text-roots-black">Declaration & Consent</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            {{ form.agreed_to_terms }}
+                            <span class="font-bold text-sm text-gray-700 pt-1">
+                                I agree to the <a href="#" class="text-roots-green underline hover:text-black">Terms and Conditions</a> <span class="text-roots-red">*</span>
+                            </span>
+                        </label>
+                        {{ form.agreed_to_terms.errors }}
+                    </div>
+                </section>
+
+                <!-- Info Box -->
+                <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-lg flex gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-orange-500 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                    </svg>
+                    <div class="text-sm text-orange-800">
+                        <p class="font-bold mb-1">Please complete the following:</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Surname is required</li>
+                            <li>Other names must be at least 2 characters</li>
+                            <li>ID number must be 7-10 digits</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-roots-green text-white py-4 px-8 font-black uppercase text-xl border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                    Proceed to Payment
+                </button>
+
+            </form>
+        </div>
+        
+        <p class="text-center font-bold text-gray-400 text-xs mt-8">Having trouble? Contact support at 0791-555-222</p>
+    </div>
+</div>
+{% endblock %}

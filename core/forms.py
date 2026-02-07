@@ -55,3 +55,47 @@ class NewsletterForm(forms.Form):
         })
     )
 
+
+from .models import AspirantRegistration
+
+class AspirantRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = AspirantRegistration
+        fields = [
+            'id_number', 'surname', 'other_names', 'phone_number', 
+            'date_of_birth', 'email', 'position', 'is_incumbent', 
+            'membership_status', 'agreed_to_terms'
+        ]
+        widgets = {
+            'id_number': forms.TextInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'placeholder': '12345678'
+            }),
+            'surname': forms.TextInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'placeholder': 'Enter your surname'
+            }),
+            'other_names': forms.TextInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'placeholder': 'Enter your other names'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'placeholder': '+254 712345678'
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'type': 'date'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors',
+                'placeholder': 'your.email@example.com'
+            }),
+            'position': forms.Select(attrs={
+                'class': 'w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors bg-white cursor-pointer'
+            }),
+            'membership_status': forms.RadioSelect(attrs={
+                'class': 'hidden peer' # We'll style these custom with labels in template if needed, or standard radio
+            }),
+            'is_incumbent': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
+        }

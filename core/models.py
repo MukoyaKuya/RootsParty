@@ -580,3 +580,51 @@ class FloatingImage(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.get_position_display()})"
+
+
+class AspirantRegistration(models.Model):
+    """Model for storing aspirant registration data"""
+    # Position Choices with Fees (Updated for Roots context)
+    POSITION_CHOICES = [
+        ('governor', 'Governor - KES 10,000'),
+        ('senator', 'Senator - KES 5,000'),
+        ('woman_rep', 'Woman Representative - KES 5,000'),
+        ('mp', 'Member of Parliament (MP) - KES 5,000'),
+        ('mca', 'Member of County Assembly (MCA) - KES 2,000'),
+    ]
+    
+    MEMBERSHIP_STATUS_CHOICES = [
+        ('existing', 'Existing Roots Party Member'),
+        ('new', 'New Member'),
+    ]
+
+    # Personal Information
+    id_number = models.CharField(max_length=20, verbose_name="ID Number")
+    surname = models.CharField(max_length=100)
+    other_names = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=20, help_text="Used for verification and notifications")
+    date_of_birth = models.DateField()
+    email = models.EmailField(blank=True, null=True, verbose_name="Email Address (Optional)")
+
+    # Position of Interest
+    position = models.CharField(max_length=50, choices=POSITION_CHOICES, verbose_name="Select Position")
+
+    # Additional Details
+    is_incumbent = models.BooleanField(default=False, verbose_name="Are you a current elected leader?")
+    membership_status = models.CharField(max_length=20, choices=MEMBERSHIP_STATUS_CHOICES, default='new', verbose_name="Party Membership Status")
+    
+    # Declaration
+    agreed_to_terms = models.BooleanField(default=False, verbose_name="I agree to the Terms and Conditions")
+    
+    # Meta
+    payment_status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('completed', 'Completed')])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.surname} {self.other_names} - {self.get_position_display()}"
+        
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Aspirant Application'
+        verbose_name_plural = 'Aspirant Applications'
+

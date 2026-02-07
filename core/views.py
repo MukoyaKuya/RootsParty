@@ -25,15 +25,30 @@ from django.utils import timezone
 from asgiref.sync import sync_to_async
 
 # Local imports
-from .forms import ContactForm, NewsletterForm
+from .forms import ContactForm, NewsletterForm, AspirantRegistrationForm
 from .models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent, 
     HomeVideo, GatePass, LeadershipRole, CarouselImage, FloatingImage,
     GalleryPost, Event, Product, Resource, Vendor, ContactMessage, 
-    NewsletterSubscriber, Constituency, Aspirant
+    NewsletterSubscriber, Constituency, Aspirant, AspirantRegistration
 )
 from users.models import Member
 from finance.models import Donation
+
+def aspirant_registration(request):
+    """View for aspirant registration"""
+    if request.method == 'POST':
+        form = AspirantRegistrationForm(request.POST)
+        if form.is_valid():
+            aspirant_reg = form.save()
+            messages.success(request, "Registration successful! Proceed to payment or wait for further instructions.")
+            # TODO: Redirect to payment or success page
+            return render(request, 'core/aspirant_registration_success.html', {'aspirant': aspirant_reg})
+    else:
+        form = AspirantRegistrationForm()
+    
+    return render(request, 'core/aspirant_registration.html', {'form': form})
+
 
 
 def home(request):

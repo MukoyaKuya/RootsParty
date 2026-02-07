@@ -95,6 +95,7 @@ urlpatterns += [
     # Aspirants
     path('aspirants/', core_views.aspirant_list, name='aspirant_list'),
     path('aspirants/<int:aspirant_id>/', core_views.aspirant_detail, name='aspirant_detail'),
+    path('aspirants/register/', core_views.aspirant_registration, name='aspirant_registration'),
 
     # MP Roles
     path('roles/mp/', core_views.mp_list, name='mp_list'),
