@@ -972,9 +972,10 @@ def download_aspirants_list_pdf(request):
         # Table Data
         data = [[
             Paragraph("Photo", styles['TableHeader']),
-            Paragraph("Name", styles['TableHeader']),
+            Paragraph("Particulars", styles['TableHeader']),
             Paragraph("Jurisdiction", styles['TableHeader']),
-            Paragraph("Phone", styles['TableHeader']),
+            Paragraph("Phone No", styles['TableHeader']),
+            Paragraph("Seat", styles['TableHeader']),
             Paragraph("Status", styles['TableHeader']),
         ]]
         
@@ -991,9 +992,9 @@ def download_aspirants_list_pdf(request):
             if asp.position in ['governor', 'senator', 'woman_rep']:
                 jurisdiction = asp.county.name if asp.county else "-"
             elif asp.position == 'mp':
-                jurisdiction = f"{asp.constituency} ({asp.county.name})" if asp.county else asp.constituency or "-"
+                jurisdiction = f"{asp.constituency}, {asp.county.name}" if asp.county else asp.constituency or "-"
             elif asp.position == 'mca':
-                jurisdiction = f"{asp.ward}, {asp.constituency}"
+                jurisdiction = f"{asp.county.name}, {asp.ward} Ward, {asp.constituency} North" if asp.county else f"{asp.ward}, {asp.constituency}"
             elif asp.position == 'president':
                 jurisdiction = "National"
                 
@@ -1004,24 +1005,41 @@ def download_aspirants_list_pdf(request):
 
             data.append([
                 photo_cell,
-                Paragraph(f"<b>{asp.surname}</b> {asp.other_names}{verified_mark}<br/><font size=7>ID: {asp.id_number}</font>", styles['TableBody']),
+                Paragraph(f"<b>{asp.surname}</b>, {asp.other_names}<br/><font size=7>ID: {asp.id_number}</font>", styles['TableBody']),
                 Paragraph(jurisdiction, styles['TableBody']),
                 Paragraph(asp.phone_number, styles['TableBody']),
-                Paragraph(asp.get_status_display(), styles['TableBody']),
+                Paragraph(asp.get_position_display().upper(), styles['TableBody']),
+                Paragraph(f"{verified_mark}<br/>{asp.get_status_display()}" if asp.is_verified else asp.get_status_display(), styles['TableBody']),
             ])
             
-        # Table Style
-        t = Table(data, colWidths=[40, 160, 150, 90, 80])
+        # Table Style - Improved for better visual appeal
+        t = Table(data, colWidths=[45, 165, 140, 85, 65, 85])
         t.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#e5e7eb')), # Light Grey Header
-            ('TEXTCOLOR', (0,0), (-1,0), colors.black),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            # Header styling
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#e5e7eb')), # Light gray header
+            ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor('#1f2937')), # Dark gray text
+            ('ALIGN', (0,0), (-1,0), 'CENTER'),
             ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0,0), (-1,0), 6),
-            ('TOPPADDING', (0,0), (-1,0), 6),
-            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#d1d5db')),
-            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f9fafb')]), # Alternating
+            ('FONTSIZE', (0,0), (-1,0), 9),
+            ('BOTTOMPADDING', (0,0), (-1,0), 10),
+            ('TOPPADDING', (0,0), (-1,0), 10),
+            
+            # Body styling
+            ('ALIGN', (0,1), (0,-1), 'CENTER'),  # Photo column centered
+            ('ALIGN', (1,1), (-1,-1), 'LEFT'),   # All other columns left-aligned
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('FONTSIZE', (1,1), (-1,-1), 8),
+            ('LEFTPADDING', (0,0), (-1,-1), 8),
+            ('RIGHTPADDING', (0,0), (-1,-1), 8),
+            ('TOPPADDING', (0,1), (-1,-1), 10),
+            ('BOTTOMPADDING', (0,1), (-1,-1), 10),
+            
+            # Grid and borders
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e0')),
+            ('LINEBELOW', (0,0), (-1,0), 1.5, colors.HexColor('#9ca3af')), # Medium gray header border
+            
+            # Alternating row colors
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f7fafc')]),
         ]))
         
         elements.append(t)
