@@ -560,5 +560,17 @@ class AspirantRegistrationAdmin(ModelAdmin):
             ''')
         return "-"
     download_pdf_button.short_description = 'Export Profile'
+    
+    def save_model(self, request, obj, form, change):
+        """Override to invalidate cache when aspirant is saved."""
+        super().save_model(request, obj, form, change)
+        from core.cache_utils import invalidate_aspirant_cache
+        invalidate_aspirant_cache()
+    
+    def delete_model(self, request, obj):
+        """Override to invalidate cache when aspirant is deleted."""
+        super().delete_model(request, obj)
+        from core.cache_utils import invalidate_aspirant_cache
+        invalidate_aspirant_cache()
 
 

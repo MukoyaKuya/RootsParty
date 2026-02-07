@@ -20,6 +20,7 @@ from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Sum, Count, Case, When, Value, IntegerField, F, Prefetch, Q
 from django.http import FileResponse, HttpResponseNotAllowed, HttpResponse
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
@@ -118,6 +119,7 @@ def check_aspirant_id(request):
         return HttpResponse('<span class="text-roots-red font-bold uppercase block mt-1 bg-roots-black text-white p-2">⚠️ Error: Comrade already has an application!</span>')
     return HttpResponse('')
 
+@cache_page(60 * 15)  # Cache for 15 minutes
 def home(request):
     # Try to get stats from cache
     stats = cache.get('home_stats')
@@ -184,6 +186,7 @@ def about(request):
         'page_content': page_content,
     })
 
+@cache_page(60 * 60)  # Cache for 1 hour (rarely changes)
 def manifesto(request):
     items = ManifestoItem.objects.all()
     return render(request, 'core/manifesto.html', {'items': items})
@@ -194,6 +197,7 @@ def manifesto_detail(request, slug):
     return render(request, 'core/manifesto_detail.html', {'item': item})
 
 
+@cache_page(60 * 20)  # Cache for 20 minutes
 def gallery(request):
     posts = GalleryPost.objects.prefetch_related('images').all()
     return render(request, 'core/gallery.html', {'posts': posts})
@@ -547,6 +551,7 @@ def subscribe(request):
     return HttpResponseNotAllowed(['POST'])
 
 
+@cache_page(60 * 10)  # Cache for 10 minutes
 def blog_list(request):
     """List all published blog posts"""
     category = request.GET.get('category')
@@ -586,6 +591,7 @@ def blog_detail(request, slug):
 
 
 
+@cache_page(60 * 30)  # Cache for 30 minutes
 def counties(request):
     """View county presence map"""
     # Order: Active -> Growing -> Starting -> Planned

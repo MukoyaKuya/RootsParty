@@ -125,3 +125,8 @@ djangorestframework
 django-filter
 drf-spectacular
 django-unfold
+
+# Redis Caching (Performance Optimization)
+django-redis==5.4.0
+redis==5.2.1
+hiredis==3.0.0

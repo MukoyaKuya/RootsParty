@@ -129,13 +129,51 @@ SILENCED_SYSTEM_CHECKS = [
 RATELIMIT_USE_CACHE = 'default'
 RATELIMIT_ENABLE = True
 
-# Database Cache Configuration
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+# Cache Configuration
+if os.environ.get('REDIS_URL'):
+    # Production: Use Redis for high-performance caching
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ.get('REDIS_URL'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'PARSER_CLASS': 'redis.connection.HiredisParser',  # Faster C parser
+                'CONNECTION_POOL_KWARGS': {
+                    'max_connections': 50,
+                    'retry_on_timeout': True,
+                },
+                'SOCKET_CONNECT_TIMEOUT': 5,
+                'SOCKET_TIMEOUT': 5,
+                'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+                'IGNORE_EXCEPTIONS': True,  # Don't crash if Redis is down
+            },
+            'KEY_PREFIX': 'roots_party',
+            'VERSION': 1,
+            'TIMEOUT': 300,  # Default 5 minutes
+        }
     }
-}
+    
+    # Use Redis for session storage (faster than DB)
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+    
+elif DEBUG:
+    # Development: Use in-memory cache (or Redis if available via docker-compose)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+        }
+    }
+else:
+    # Fallback: Database cache if Redis unavailable
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'cache_table',
+        }
+    }
 
 # Proxy & Security Settings (Critical for Cloud Run + Nginx)
 
@@ -188,6 +226,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
+    'core.middleware.CacheStatsMiddleware',  # Cache performance monitoring
     'django_htmx.middleware.HtmxMiddleware',
 ]
 
