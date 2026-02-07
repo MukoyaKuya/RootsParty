@@ -24,12 +24,7 @@ if (!(Get-Command gcloud -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Check if Docker is installed
-if (!(Get-Command docker -ErrorAction SilentlyContinue)) {
-    Write-Host "❌ ERROR: Docker not found!" -ForegroundColor Red
-    Write-Host "Install from: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
-    exit 1
-}
+
 
 Write-Host "✅ Prerequisites OK" -ForegroundColor Green
 Write-Host ""
@@ -67,37 +62,19 @@ Write-Host ""
 Write-Host "✅ Environment variables configured" -ForegroundColor Green
 Write-Host ""
 
-# Step 5: Build Docker Image
-Write-Host "[5/8] Building Docker Image..." -ForegroundColor Yellow
+# Step 5: Build and Push Container Image (Cloud Build)
+Write-Host "[5/6] Building and Pushing Container Image via Cloud Build..." -ForegroundColor Yellow
 Write-Host ""
 
-Write-Host "Building: $IMAGE_NAME" -ForegroundColor Cyan
-docker build -t "${IMAGE_NAME}:latest" .
+Write-Host "Submitting build to Cloud Build..." -ForegroundColor Cyan
+gcloud builds submit --tag "${IMAGE_NAME}:latest" .
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ ERROR: Docker build failed!" -ForegroundColor Red
+    Write-Host "❌ ERROR: Cloud Build failed!" -ForegroundColor Red
     exit 1
 }
 
-Write-Host "✅ Docker image built successfully" -ForegroundColor Green
-Write-Host ""
-
-# Step 6: Push to Google Container Registry
-Write-Host "[6/8] Pushing to Google Container Registry..." -ForegroundColor Yellow
-Write-Host ""
-
-Write-Host "Configuring Docker for GCR..." -ForegroundColor Cyan
-gcloud auth configure-docker
-
-Write-Host "Pushing image..." -ForegroundColor Cyan
-docker push "${IMAGE_NAME}:latest"
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ ERROR: Docker push failed!" -ForegroundColor Red
-    exit 1
-}
-
-Write-Host "✅ Image pushed to GCR" -ForegroundColor Green
+Write-Host "✅ Container built and pushed to GCR" -ForegroundColor Green
 Write-Host ""
 
 # Step 7: Deploy to Cloud Run

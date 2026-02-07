@@ -1,0 +1,3 @@
+Creating job migrate-db-roots-minimal with minimal env vars...
+COMMAND TO RUN:
+gcloud run jobs create migrate-db-roots-minimal --image gcr.io/gen-lang-client-0549116861/roots-party --set-env-vars "SECRET_KEY=go%o6!qkohy7uvm@-(vc_7fb_=4l=5k&+8zx7hu0c@g3f,DATABASE_URL=postgresql://neondb_owner:npg_JcqhweA1C8HG@ep-autumn-math-ahlr3cf2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require" --region europe-north1 --command python --args manage.py,migrate --quiet
