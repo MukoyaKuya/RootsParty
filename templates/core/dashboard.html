@@ -23,7 +23,7 @@
     </header>
 
     <!-- KPI Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
         <!-- Members -->
         <div class="border-4 border-roots-black bg-white p-6 shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-1 hover:-translate-y-1 transition-transform">
             <h3 class="text-xl font-black uppercase mb-2">Comrades</h3>
@@ -39,6 +39,16 @@
             <h3 class="text-xl font-black uppercase mb-2">Leaders</h3>
             <p class="text-5xl font-black text-roots-red">{{ total_coordinators }}</p>
             <p class="font-bold text-xs uppercase mt-2 opacity-70">Coordinator Applicants</p>
+        </div>
+
+        <!-- Aspirants -->
+        <div class="border-4 border-roots-black bg-roots-green text-white p-6 shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-1 hover:-translate-y-1 transition-transform">
+            <h3 class="text-xl font-black uppercase mb-2">Aspirants</h3>
+            <p class="text-5xl font-black text-white">{{ total_aspirants }}</p>
+            <div class="flex gap-2 mt-4 text-xs font-bold uppercase">
+                <span class="bg-white/20 px-2 py-1">+{{ new_aspirants_today }} Today</span>
+                <span class="bg-white/10 px-2 py-1">+{{ new_aspirants_week }} Week</span>
+            </div>
         </div>
 
         <!-- Funds -->
@@ -57,7 +67,7 @@
     </div>
 
     <!-- Recent Activity Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
         <!-- Recent Members -->
         <div class="border-4 border-roots-black bg-white p-6">
@@ -99,6 +109,26 @@
             </div>
             {% else %}
             <p>No donations yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Aspirants -->
+        <div class="border-4 border-roots-black bg-white p-6">
+            <h3 class="text-2xl font-black uppercase mb-6 border-b-4 border-roots-green inline-block">Recent Aspirants</h3>
+            {% if recent_aspirants %}
+            <div class="space-y-4">
+                {% for aspirant in recent_aspirants %}
+                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-2">
+                    <div>
+                        <p class="font-bold uppercase">{{ aspirant.surname }} {{ aspirant.other_names }}</p>
+                        <p class="text-xs font-mono text-gray-500">{{ aspirant.created_at|date:"d M Y H:i" }}</p>
+                    </div>
+                    <span class="bg-roots-green/10 text-roots-green text-xs font-black uppercase px-2 py-1 border border-roots-green">{{ aspirant.get_position_display }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No aspirant applications yet.</p>
             {% endif %}
         </div>
 

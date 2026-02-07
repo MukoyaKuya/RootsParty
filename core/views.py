@@ -327,6 +327,14 @@ def dashboard(request):
         
         upcoming_events_count = Event.objects.filter(date__gte=timezone.now()).count()
         
+        # --- ASPIRANT REGISTRATION STATS ---
+        total_aspirants = AspirantRegistration.objects.count()
+        new_aspirants_today = AspirantRegistration.objects.filter(created_at__date=today).count()
+        new_aspirants_week = AspirantRegistration.objects.filter(created_at__date__gte=week_ago).count()
+        
+        # Breakdown by position
+        aspirants_by_position = AspirantRegistration.objects.values('position').annotate(count=Count('id')).order_by('-count')
+        
         dashboard_stats = {
             'total_members': total_members,
             'total_coordinators': total_coordinators,
@@ -334,17 +342,23 @@ def dashboard(request):
             'new_members_week': new_members_week,
             'total_donations_amount': total_donations_amount,
             'upcoming_events_count': upcoming_events_count,
+            'total_aspirants': total_aspirants,
+            'new_aspirants_today': new_aspirants_today,
+            'new_aspirants_week': new_aspirants_week,
+            'aspirants_by_position': list(aspirants_by_position),
         }
         # Cache for 15 minutes
         cache.set('dashboard_stats', dashboard_stats, 60 * 15)
     
     recent_members = Member.objects.filter(is_coordinator_applicant=False).order_by('-created_at')[:5]
     recent_donations = Donation.objects.order_by('-created_at')[:5]
+    recent_aspirants = AspirantRegistration.objects.order_by('-created_at')[:5]
     
     context = {
         **dashboard_stats,
         'recent_members': recent_members,
         'recent_donations': recent_donations,
+        'recent_aspirants': recent_aspirants,
     }
     return render(request, 'core/dashboard.html', context)
 
