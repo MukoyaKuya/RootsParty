@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
+from django.urls import reverse
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Product, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, Vendor, NewsletterSubscriber, LeadershipRole, CarouselImage, Constituency, Aspirant, FloatingImage, AspirantRegistration
@@ -485,9 +487,78 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
 
 @admin.register(AspirantRegistration)
 class AspirantRegistrationAdmin(ModelAdmin):
-    list_display = ('surname', 'other_names', 'position', 'membership_status', 'created_at')
-    list_filter = ('position', 'membership_status', 'created_at')
-    search_fields = ('surname', 'other_names', 'id_number', 'phone_number')
+    list_display = ('surname', 'other_names', 'position', 'county', 'is_verified', 'membership_status', 'created_at', 'admin_photo_thumbnail', 'download_pdf_link')
+    list_filter = ('position', 'county', 'is_verified', 'membership_status', 'created_at')
+    search_fields = ('surname', 'other_names', 'id_number', 'phone_number', 'county__name', 'constituency', 'ward')
+    list_editable = ('is_verified',)
+    readonly_fields = ('admin_photo', 'download_pdf_button', 'created_at', 'updated_at')
     ordering = ['-created_at']
+    actions = ['approve_aspirants', 'reject_aspirants']
+
+    def approve_aspirants(self, request, queryset):
+        count = queryset.update(status='approved')
+        self.message_user(request, f"{count} applications marked as Approved.")
+    approve_aspirants.short_description = "Approve selected applications"
+
+    def reject_aspirants(self, request, queryset):
+        count = queryset.update(status='rejected')
+        self.message_user(request, f"{count} applications marked as Rejected.")
+    reject_aspirants.short_description = "Reject selected applications"
+    
+    fieldsets = (
+        ('Actions', {
+            'fields': ('download_pdf_button', 'admin_photo', 'is_verified')
+        }),
+        ('Personal Information', {
+            'fields': ('surname', 'other_names', 'id_number', 'date_of_birth', 'photo')
+        }),
+        ('Contact Details', {
+            'fields': ('phone_number', 'email')
+        }),
+        ('Position of Interest', {
+            'fields': ('position', 'is_incumbent', 'membership_status')
+        }),
+        ('Jurisdiction', {
+            'fields': ('county', 'constituency', 'ward'),
+            'classes': ('collapse',),
+        }),
+        ('Status', {
+            'fields': ('status', 'payment_status', 'draft_token')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at')
+        }),
+        ('Declaration', {
+            'fields': ('agreed_to_terms',)
+        }),
+    )
+
+    def admin_photo_thumbnail(self, obj):
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" width="50" height="50" style="object-fit:cover; border-radius:50%;" />')
+        return "-"
+    admin_photo_thumbnail.short_description = 'Photo'
+
+    def admin_photo(self, obj):
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" width="300" style="max-width:100%; height:auto; border-radius:8px; border: 4px solid #1a1a1a;" />')
+        return "No Photo"
+    admin_photo.short_description = 'Passport Photo Preview'
+    
+    def download_pdf_link(self, obj):
+        url = reverse('download_aspirant_pdf', args=[obj.id])
+        return mark_safe(f'<a href="{url}" target="_blank" style="color:#d32f2f; font-weight:bold;">PDF</a>')
+    download_pdf_link.short_description = 'PDF'
+
+    def download_pdf_button(self, obj):
+        if obj.id:
+            url = reverse('download_aspirant_pdf', args=[obj.id])
+            return mark_safe(f'''
+                <a href="{url}" target="_blank" class="button" style="background-color:#d32f2f; color:white; padding:10px 15px; text-decoration:none; border-radius:4px; font-weight:bold;">
+                    Download Official Profile (PDF)
+                </a>
+            ''')
+        return "-"
+    download_pdf_button.short_description = 'Export Profile'
 
 

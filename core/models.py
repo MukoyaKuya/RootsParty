@@ -597,17 +597,33 @@ class AspirantRegistration(models.Model):
         ('existing', 'Existing Roots Party Member'),
         ('new', 'New Member'),
     ]
+    
+    APPLICATION_STATUS_CHOICES = [
+        ('draft', 'Draft - Incomplete'),
+        ('submitted', 'Submitted - Pending Review'),
+        ('under_review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
 
     # Personal Information
     id_number = models.CharField(max_length=20, verbose_name="ID Number")
     surname = models.CharField(max_length=100)
     other_names = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=20, help_text="Used for verification and notifications")
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField(blank=True, null=True, verbose_name="Email Address (Optional)")
 
+    # Photo Upload
+    photo = models.ImageField(upload_to='aspirants/photos/', blank=True, null=True, help_text="Passport photo (JPG/PNG, max 2MB)")
+
     # Position of Interest
-    position = models.CharField(max_length=50, choices=POSITION_CHOICES, verbose_name="Select Position")
+    position = models.CharField(max_length=50, choices=POSITION_CHOICES, verbose_name="Select Position", blank=True)
+
+    # Location Details (Target Jurisdiction)
+    county = models.ForeignKey('County', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Target County")
+    constituency = models.CharField(max_length=100, blank=True, null=True, verbose_name="Target Constituency")
+    ward = models.CharField(max_length=100, blank=True, null=True, verbose_name="Target Ward")
 
     # Additional Details
     is_incumbent = models.BooleanField(default=False, verbose_name="Are you a current elected leader?")
@@ -616,12 +632,25 @@ class AspirantRegistration(models.Model):
     # Declaration
     agreed_to_terms = models.BooleanField(default=False, verbose_name="I agree to the Terms and Conditions")
     
+    # Application Status & Draft Mode
+    status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, default='submitted', db_index=True)
+    draft_token = models.CharField(max_length=64, unique=True, null=True, blank=True, help_text="Token for resuming draft applications")
+    
     # Meta
     payment_status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('completed', 'Completed')])
+    is_verified = models.BooleanField(default=False, verbose_name="Verified Aspirant", help_text="Check this to mark the aspirant as verified.")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.surname} {self.other_names} - {self.get_position_display()}"
+    
+    def save(self, *args, **kwargs):
+        # Generate draft token if not set
+        if not self.draft_token:
+            import secrets
+            self.draft_token = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
         
     class Meta:
         ordering = ['-created_at']

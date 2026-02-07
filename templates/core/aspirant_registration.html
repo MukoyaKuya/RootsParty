@@ -2,177 +2,583 @@
 {% load static %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-2xl mx-auto">
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto">
         <!-- Header -->
-        <div class="text-center mb-10">
-            <h2 class="text-4xl font-black uppercase text-roots-black mb-2">Aspirant Registration</h2>
-            <div class="w-24 h-2 bg-roots-red mx-auto mb-4"></div>
-            <p class="text-xl font-bold text-gray-600">Join the movement and vie for a leadership position.</p>
+        <div class="text-center mb-8">
+            <span class="inline-block bg-roots-red text-white px-4 py-1 text-sm font-black uppercase tracking-wider mb-3">2027 Elections</span>
+            <h1 class="text-3xl md:text-4xl font-black uppercase text-roots-black mb-3 tracking-tight">
+                Aspirant Registration
+            </h1>
+            <p class="text-base text-gray-600 font-medium max-w-xl mx-auto">
+                Register to contest for a leadership position under Roots Party of Kenya
+            </p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="flex justify-center mb-8">
+            <div class="flex items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-roots-red text-white flex items-center justify-center font-black text-sm border-2 border-roots-black">1</div>
+                    <span class="ml-2 font-bold text-xs hidden sm:block">Registration</span>
+                </div>
+                <div class="w-10 h-0.5 bg-gray-300 mx-2"></div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center font-black text-sm border-2 border-gray-300">2</div>
+                    <span class="ml-2 font-bold text-xs text-gray-400 hidden sm:block">Verification</span>
+                </div>
+                <div class="w-10 h-0.5 bg-gray-300 mx-2"></div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center font-black text-sm border-2 border-gray-300">3</div>
+                    <span class="ml-2 font-bold text-xs text-gray-400 hidden sm:block">Payment</span>
+                </div>
+            </div>
         </div>
 
         <!-- Form Container -->
-        <div class="bg-white border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] p-8 md:p-12 relative overflow-hidden">
-            <!-- Decorative Corner -->
-            <div class="absolute top-0 right-0 w-16 h-16 bg-roots-red border-l-4 border-b-4 border-roots-black"></div>
-
-            <form method="post" class="space-y-8">
-                {% csrf_token %}
-                
-                <!-- Personal Information -->
-                <section>
-                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
-                        <h3 class="text-xl font-black uppercase text-roots-black">Personal Information</h3>
+        <div class="bg-white border-4 border-roots-black shadow-[6px_6px_0px_0px_#1a1a1a]">
+            <div class="p-6 md:p-8">
+                <form method="post" enctype="multipart/form-data" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <!-- Honeypot field for spam prevention - hidden from real users -->
+                    <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                        {{ form.website }}
                     </div>
                     
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">ID Number <span class="text-roots-red">*</span></label>
-                            {{ form.id_number }}
-                            {{ form.id_number.errors }}
+                    <!-- Section 1: Personal Information -->
+                    <section>
+                        <div class="border-l-4 border-roots-red pl-4 mb-4">
+                            <h2 class="text-lg font-black uppercase text-roots-black">Personal Information</h2>
+                            <p class="text-xs text-gray-500">Enter your details as they appear on your national ID</p>
                         </div>
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">Surname <span class="text-roots-red">*</span></label>
-                            {{ form.surname }}
-                            {{ form.surname.errors }}
-                        </div>
-                        <div class="col-span-2 space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">Other Names <span class="text-roots-red">*</span></label>
-                            {{ form.other_names }}
-                            {{ form.other_names.errors }}
-                        </div>
-                        <div class="col-span-2 space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">Phone Number <span class="text-roots-red">*</span></label>
-                            {{ form.phone_number }}
-                            <p class="text-xs text-gray-500 font-bold">This phone number will be used for OTP verification and receiving important SMS notifications.</p>
-                            {{ form.phone_number.errors }}
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">Date of Birth <span class="text-roots-red">*</span></label>
-                            {{ form.date_of_birth }}
-                            {{ form.date_of_birth.errors }}
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700">Email Address (Optional)</label>
-                            {{ form.email }}
-                            {{ form.email.errors }}
-                        </div>
-                    </div>
-                </section>
-
-                <hr class="border-2 border-dashed border-gray-200" />
-
-                <!-- Position of Interest -->
-                <section>
-                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
-                        <h3 class="text-xl font-black uppercase text-roots-black">Position of Interest</h3>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <label class="block font-bold text-sm uppercase text-gray-700">Select Position <span class="text-roots-red">*</span></label>
-                        {{ form.position }}
-                        {{ form.position.errors }}
                         
-                        <!-- Fee Info (Dynamic mostly, but static hints for now based on model) -->
-                        <div class="bg-gray-100 p-4 border-l-4 border-roots-black text-sm font-bold">
-                            <p>Governor: KES 10,000</p>
-                            <p>Senator: KES 5,000</p>
-                            <p>Woman Representative: KES 5,000</p>
-                            <p>Member of Parliament (MP): KES 5,000</p>
-                            <p>Member of County Assembly (MCA): KES 2,000</p>
-                        </div>
-                    </div>
-                </section>
-
-                <hr class="border-2 border-dashed border-gray-200" />
-
-                <!-- Additional Details -->
-                <section>
-                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
-                        <h3 class="text-xl font-black uppercase text-roots-black">Additional Details</h3>
-                    </div>
-                    
-                    <div class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700 mb-2">Are you a current elected leader?</label>
-                            <div class="flex gap-6">
-                                {% for radio in form.is_incumbent %}
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    {{ radio.tag }}
-                                    <div class="w-6 h-6 border-4 border-roots-black rounded-full flex items-center justify-center group-hover:border-roots-green peer-checked:bg-roots-green peer-checked:border-roots-green transition-all">
-                                        <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
-                                    </div>
-                                    <span class="font-bold text-gray-700 group-hover:text-black">{{ radio.choice_label }}</span>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    National ID Number <span class="text-roots-red">*</span>
                                 </label>
-                                {% endfor %}
+                                {{ form.id_number }}
+                                <div id="id-error-ajax"></div>
+                                {% if form.id_number.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.id_number.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Last Name <span class="text-roots-red">*</span>
+                                </label>
+                                {{ form.surname }}
+                                {% if form.surname.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.surname.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Other Names <span class="text-roots-red">*</span>
+                                </label>
+                                {{ form.other_names }}
+                                {% if form.other_names.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.other_names.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Phone Number <span class="text-roots-red">*</span>
+                                </label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.phone_number.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Date of Birth <span class="text-roots-red">*</span>
+                                </label>
+                                {{ form.date_of_birth }}
+                                {% if form.date_of_birth.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.date_of_birth.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Email <span class="text-gray-400 font-normal text-xs">(Optional)</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.email.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Photo Upload -->
+                            <div class="space-y-1 md:col-span-3">
+                                <label class="block font-bold text-sm text-gray-700">
+                                    Passport Photo <span class="text-roots-red">*</span> <span class="text-gray-400 font-normal text-xs">(Max 2MB, JPG/PNG)</span>
+                                </label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-roots-black transition-colors bg-gray-50">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 justify-center">
+                                            <label for="{{ form.photo.id_for_label }}" class="relative cursor-pointer bg-white rounded-md font-bold text-roots-red hover:text-roots-black focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-roots-red">
+                                                <span>Upload a file</span>
+                                                {{ form.photo }}
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 2MB</p>
+                                    </div>
+                                </div>
+                                {% if form.photo.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.photo.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
+                    </section>
 
-                        <div class="space-y-2">
-                            <label class="block font-bold text-sm uppercase text-gray-700 mb-2">Party Membership Status</label>
-                            <div class="grid md:grid-cols-2 gap-4">
-                                {% for radio in form.membership_status %}
-                                <label class="cursor-pointer">
-                                    {{ radio.tag }}
-                                    <div class="peer-checked:bg-roots-green/10 peer-checked:border-roots-green border-4 border-gray-200 p-4 rounded-lg hover:border-roots-black transition-all">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-5 h-5 rounded-full border-4 border-roots-black flex items-center justify-center">
-                                                 <!-- Simple radio visual logic needed here if not using default -->
-                                            </div>
-                                            <span class="font-bold uppercase text-sm">{{ radio.choice_label }}</span>
+                    <!-- Section 2: Position Selection -->
+                    <section>
+                        <div class="border-l-4 border-roots-red pl-4 mb-4">
+                            <h2 class="text-lg font-black uppercase text-roots-black">Position of Interest</h2>
+                            <p class="text-xs text-gray-500">Select the elective seat you wish to contest</p>
+                        </div>
+                        
+                        <!-- National Positions -->
+                        <div class="mb-5">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="w-8 h-0.5 bg-roots-red"></span>
+                                <p class="text-xs font-bold uppercase text-roots-black tracking-wider">National & County Seats</p>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="position" value="governor" class="peer hidden" {% if form.position.value == 'governor' %}checked{% endif %}>
+                                    <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black peer-checked:shadow-lg bg-white border-2 border-gray-200 rounded-lg p-4 text-center hover:border-roots-black hover:shadow-md transition-all duration-200 h-full flex flex-col justify-center group-hover:scale-[1.02]">
+                                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gray-100 peer-checked:bg-white/20 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-roots-red peer-checked:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                        </div>
+                                        <p class="font-black text-sm uppercase peer-checked:text-white">Governor</p>
+                                        <p class="font-bold text-lg mt-1 text-roots-red peer-checked:text-white">KES 10,000</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="position" value="senator" class="peer hidden" {% if form.position.value == 'senator' %}checked{% endif %}>
+                                    <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black peer-checked:shadow-lg bg-white border-2 border-gray-200 rounded-lg p-4 text-center hover:border-roots-black hover:shadow-md transition-all duration-200 h-full flex flex-col justify-center group-hover:scale-[1.02]">
+                                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gray-100 peer-checked:bg-white/20 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-roots-red peer-checked:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+                                        </div>
+                                        <p class="font-black text-sm uppercase peer-checked:text-white">Senator</p>
+                                        <p class="font-bold text-lg mt-1 text-roots-red peer-checked:text-white">KES 5,000</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="position" value="woman_rep" class="peer hidden" {% if form.position.value == 'woman_rep' %}checked{% endif %}>
+                                    <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black peer-checked:shadow-lg bg-white border-2 border-gray-200 rounded-lg p-4 text-center hover:border-roots-black hover:shadow-md transition-all duration-200 h-full flex flex-col justify-center group-hover:scale-[1.02]">
+                                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gray-100 peer-checked:bg-white/20 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-roots-red peer-checked:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                        </div>
+                                        <p class="font-black text-xs uppercase leading-tight peer-checked:text-white">Woman Rep</p>
+                                        <p class="font-bold text-lg mt-1 text-roots-red peer-checked:text-white">KES 5,000</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="position" value="mp" class="peer hidden" {% if form.position.value == 'mp' %}checked{% endif %}>
+                                    <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black peer-checked:shadow-lg bg-white border-2 border-gray-200 rounded-lg p-4 text-center hover:border-roots-black hover:shadow-md transition-all duration-200 h-full flex flex-col justify-center group-hover:scale-[1.02]">
+                                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gray-100 peer-checked:bg-white/20 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-roots-red peer-checked:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        </div>
+                                        <p class="font-black text-xs uppercase leading-tight peer-checked:text-white">MP</p>
+                                        <p class="font-bold text-lg mt-1 text-roots-red peer-checked:text-white">KES 5,000</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Ward Positions -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="w-8 h-0.5 bg-gray-400"></span>
+                                <p class="text-xs font-bold uppercase text-gray-500 tracking-wider">Ward Level</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="position" value="mca" class="peer hidden" {% if form.position.value == 'mca' %}checked{% endif %}>
+                                    <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black peer-checked:shadow-lg bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-roots-black hover:shadow-md transition-all duration-200 group-hover:scale-[1.01] flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-full bg-gray-100 peer-checked:bg-white/20 flex items-center justify-center flex-shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500 peer-checked:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-black text-sm uppercase peer-checked:text-white">Member of County Assembly</p>
+                                            <p class="text-xs text-gray-500 peer-checked:text-white/80">MCA - Ward Representative</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold text-xl text-roots-red peer-checked:text-white">KES 2,000</p>
                                         </div>
                                     </div>
                                 </label>
-                                {% endfor %}
                             </div>
-                            <p class="text-xs text-roots-green font-bold mt-2">Dial *509# to confirm membership</p>
                         </div>
+                        
+                        {% if form.position.errors %}
+                        <p class="text-roots-red text-xs font-medium mt-3">{{ form.position.errors.0 }}</p>
+                        {% endif %}
+                    <!-- Section 3: Target Jurisdiction -->
+                    <section id="section-jurisdiction" class="hidden">
+                        <div class="border-l-4 border-roots-red pl-4 mb-4">
+                            <h2 class="text-lg font-black uppercase text-roots-black">Target Jurisdiction</h2>
+                            <p class="text-xs text-gray-500">Where are you vying?</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-6 border-2 border-gray-200 rounded-lg">
+                            <!-- County -->
+                            <div id="wrapper-county" class="hidden">
+                                <label class="block font-bold text-sm text-gray-700 mb-1">County <span class="text-roots-red">*</span></label>
+                                <select name="county" id="field-county" onchange="fetchConstituencies(this.value)" class="w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors bg-white appearance-none cursor-pointer">
+                                    <option value="">Select County</option>
+                                    {% for county in counties %}
+                                        <option value="{{ county.id }}" data-name="{{ county.name }}" {% if form.county.value == county.id %}selected{% endif %}>{{ county.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.county.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.county.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Constituency -->
+                            <div id="wrapper-constituency" class="hidden">
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Constituency <span class="text-roots-red">*</span></label>
+                                <select name="constituency" id="field-constituency" onchange="fetchWards(this.value)" disabled class="w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors bg-white appearance-none cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed">
+                                    <option value="">Select Constituency</option>
+                                    {% if form.constituency.value %}
+                                        <option value="{{ form.constituency.value }}" selected>{{ form.constituency.value }}</option>
+                                    {% endif %}
+                                </select>
+                                <div id="loader-constituency" class="hidden w-full h-[50px] bg-gray-200 animate-pulse mt-1"></div>
+                                {% if form.constituency.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.constituency.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Ward -->
+                            <div id="wrapper-ward" class="hidden">
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Ward <span class="text-roots-red">*</span></label>
+                                <select name="ward" id="field-ward" disabled class="w-full p-3 border-4 border-roots-black font-bold focus:outline-none focus:border-roots-red transition-colors bg-white appearance-none cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed">
+                                    <option value="">Select Ward</option>
+                                    {% if form.ward.value %}
+                                        <option value="{{ form.ward.value }}" selected>{{ form.ward.value }}</option>
+                                    {% endif %}
+                                </select>
+                                <div id="loader-ward" class="hidden w-full h-[50px] bg-gray-200 animate-pulse mt-1"></div>
+                                {% if form.ward.errors %}
+                                <p class="text-roots-red text-xs font-medium">{{ form.ward.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 3: Background Information -->
+                    <section>
+                        <div class="border-l-4 border-roots-red pl-4 mb-6">
+                            <h2 class="text-xl font-black uppercase text-roots-black">Background Information</h2>
+                            <p class="text-sm text-gray-500">Help us understand your candidacy better</p>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Incumbent Question -->
+                            <div class="space-y-3">
+                                <label class="block font-bold text-sm text-gray-700">Are you currently an elected leader?</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    {% for radio in form.is_incumbent %}
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="{{ form.is_incumbent.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="peer hidden">
+                                        <div class="peer-checked:bg-roots-black peer-checked:text-white peer-checked:border-roots-black bg-white border-2 border-gray-200 p-4 text-center font-bold uppercase hover:border-roots-black transition-all">
+                                            {{ radio.choice_label }}
+                                        </div>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Membership Status -->
+                            <div class="space-y-3">
+                                <label class="block font-bold text-sm text-gray-700">Party Membership Status</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {% for radio in form.membership_status %}
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="{{ form.membership_status.name }}" value="{{ radio.data.value }}" {% if radio.data.selected %}checked{% endif %} class="peer hidden">
+                                        <div class="peer-checked:bg-roots-red/10 peer-checked:border-roots-red bg-white border-2 border-gray-200 p-4 hover:border-roots-black transition-all">
+                                            <span class="font-bold">{{ radio.choice_label }}</span>
+                                        </div>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <p class="text-xs text-gray-500">
+                                    <span class="font-bold">Not sure?</span> Dial *509# to check your membership status
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 4: Declaration -->
+                    <section>
+                        <div class="border-l-4 border-roots-red pl-4 mb-6">
+                            <h2 class="text-xl font-black uppercase text-roots-black">Declaration</h2>
+                            <p class="text-sm text-gray-500">Please read and accept the terms</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 border-2 border-gray-200 p-5">
+                            <label class="flex items-start gap-4 cursor-pointer">
+                                <div class="relative mt-0.5 flex-shrink-0">
+                                    <input type="checkbox" name="agreed_to_terms" class="peer w-6 h-6 border-2 border-roots-black bg-white appearance-none cursor-pointer checked:bg-roots-red checked:border-roots-red" {% if form.agreed_to_terms.value %}checked{% endif %}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-white absolute top-1 left-1 opacity-0 peer-checked:opacity-100 pointer-events-none">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-gray-700">
+                                    I confirm that the information provided is accurate and complete. I have read and agree to the 
+                                    <a href="#" class="text-roots-red underline hover:text-roots-black">Terms and Conditions</a> 
+                                    and <a href="#" class="text-roots-red underline hover:text-roots-black">Privacy Policy</a> 
+                                    of Roots Party of Kenya. <span class="text-roots-red font-bold">*</span>
+                                </span>
+                            </label>
+                            {% if form.agreed_to_terms.errors %}
+                            <p class="text-roots-red text-xs font-medium mt-3">{{ form.agreed_to_terms.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <!-- Submit Button -->
+                    <!-- Submit Buttons -->
+                    <div class="pt-4 grid md:grid-cols-2 gap-4">
+                        <button type="submit" name="save_draft" value="true" class="w-full bg-white text-roots-black py-4 px-8 font-bold uppercase text-lg border-4 border-roots-black shadow-[4px_4px_0px_0px_gray] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                            </svg>
+                            <span>Save Draft & Exit</span>
+                        </button>
+                        
+                        <button type="submit" class="w-full bg-roots-red text-white py-4 px-8 font-black uppercase text-lg border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-2">
+                            <span>{% if is_draft_resume %}Update Application{% else %}Continue to Payment{% endif %}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
                     </div>
-                </section>
 
-                <hr class="border-2 border-dashed border-gray-200" />
-
-                <!-- Declaration -->
-                <section>
-                    <div class="flex items-center gap-3 mb-6 border-l-4 border-roots-green pl-4">
-                        <h3 class="text-xl font-black uppercase text-roots-black">Declaration & Consent</h3>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            {{ form.agreed_to_terms }}
-                            <span class="font-bold text-sm text-gray-700 pt-1">
-                                I agree to the <a href="#" class="text-roots-green underline hover:text-black">Terms and Conditions</a> <span class="text-roots-red">*</span>
-                            </span>
-                        </label>
-                        {{ form.agreed_to_terms.errors }}
-                    </div>
-                </section>
-
-                <!-- Info Box -->
-                <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-lg flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-orange-500 flex-shrink-0">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                    </svg>
-                    <div class="text-sm text-orange-800">
-                        <p class="font-bold mb-1">Please complete the following:</p>
-                        <ul class="list-disc pl-4 space-y-1">
-                            <li>Surname is required</li>
-                            <li>Other names must be at least 2 characters</li>
-                            <li>ID number must be 7-10 digits</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-roots-green text-white py-4 px-8 font-black uppercase text-xl border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-                    Proceed to Payment
-                </button>
-
-            </form>
+                </form>
+            </div>
         </div>
         
-        <p class="text-center font-bold text-gray-400 text-xs mt-8">Having trouble? Contact support at 0791-555-222</p>
+        <!-- Help Footer -->
+        <div class="text-center mt-8">
+            <p class="text-sm text-gray-500">
+                Need help? <a href="https://wa.me/254717157165" target="_blank" class="text-roots-red font-bold hover:underline">0717 157165</a> 
+                or email <a href="mailto:aspirants@rootsparty.co.ke" class="text-roots-red font-bold hover:underline">aspirants@rootsparty.co.ke</a>
+            </p>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const API_KEY = "keyPub1569gsvndc123kg9sjhg";
+    const API_BASE = "https://kenyaareadata.vercel.app/api/areas";
+    
+    // Mappings for disparate county names
+    const MAPPINGS = {
+        'Elgoyo Marakwet': 'Elgeyo/Marakwet',
+        'Homabay': 'Homa Bay',
+        'Murang\'a': "Murang'A",
+        'Tharaka Nithi': 'Tharaka - Nithi',
+        'Trans Zoia': 'Trans Nzoia',
+        'Transzoia': 'Trans Nzoia',
+        'Nairobi': 'Nairobi City'
+    };
+
+    function getMappedCountyName(rawName) {
+        if (!rawName) return '';
+        let name = rawName.replace(' County', '').replace(' City', '').trim();
+        if (MAPPINGS[name]) return MAPPINGS[name];
+        return name;
+    }
+
+    // Toggle logic based on position
+    function handlePositionChange() {
+        const selected = document.querySelector('input[name="position"]:checked');
+        const section = document.getElementById('section-jurisdiction');
+        const wrapCounty = document.getElementById('wrapper-county');
+        const wrapConst = document.getElementById('wrapper-constituency');
+        const wrapWard = document.getElementById('wrapper-ward');
+        
+        if (!selected) return;
+        
+        const pos = selected.value;
+        
+        // Logic table
+        // Gov/Sen/WR -> County
+        // MP -> County + Const
+        // MCA -> County + Const + Ward
+        
+        if (['governor', 'senator', 'woman_rep'].includes(pos)) {
+            section.classList.remove('hidden');
+            wrapCounty.classList.remove('hidden');
+            wrapConst.classList.add('hidden');
+            wrapWard.classList.add('hidden');
+            document.getElementById('field-county').required = true;
+            document.getElementById('field-constituency').required = false;
+            document.getElementById('field-ward').required = false;
+        } else if (pos === 'mp') {
+            section.classList.remove('hidden');
+            wrapCounty.classList.remove('hidden');
+            wrapConst.classList.remove('hidden');
+            wrapWard.classList.add('hidden');
+            document.getElementById('field-county').required = true;
+            document.getElementById('field-constituency').required = true;
+            document.getElementById('field-ward').required = false;
+        } else if (pos === 'mca') {
+            section.classList.remove('hidden');
+            wrapCounty.classList.remove('hidden');
+            wrapConst.classList.remove('hidden');
+            wrapWard.classList.remove('hidden');
+            document.getElementById('field-county').required = true;
+            document.getElementById('field-constituency').required = true;
+            document.getElementById('field-ward').required = true;
+        } else {
+            // President or others
+            section.classList.add('hidden');
+            document.getElementById('field-county').required = false;
+            document.getElementById('field-constituency').required = false;
+            document.getElementById('field-ward').required = false;
+        }
+    }
+
+    // Attach listeners
+    document.querySelectorAll('input[name="position"]').forEach(radio => {
+        radio.addEventListener('change', handlePositionChange);
+    });
+
+    // Run on load (for validation errors/drafts)
+    document.addEventListener('DOMContentLoaded', function() {
+        handlePositionChange();
+        
+        // If we have values pre-filled (e.g. from error), trigger fetches
+        // Note: This is complex because fetch is async. 
+        // For now, if value exists, user might need to re-select to fetch dependent options
+        // unless we implement chain loading.
+        // A simple "click" on the selected county might trigger it if we wanted.
+        // Or check if options are empty but value exists.
+        
+        const countyVal = document.getElementById('field-county').value;
+        if (countyVal) {
+             // We can try to load constituencies
+             fetchConstituencies(countyVal);
+             // But wait, the dependent value (constituency) is in the select 'value' attribute
+             // but options aren't there yet.
+             // We'd need to set the value AFTER fetching.
+        }
+    });
+
+    async function fetchConstituencies(countyId) {
+        const constituencySelect = document.getElementById('field-constituency');
+        const wardSelect = document.getElementById('field-ward');
+        const loader = document.getElementById('loader-constituency');
+        
+        // Preserve current value if any (from server render)
+        const currentVal = constituencySelect.value || constituencySelect.getAttribute('value') || "{{ form.constituency.value|default:'' }}";
+        
+        constituencySelect.innerHTML = '<option value="">Select Constituency</option>';
+        constituencySelect.disabled = true;
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+
+        if (!countyId) return;
+
+        const countySelect = document.getElementById('field-county');
+        const selectedOption = Array.from(countySelect.options).find(opt => opt.value == countyId);
+        if (!selectedOption) return;
+
+        const countyName = getMappedCountyName(selectedOption.getAttribute('data-name'));
+        
+        try {
+            loader.classList.remove('hidden');
+            constituencySelect.classList.add('hidden');
+            
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}`);
+            const data = await response.json();
+            
+            if (data && data[countyName]) {
+                const constituencies = Object.keys(data[countyName]).sort();
+                constituencies.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c;
+                    option.textContent = c;
+                    if (c === currentVal) option.selected = true;
+                    constituencySelect.appendChild(option);
+                });
+                constituencySelect.disabled = false;
+                
+                // If we selected a constituency, trigger ward fetch
+                if (currentVal && constituencySelect.value === currentVal) {
+                    fetchWards(currentVal);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            loader.classList.add('hidden');
+            constituencySelect.classList.remove('hidden');
+        }
+    }
+
+    async function fetchWards(constituencyName) {
+        const wardSelect = document.getElementById('field-ward');
+        const loader = document.getElementById('loader-ward');
+        
+        const currentVal = wardSelect.value || "{{ form.ward.value|default:'' }}";
+        
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+
+        if (!constituencyName) return;
+
+        const countySelect = document.getElementById('field-county');
+        const selectedOption = Array.from(countySelect.options).find(opt => opt.selected);
+        const countyName = getMappedCountyName(selectedOption.getAttribute('data-name'));
+
+        try {
+            loader.classList.remove('hidden');
+            wardSelect.classList.add('hidden');
+            
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}&constituency=${encodeURIComponent(constituencyName)}`);
+            const data = await response.json();
+            
+            let wards = [];
+            if (data && data[countyName] && data[countyName][constituencyName]) {
+                 wards = data[countyName][constituencyName];
+            } else if (data && data[constituencyName]) {
+                 wards = data[constituencyName];
+            }
+
+            if (wards.length > 0) {
+                wards.sort().forEach(w => {
+                    const option = document.createElement('option');
+                    option.value = w;
+                    option.textContent = w;
+                    if (w === currentVal) option.selected = true;
+                    wardSelect.appendChild(option);
+                });
+                wardSelect.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+             loader.classList.add('hidden');
+             wardSelect.classList.remove('hidden');
+        }
+    }
+</script>
 {% endblock %}

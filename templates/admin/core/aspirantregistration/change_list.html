@@ -1,0 +1,64 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    <li>
+        <a href="{% url 'download_aspirants_list_pdf' %}" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" style="background-color: #d32f2f; color: white; padding: 10px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; white-space: nowrap;">
+            ASP REPORT
+        </a>
+    </li>
+
+    {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Find the Add button (usually ends with /add/)
+        // We look inside object-tools to avoid grabbing other links
+        const addBtn = document.querySelector('.object-tools a[href$="/add/"]');
+        
+        // Find the title element. Standard Django is #content > h1, Unfold might be slightly different
+        // We look for the main h1 which usually contains the model name
+        const titleElements = document.querySelectorAll('h1');
+        let titleEl = null;
+
+        // In Unfold, the title might be inside a flex container. 
+        // We grab the last h1 which is likely the page content title if multiple exist
+        if (titleElements.length > 0) {
+            titleEl = titleElements[titleElements.length - 1];
+        }
+
+        if (addBtn && titleEl) {
+            // Check if title is in a flex container (Unfold optimization)
+            const parent = titleEl.parentElement;
+            const computedStyle = window.getComputedStyle(parent);
+            
+            if (computedStyle.display === 'flex' || computedStyle.display === 'inline-flex') {
+                // Determine styling for the button to fit in
+                addBtn.style.marginLeft = '15px';
+                addBtn.style.order = '99'; // Ensure it's after the text
+                parent.appendChild(addBtn);
+                parent.style.alignItems = 'center'; // Vertical align
+            } else {
+                // Create a flex wrapper if it's not flex
+                // Or just insert after
+                addBtn.style.marginLeft = '15px';
+                addBtn.style.display = 'inline-block';
+                addBtn.style.verticalAlign = 'middle';
+                titleEl.appendChild(addBtn);
+            }
+
+            // Hide the li that held the button if it's now empty
+            // The addBtn was moved, so we traverse up to finding the li
+            // But addBtn.parentElement is now the title container. 
+            // So we can't hide the old li easily unless we stored reference or check the object-tools.
+            // However, moving an element removes it from old parent, so the old LI is just empty.
+            // We can style empty li to hidden via CSS or just leave it (it's often invisible if empty).
+        }
+        
+
+    });
+</script>
+{% endblock %}

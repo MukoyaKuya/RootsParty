@@ -19,7 +19,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Sum, Count, Case, When, Value, IntegerField, F, Prefetch, Q
-from django.http import FileResponse, HttpResponseNotAllowed
+from django.http import FileResponse, HttpResponseNotAllowed, HttpResponse
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from asgiref.sync import sync_to_async
@@ -34,22 +35,88 @@ from .models import (
 )
 from users.models import Member
 from finance.models import Donation
+from django_ratelimit.decorators import ratelimit
+from django.http import HttpResponseForbidden
 
-def aspirant_registration(request):
-    """View for aspirant registration"""
-    if request.method == 'POST':
-        form = AspirantRegistrationForm(request.POST)
-        if form.is_valid():
-            aspirant_reg = form.save()
-            messages.success(request, "Registration successful! Proceed to payment or wait for further instructions.")
-            # TODO: Redirect to payment or success page
-            return render(request, 'core/aspirant_registration_success.html', {'aspirant': aspirant_reg})
-    else:
-        form = AspirantRegistrationForm()
+@ratelimit(key='ip', rate='5/h', method='POST', block=False)
+def aspirant_registration(request, draft_token=None):
+    """View for aspirant registration with rate limiting and draft support"""
+    # Check if rate limited
+    was_limited = getattr(request, 'limited', False)
+    if was_limited:
+        messages.error(request, "Too many submission attempts. Please try again later.")
+        return render(request, 'core/aspirant_registration.html', {
+            'form': AspirantRegistrationForm(),
+            'rate_limited': True
+        })
     
-    return render(request, 'core/aspirant_registration.html', {'form': form})
+    # Check if resuming a draft
+    instance = None
+    if draft_token:
+        instance = AspirantRegistration.objects.filter(draft_token=draft_token, status='draft').first()
+        if not instance:
+            messages.error(request, "Draft application not found or already submitted.")
+            return redirect('aspirant_registration')
+    
+    if request.method == 'POST':
+        form = AspirantRegistrationForm(request.POST, request.FILES, instance=instance)
+        
+        # Check which button was clicked
+        is_draft = 'save_draft' in request.POST
+        
+        if is_draft:
+            # Save as draft - only validate basic fields
+            if form.is_valid() or True:  # Allow partial save
+                aspirant_reg = form.save(commit=False)
+                aspirant_reg.status = 'draft'
+                aspirant_reg.save()
+                messages.success(request, "Draft saved! Use the link below to continue later.")
+                return render(request, 'core/aspirant_draft_saved.html', {'aspirant': aspirant_reg})
+        else:
+            if form.is_valid():
+                aspirant_reg = form.save(commit=False)
+                aspirant_reg.status = 'submitted'
+                aspirant_reg.save()
+                messages.success(request, "Registration successful!")
+                return render(request, 'core/aspirant_registration_success.html', {'aspirant': aspirant_reg})
+    else:
+        form = AspirantRegistrationForm(instance=instance)
+    
+    counties = County.objects.all().order_by('name')
+    return render(request, 'core/aspirant_registration.html', {
+        'form': form,
+        'is_draft_resume': instance is not None,
+        'counties': counties
+    })
 
 
+def aspirant_status(request):
+    """View for checking application status"""
+    aspirant = None
+    searched = False
+    
+    if request.method == 'POST':
+        id_number = request.POST.get('id_number', '').strip()
+        searched = True
+        if id_number:
+            aspirant = AspirantRegistration.objects.filter(
+                id_number=id_number
+            ).exclude(status='draft').first()
+    
+    return render(request, 'core/aspirant_status.html', {
+        'aspirant': aspirant,
+        'searched': searched
+    })
+
+
+
+@require_http_methods(["GET"])
+def check_aspirant_id(request):
+    """Ajax check for duplicate ID number in aspirants"""
+    id_number = request.GET.get('id_number')
+    if id_number and AspirantRegistration.objects.filter(id_number=id_number).exists():
+        return HttpResponse('<span class="text-roots-red font-bold uppercase block mt-1 bg-roots-black text-white p-2">⚠️ Error: Comrade already has an application!</span>')
+    return HttpResponse('')
 
 def home(request):
     # Try to get stats from cache
@@ -651,6 +718,330 @@ def aspirant_detail(request, aspirant_id):
     """Generic detail view for any aspirant"""
     aspirant = get_object_or_404(Aspirant, id=aspirant_id)
     return render(request, 'core/aspirant_detail.html', {'aspirant': aspirant})
+
+@staff_member_required
+def download_aspirant_pdf(request, aspirant_id):
+    """Generate PDF profile for an aspirant using Platypus for professional layout"""
+    aspirant = get_object_or_404(AspirantRegistration, id=aspirant_id)
+    
+    buffer = io.BytesIO()
+    
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as ReportLabImage
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+    
+    # Document Setup
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=40, leftMargin=40,
+        topMargin=40, bottomMargin=40,
+        title=f"Aspirant Profile - {aspirant.surname}"
+    )
+    
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # --- Styles ---
+    styles.add(ParagraphStyle(name='HeaderTitle', parent=styles['Heading1'], alignment=TA_CENTER, fontSize=24, spaceAfter=10, textColor=colors.HexColor('#1a1a1a')))
+    styles.add(ParagraphStyle(name='HeaderSubtitle', parent=styles['Normal'], alignment=TA_CENTER, fontSize=14, spaceAfter=20, textColor=colors.HexColor('#d32f2f'), fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='SectionHeader', parent=styles['Heading2'], fontSize=16, spaceBefore=15, spaceAfter=10, textColor=colors.HexColor('#1a1a1a'), borderPadding=5, borderColor=colors.HexColor('#1a1a1a'), borderWidth=0, borderBottomWidth=2))
+    styles.add(ParagraphStyle(name='Label', parent=styles['Normal'], fontSize=11, fontName='Helvetica-Bold', textColor=colors.HexColor('#555555')))
+    styles.add(ParagraphStyle(name='Value', parent=styles['Normal'], fontSize=11, fontName='Helvetica', textColor=colors.black))
+    styles.add(ParagraphStyle(name='FooterText', parent=styles['Normal'], fontSize=8, alignment=TA_CENTER, textColor=colors.gray))
+
+    # --- Header with Logo ---
+    logo_path = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'roots_logo_circle.png')
+    if os.path.exists(logo_path):
+        im = ReportLabImage(logo_path, width=80, height=80)
+        im.hAlign = 'CENTER'
+        elements.append(im)
+    
+    elements.append(Spacer(1, 10))
+    elements.append(Paragraph("ROOTS PARTY OF KENYA", styles['HeaderTitle']))
+    elements.append(Paragraph("OFFICIAL ASPIRANT PROFILE", styles['HeaderSubtitle']))
+    elements.append(Spacer(1, 10))
+    
+    # --- Top Section: Photo and Basic Info in a Table ---
+    # Prepare Photo
+    photo_img = None
+    if aspirant.photo and hasattr(aspirant.photo, 'path') and os.path.exists(aspirant.photo.path):
+        try:
+            # Resize keeping aspect ratio is tricky in simple Platypus without PIL, 
+            # but ReportLabImage handles width/height. We'll set a fixed width.
+            photo_width = 150
+            photo_height = 150 # Square box, image will fit
+            photo_img = ReportLabImage(aspirant.photo.path, width=photo_width, height=photo_height)
+            photo_img.hAlign = 'RIGHT'
+        except Exception:
+            photo_img = Paragraph("[Photo Error]", styles['Normal'])
+    else:
+        # Placeholder box
+        photo_img = Paragraph("NO PHOTO", styles['Normal'])
+
+    # Basic Info for the left side
+    # Verification Status
+    verified_text = "Pending Verification"
+    verified_color = "red"
+    if aspirant.is_verified:
+        verified_text = "VERIFIED"
+        verified_color = "green"
+
+    basic_info_data = [
+        [Paragraph("Application ID:", styles['Label']), Paragraph(f"#{aspirant.id}", styles['Value'])],
+        [Paragraph("Date Submitted:", styles['Label']), Paragraph(aspirant.created_at.strftime('%d %B %Y'), styles['Value'])],
+        [Paragraph("Status:", styles['Label']), Paragraph(aspirant.get_status_display().upper(), styles['Value'])],
+        [Paragraph("Verification:", styles['Label']), Paragraph(f"<font color='{verified_color}'><b>{verified_text}</b></font>", styles['Value'])],
+        [Paragraph("Position:", styles['Label']), Paragraph(aspirant.get_position_display().upper(), styles['Value'])],
+    ]
+    
+    basic_info_table = Table(basic_info_data, colWidths=[120, 200])
+    basic_info_table.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('kPadding', (0,0), (-1,-1), 1),
+        ('LEFTPADDING', (0,0), (-1,-1), 0),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+    ]))
+    
+    # Main Header Table (Info Left, Photo Right)
+    header_table_data = [[basic_info_table, photo_img]]
+    header_table = Table(header_table_data, colWidths=[350, 160])
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('ALIGN', (1,0), (1,0), 'RIGHT'), # Align photo right
+    ]))
+    
+    elements.append(header_table)
+    elements.append(Spacer(1, 20))
+    
+    # --- Detailed Information Table ---
+    elements.append(Paragraph("PERSONAL DETAILS", styles['SectionHeader']))
+    
+    details_data = [
+        [Paragraph("Surname:", styles['Label']), Paragraph(aspirant.surname, styles['Value'])],
+        [Paragraph("Other Names:", styles['Label']), Paragraph(aspirant.other_names, styles['Value'])],
+        [Paragraph("ID Number:", styles['Label']), Paragraph(aspirant.id_number, styles['Value'])],
+        [Paragraph("Date of Birth:", styles['Label']), Paragraph(aspirant.date_of_birth.strftime('%d %B %Y') if aspirant.date_of_birth else "-", styles['Value'])],
+        [Paragraph("Phone Number:", styles['Label']), Paragraph(aspirant.phone_number, styles['Value'])],
+        [Paragraph("Email Address:", styles['Label']), Paragraph(aspirant.email or "-", styles['Value'])],
+    ]
+    
+    # Add Jurisdiction context if available from Position logic (simplified here)
+    if aspirant.is_incumbent:
+        details_data.append([Paragraph("Incumbent:", styles['Label']), Paragraph("Yes, currently elected", styles['Value'])])
+    
+    details_data.append([Paragraph("Membership Status:", styles['Label']), Paragraph(aspirant.get_membership_status_display(), styles['Value'])])
+    details_data.append([Paragraph("Payment Status:", styles['Label']), Paragraph(aspirant.get_payment_status_display(), styles['Value'])])
+
+    
+    details_table = Table(details_data, colWidths=[180, 330])
+    details_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#f9fafb')), # Light gray label column
+        ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e5e7eb')), # Light border
+        ('PADDING', (0,0), (-1,-1), 12),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+    ]))
+    
+    elements.append(details_table)
+    elements.append(Spacer(1, 30))
+    
+    # --- Declaration Section ---
+    elements.append(Paragraph("DECLARATION", styles['SectionHeader']))
+    declaration_text = f"I, <b>{aspirant.surname} {aspirant.other_names}</b>, confirmed that the information provided is accurate and complete. I achieved this by accepting the Terms and Conditions of Roots Party of Kenya during the registration process on {aspirant.created_at.strftime('%d %B %Y')}."
+    elements.append(Paragraph(declaration_text, styles['Normal']))
+    
+    elements.append(Spacer(1, 40))
+    
+    # --- Signature Area ---
+    sig_data = [
+        ["__________________________", "__________________________"],
+        ["Signature", "Party Official / Date"]
+    ]
+    sig_table = Table(sig_data, colWidths=[250, 250])
+    sig_table.setStyle(TableStyle([
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('FONTNAME', (0,1), (-1,-1), 'Helvetica-Oblique'),
+        ('FONTSIZE', (0,1), (-1,-1), 10),
+        ('TOPPADDING', (0,1), (-1,-1), 5),
+    ]))
+    elements.append(sig_table)
+    
+    # --- Build Document ---
+    def footer(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Helvetica', 9)
+        canvas.setFillColor(colors.gray)
+        canvas.drawString(40, 30, f"Generated on {timezone.now().strftime('%d %B %Y %H:%M')}")
+        canvas.drawCentredString(A4[0]/2, 30, "Roots Party of Kenya - Internal Document")
+        canvas.drawRightString(A4[0]-40, 30, f"Page {doc.page}")
+        canvas.restoreState()
+
+    doc.build(elements, onFirstPage=footer, onLaterPages=footer)
+    
+    buffer.seek(0)
+    filename = f"Profile_{aspirant.surname}_{aspirant.id_number}.pdf"
+    return FileResponse(buffer, as_attachment=True, filename=filename)
+
+@staff_member_required
+def download_aspirants_list_pdf(request):
+    """Generate a full PDF report of all aspirants grouped by position"""
+    buffer = io.BytesIO()
+    
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image as ReportLabImage
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT
+    
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=30, leftMargin=30,
+        topMargin=30, bottomMargin=30,
+        title="Roots Party - Aspirant Report"
+    )
+    
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Custom Styles
+    styles.add(ParagraphStyle(name='CoverTitle', parent=styles['Heading1'], alignment=TA_CENTER, fontSize=30, leading=36, spaceAfter=20, textColor=colors.HexColor('#1a1a1a'), fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='CoverSubtitle', parent=styles['Heading2'], alignment=TA_CENTER, fontSize=18, leading=24, spaceAfter=10, textColor=colors.HexColor('#d32f2f'), fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='CoverDate', parent=styles['Normal'], alignment=TA_CENTER, fontSize=12, textColor=colors.HexColor('#555555')))
+    styles.add(ParagraphStyle(name='CoverStats', parent=styles['Normal'], alignment=TA_CENTER, fontSize=14, textColor=colors.HexColor('#1a1a1a'), spaceBefore=30))
+    
+    styles.add(ParagraphStyle(name='ReportTitle', parent=styles['Heading1'], alignment=TA_CENTER, fontSize=20, spaceAfter=20, textColor=colors.HexColor('#1a1a1a')))
+    styles.add(ParagraphStyle(name='PositionHeader', parent=styles['Heading2'], fontSize=14, spaceBefore=15, spaceAfter=10, textColor=colors.HexColor('#d32f2f'), borderPadding=5, borderBottomWidth=1, borderColor=colors.HexColor('#d32f2f')))
+    styles.add(ParagraphStyle(name='TableHeader', parent=styles['Normal'], fontSize=9, fontName='Helvetica-Bold', textColor=colors.black, alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name='TableBody', parent=styles['Normal'], fontSize=8, fontName='Helvetica', alignment=TA_LEFT))
+
+    # --- Cover Page ---
+    elements.append(Spacer(1, 60)) # Vertical centering spacing mainly
+    
+    # Logo
+    logo_path = os.path.join(settings.STATICFILES_DIRS[0], 'images', 'roots_logo_circle.png')
+    if os.path.exists(logo_path):
+        im = ReportLabImage(logo_path, width=150, height=150)
+        im.hAlign = 'CENTER'
+        elements.append(im)
+    
+    elements.append(Spacer(1, 40))
+    elements.append(Paragraph("ROOTS PARTY OF KENYA", styles['CoverTitle']))
+    elements.append(Paragraph("ASPIRANT REGISTRATION REPORT", styles['CoverSubtitle']))
+    
+    # Decorative line using a Table
+    line_data = [[""]]
+    line_table = Table(line_data, colWidths=[400])
+    line_table.setStyle(TableStyle([
+        ('BOTTOMPADDING', (0,0), (-1,-1), 1),
+        ('LINEBELOW', (0,0), (-1,-1), 2, colors.HexColor('#d32f2f')),
+    ]))
+    elements.append(line_table)
+    
+    elements.append(Spacer(1, 20))
+    
+    elements.append(Paragraph(f"Generated on {timezone.now().strftime('%d %B %Y')}", styles['CoverDate']))
+    elements.append(Paragraph(f"at {timezone.now().strftime('%H:%M')}", styles['CoverDate']))
+    
+    elements.append(Spacer(1, 50))
+    
+    # Summary Stats on Cover
+    total_aspirants = AspirantRegistration.objects.count()
+    elements.append(Paragraph(f"Total Applications Received: <b>{total_aspirants}</b>", styles['CoverStats']))
+    
+    elements.append(PageBreak())
+    
+    # --- Grouped List ---
+    # Order of positions
+    position_order = ['president', 'governor', 'senator', 'woman_rep', 'mp', 'mca']
+    position_labels = dict(AspirantRegistration.POSITION_CHOICES)
+    
+    for pos_key in position_order:
+        aspirants = AspirantRegistration.objects.select_related('county').filter(position=pos_key).order_by('surname')
+        
+        if not aspirants.exists():
+            continue
+            
+        # Section Header
+        pos_label = position_labels.get(pos_key, pos_key.replace('_', ' ').title())
+        elements.append(Paragraph(f"{pos_label} ({aspirants.count()})", styles['PositionHeader']))
+        
+        # Table Data
+        data = [[
+            Paragraph("Photo", styles['TableHeader']),
+            Paragraph("Name", styles['TableHeader']),
+            Paragraph("Jurisdiction", styles['TableHeader']),
+            Paragraph("Phone", styles['TableHeader']),
+            Paragraph("Status", styles['TableHeader']),
+        ]]
+        
+        for asp in aspirants:
+            # Photo
+            photo_cell = ""
+            if asp.photo and hasattr(asp.photo, 'path') and os.path.exists(asp.photo.path):
+                try:
+                    photo_cell = ReportLabImage(asp.photo.path, width=30, height=30)
+                except: pass
+            
+            # Jurisdiction Logic
+            jurisdiction = ""
+            if asp.position in ['governor', 'senator', 'woman_rep']:
+                jurisdiction = asp.county.name if asp.county else "-"
+            elif asp.position == 'mp':
+                jurisdiction = f"{asp.constituency} ({asp.county.name})" if asp.county else asp.constituency or "-"
+            elif asp.position == 'mca':
+                jurisdiction = f"{asp.ward}, {asp.constituency}"
+            elif asp.position == 'president':
+                jurisdiction = "National"
+                
+            # Verification Status Indication
+            verified_mark = ""
+            if asp.is_verified:
+                verified_mark = " <font color='green' size=8>[VERIFIED]</font>"
+
+            data.append([
+                photo_cell,
+                Paragraph(f"<b>{asp.surname}</b> {asp.other_names}{verified_mark}<br/><font size=7>ID: {asp.id_number}</font>", styles['TableBody']),
+                Paragraph(jurisdiction, styles['TableBody']),
+                Paragraph(asp.phone_number, styles['TableBody']),
+                Paragraph(asp.get_status_display(), styles['TableBody']),
+            ])
+            
+        # Table Style
+        t = Table(data, colWidths=[40, 160, 150, 90, 80])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#e5e7eb')), # Light Grey Header
+            ('TEXTCOLOR', (0,0), (-1,0), colors.black),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 6),
+            ('TOPPADDING', (0,0), (-1,0), 6),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#d1d5db')),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f9fafb')]), # Alternating
+        ]))
+        
+        elements.append(t)
+        elements.append(Spacer(1, 15))
+
+
+    # --- Build ---
+    def footer(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Helvetica', 8)
+        canvas.setFillColor(colors.gray)
+        canvas.drawString(30, 20, "Roots Party of Kenya | Confidential Internal Report")
+        canvas.drawRightString(A4[0]-30, 20, f"Page {doc.page}")
+        canvas.restoreState()
+
+    doc.build(elements, onFirstPage=footer, onLaterPages=footer)
+    
+    buffer.seek(0)
+    filename = f"Roots_Aspirants_Report_{timezone.now().strftime('%Y%m%d')}.pdf"
+    return FileResponse(buffer, as_attachment=True, filename=filename)
 
 def dashboard_callback(request, context):
     """

@@ -95,7 +95,13 @@ urlpatterns += [
     # Aspirants
     path('aspirants/', core_views.aspirant_list, name='aspirant_list'),
     path('aspirants/<int:aspirant_id>/', core_views.aspirant_detail, name='aspirant_detail'),
+    path('aspirants/<int:aspirant_id>/pdf/', core_views.download_aspirant_pdf, name='download_aspirant_pdf'),
+    path('aspirants/report/pdf/', core_views.download_aspirants_list_pdf, name='download_aspirants_list_pdf'),
     path('aspirants/register/', core_views.aspirant_registration, name='aspirant_registration'),
+    path('aspirants/register/<str:draft_token>/', core_views.aspirant_registration, name='aspirant_registration_resume'),
+    path('aspirants/status/', core_views.aspirant_status, name='aspirant_status'),
+    path('check-aspirant-id/', core_views.check_aspirant_id, name='check_aspirant_id'),
+
 
     # MP Roles
     path('roles/mp/', core_views.mp_list, name='mp_list'),
