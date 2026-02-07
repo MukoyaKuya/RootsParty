@@ -980,12 +980,19 @@ def download_aspirants_list_pdf(request):
         ]]
         
         for asp in aspirants:
-            # Photo
+            # Photo - Handle gracefully for production compatibility
             photo_cell = ""
-            if asp.photo and hasattr(asp.photo, 'path') and os.path.exists(asp.photo.path):
+            if asp.photo:
                 try:
-                    photo_cell = ReportLabImage(asp.photo.path, width=30, height=30)
-                except: pass
+                    # Try to use the file path if available
+                    if hasattr(asp.photo, 'path'):
+                        photo_path = asp.photo.path
+                        if os.path.exists(photo_path):
+                            photo_cell = ReportLabImage(photo_path, width=30, height=30)
+                except (NotImplementedError, FileNotFoundError, AttributeError):
+                    # In production (Cloud Run), photo.path may not be available
+                    # Skip photo if we can't access it
+                    pass
             
             # Jurisdiction Logic
             jurisdiction = ""
