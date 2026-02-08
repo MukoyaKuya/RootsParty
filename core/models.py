@@ -259,6 +259,9 @@ class BlogPost(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Blog Post'
         verbose_name_plural = 'Blog Posts'
+        indexes = [
+            models.Index(fields=['is_published', 'created_at']),
+        ]
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -656,4 +659,12 @@ class AspirantRegistration(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Aspirant Application'
         verbose_name_plural = 'Aspirant Applications'
+        indexes = [
+            models.Index(fields=['id_number']),
+            models.Index(fields=['position']),
+            models.Index(fields=['county']),
+            models.Index(fields=['is_verified']),
+            models.Index(fields=['created_at']),
+            models.Index(fields=['status', 'created_at']),
+        ]
 
