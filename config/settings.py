@@ -167,11 +167,11 @@ elif DEBUG:
         }
     }
 else:
-    # Fallback: Database cache if Redis unavailable
+    # Fallback: Dummy cache (no caching) if Redis unavailable
+    # This is safer than database cache which requires table creation
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-            'LOCATION': 'cache_table',
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
 
