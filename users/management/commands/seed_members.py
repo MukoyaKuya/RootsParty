@@ -44,5 +44,5 @@ class Command(BaseCommand):
             # Clean up
             try:
                 os.remove(temp_filename)
-            except:
+            except Exception:
                 pass

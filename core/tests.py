@@ -224,3 +224,30 @@ class BlogViewsTest(TestCase):
         response = self.client.get(reverse('blog_detail', args=[unpublished.slug]))
         self.assertEqual(response.status_code, 404)
 
+
+class GatePassPDFTest(TestCase):
+    """Integration test for gate pass PDF generation (content-type, filename)."""
+
+    def setUp(self):
+        self.client = Client()
+        self.event = Event.objects.create(
+            title="Test Rally",
+            location="Nairobi",
+            date=timezone.now() + datetime.timedelta(days=1),
+            slug="test-rally",
+        )
+
+    def test_download_gate_pass_returns_pdf(self):
+        """GET gate-pass URL returns 200 with application/pdf and attachment filename."""
+        url = reverse('download_gate_pass', args=[self.event.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get('Content-Type'), 'application/pdf')
+        self.assertTrue(
+            response.get('Content-Disposition', '').startswith('attachment'),
+            'Should be attachment',
+        )
+        self.assertIn('gate_pass_', response.get('Content-Disposition', ''))
+        if response.content:
+            self.assertTrue(response.content.startswith(b'%PDF'), 'Response should be PDF bytes')
+

@@ -112,18 +112,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-md mx-auto p-4 mt-12 md:max-w-none xl:ml-64 md:mt-20 md:p-12 md:mr-0 transition-all">
-        {% if messages %}
-        <div class="mb-8 space-y-4">
-            {% for message in messages %}
-            <div
-                class="p-4 border-4 border-roots-black bg-roots-red text-white font-bold uppercase rounded-lg shadow-[3px_3px_0px_0px_rgba(26,26,26,1)]">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
+    <main class="max-w-md mx-auto p-4 mt-12 md:max-w-none xl:ml-64 md:mt-14 md:pt-1 md:pb-12 md:px-12 md:mr-0 transition-all">
         {% block content %}
         {% endblock %}
     </main>
@@ -501,6 +490,84 @@
     <script defer src="{% static 'js/app.js' %}"></script>
 
 
+    <!-- Global Notification Modal -->
+    <div id="global-notification" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-roots-black/80 backdrop-blur-sm">
+        <div class="bg-white border-8 border-roots-black shadow-[20px_20px_0px_0px_#22c55e] max-w-md w-full p-8 text-center relative transform transition-all duration-300 scale-95 opacity-0" id="notification-content">
+            <div class="mb-6 flex justify-center">
+                <div class="w-16 h-16 bg-roots-green rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] animate-bounce">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-10 h-10 text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none italic" id="notification-title">Success</h2>
+            <p class="text-lg font-bold opacity-75 mb-8 leading-tight" id="notification-message"></p>
+            <button onclick="closeNotification()" class="brutal-btn w-full bg-roots-black border-roots-black hover:bg-roots-red transition-all text-xl py-4 shadow-[4px_4px_0px_0px_#000000]">
+                TINGIZA MTI!
+            </button>
+            <div class="absolute -top-4 -right-4 w-10 h-10 bg-roots-red border-4 border-roots-black rotate-12 flex items-center justify-center text-white font-black">
+                !
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showNotification(title, message, isSuccess = true) {
+            const modal = document.getElementById('global-notification');
+            const content = document.getElementById('notification-content');
+            const titleEl = document.getElementById('notification-title');
+            const msgEl = document.getElementById('notification-message');
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            
+            content.style.boxShadow = isSuccess ? '15px 15px 0px 0px #22c55e' : '15px 15px 0px 0px #E60000';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+            
+            // Auto close after 8 seconds
+            setTimeout(closeNotification, 8000);
+        }
+
+        function closeNotification() {
+            const modal = document.getElementById('global-notification');
+            const content = document.getElementById('notification-content');
+            
+            if (modal.classList.contains('hidden')) return;
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 200);
+        }
+
+        // Check for messages on load
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        showNotification('Status Update', "{{ message|escapejs }}", true);
+                    {% elif 'error' in message.tags or 'danger' in message.tags %}
+                        showNotification('Attention', "{{ message|escapejs }}", false);
+                    {% else %}
+                        showNotification('Message', "{{ message|escapejs }}", true);
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
 </body>
 
 </html>

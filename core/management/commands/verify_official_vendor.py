@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from core.models import Vendor
+from commerce.models import Vendor
 
 class Command(BaseCommand):
     help = 'Marks the official Roots Party vendor as verified.'

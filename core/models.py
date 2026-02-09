@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from image_cropping import ImageRatioField
 
 class Leader(models.Model):
     name = models.CharField(max_length=100)
@@ -54,7 +56,7 @@ class ManifestoEvidence(models.Model):
     flag_emoji = models.CharField(max_length=10, blank=True, help_text="Country flag emoji")
     description = models.TextField()
     detailed_history = models.TextField(blank=True, help_text="Comprehensive legalization history")
-    timeline = models.TextField(blank=True, help_text="Key dates and milestones in JSON format")
+    timeline = models.JSONField(blank=True, default=dict, help_text="Key dates and milestones")
     economic_impact = models.TextField(blank=True, help_text="Economic effects and statistics")
     lessons_for_kenya = models.TextField(blank=True, help_text="What Kenya can learn")
     annual_revenue = models.CharField(max_length=100, blank=True, help_text="Annual cannabis revenue in Ksh")
@@ -122,41 +124,6 @@ class GatePass(models.Model):
     def __str__(self):
         return f"{self.code} - {self.event.title}"
 
-class Vendor(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='vendors/', blank=True, null=True, help_text="Shop Logo or Banner")
-    contact_phone = models.CharField(max_length=20, blank=True)
-    contact_email = models.EmailField(blank=True)
-    is_active = models.BooleanField(default=True, db_index=True)
-    is_verified = models.BooleanField(default=False, help_text="Verified/Official Roots Party vendor")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-class Product(models.Model):
-    vendor = models.ForeignKey(Vendor, related_name='products', on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-    image = models.ImageField(upload_to='products/')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField(blank=True)
-    is_available = models.BooleanField(default=True)
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-        
-    def __str__(self):
-        return f"{self.name} ({self.vendor.name if self.vendor else 'No Vendor'})"
 
 class Resource(models.Model):
     title = models.CharField(max_length=200)
@@ -323,6 +290,26 @@ class County(models.Model):
     def __str__(self):
         return self.name
 
+
+class Constituency(models.Model):
+    """Constituency within a county (for MP aspirants)"""
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='constituencies')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Constituencies'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 class HomeVideo(models.Model):
     """Model for homepage video section"""
     title = models.CharField(max_length=200, help_text="e.g. Watch The Message")
@@ -364,8 +351,8 @@ class HomeVideo(models.Model):
         match = re.search(youtube_regex, self.video_url)
         if match:
             video_id = match.group(1)
-            # Use youtube-nocookie and explicit origin to fix Error 153 on localhost
-            return f"https://www.youtube-nocookie.com/embed/{video_id}?rel=0&origin=http://127.0.0.1:8080"
+            # Use youtube-nocookie and SITE_BASE_URL to fix Error 153 on localhost
+            return f"https://www.youtube-nocookie.com/embed/{video_id}?rel=0&origin={settings.SITE_BASE_URL}"
             
         # Basic Vimeo Check (keep simple for now)
         if 'vimeo.com' in self.video_url:
@@ -378,6 +365,24 @@ class HomeVideo(models.Model):
         return self.video_url
 
 
+class CarouselImage(models.Model):
+    """Homepage carousel image"""
+    title = models.CharField(max_length=200, help_text='Image title/description')
+    image = models.ImageField(upload_to='carousel/', help_text='Carousel image (recommended: 1200x400px)')
+    cropping = ImageRatioField('image', '1200x500', help_text='Crop for carousel display')
+    order = models.IntegerField(default=0, help_text='Display order (lower numbers appear first)')
+    is_active = models.BooleanField(default=True, help_text='Show this image in the carousel')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = 'Carousel Image'
+        verbose_name_plural = 'Carousel Images'
+
+    def __str__(self):
+        return self.title
+
+
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -387,182 +392,6 @@ class NewsletterSubscriber(models.Model):
         return self.email
 
 
-
-class LeadershipRole(models.Model):
-    """Model for editable leadership role content"""
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, help_text="URL identifier e.g. president, governor")
-    icon_svg_path = models.TextField(help_text="Paste the SVG path data (d attribute) here")
-    description = models.TextField(help_text="Main role description")
-    responsibilities = models.TextField(help_text="Enter each responsibility on a new line")
-    roots_context = models.TextField(help_text="The Roots Mandate for this role")
-    prospects = models.TextField(blank=True, help_text="Why a Roots Government? Enter each point on a new line")
-    
-    # Candidate specific fields
-    candidate_name = models.CharField(max_length=200, blank=True, help_text="Name of the current candidate/holder")
-    image = models.ImageField(upload_to='leadership/', blank=True, null=True, help_text="Candidate photo")
-    video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo link for candidate message")
-    
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-    
-    def get_responsibilities_list(self):
-        return [line.strip() for line in self.responsibilities.split('\n') if line.strip()]
-
-    def get_prospects_list(self):
-        return [line.strip() for line in self.prospects.split('\n') if line.strip()]
-
-    def get_embed_url(self):
-        """Convert standard YouTube/Vimeo URLs to embed URLs"""
-        if not self.video_url:
-            return None
-        
-        import re
-        youtube_regex = (
-            r'(?:https?:\/\/)?(?:www\.)?'
-            r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
-            r'([a-zA-Z0-9_-]{11})'
-        )
-        match = re.search(youtube_regex, self.video_url)
-        if match:
-            video_id = match.group(1)
-            # Use standard YouTube embed without hardcoded origin for better local compatibility
-            return f"https://www.youtube.com/embed/{video_id}?rel=0"
-            
-        if 'vimeo.com' in self.video_url:
-             video_id = self.video_url.split('/')[-1]
-             if video_id.isdigit():
-                 return f"https://player.vimeo.com/video/{video_id}"
-
-        return self.video_url
-
-    def get_aspirant_role_key(self):
-        """Map leadership role slug to aspirant role choice"""
-        slug_map = {
-            'president': 'president',
-            'governor': 'governor',
-            'senator': 'senator',
-            'woman-rep': 'woman_rep',
-            'mp': 'mp',
-            'mca': 'mca',
-        }
-        return slug_map.get(self.slug)
-
-
-class CarouselImage(models.Model):
-    """Model for homepage carousel images"""
-    title = models.CharField(max_length=200, help_text="Image title/description")
-    image = models.ImageField(upload_to='carousel/', help_text="Carousel image (recommended: 1200x400px)")
-    from image_cropping import ImageRatioField
-    cropping = ImageRatioField('image', '1200x500')
-    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
-    is_active = models.BooleanField(default=True, help_text="Show this image in the carousel")
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['order', '-created_at']
-        verbose_name = 'Carousel Image'
-        verbose_name_plural = 'Carousel Images'
-    
-    def __str__(self):
-        return self.title
-
-class Constituency(models.Model):
-    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='constituencies')
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-    
-    class Meta:
-        ordering = ['name']
-        verbose_name_plural = 'Constituencies'
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            from django.utils.text import slugify
-            # Ensure unique slug by appending county name if needed
-            base_slug = slugify(self.name)
-            self.slug = base_slug
-            
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.name} ({self.county.name})"
-
-
-class Aspirant(models.Model):
-    ROLE_CHOICES = (
-        ('president', 'President'),
-        ('governor', 'Governor'),
-        ('senator', 'Senator'),
-        ('woman_rep', 'Woman Representative'),
-        ('mp', 'Member of Parliament'),
-        ('mca', 'Member of County Assembly'),
-    )
-    
-    name = models.CharField(max_length=200)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='mp', db_index=True)
-    
-    # Jurisdiction
-    county = models.ForeignKey(County, on_delete=models.SET_NULL, null=True, blank=True, related_name='aspirants', help_text="Required for Governor, Senator, Woman Rep")
-    constituency = models.ForeignKey(Constituency, on_delete=models.SET_NULL, null=True, blank=True, related_name='aspirants', help_text="Required for MP")
-    ward = models.CharField(max_length=200, blank=True, help_text="Required for MCA")
-    
-    # Media
-    profile_image = models.ImageField(upload_to='aspirants/', blank=True, null=True, help_text="Candidate Photo")
-    from image_cropping import ImageRatioField
-    cropping = ImageRatioField('profile_image', '400x400', help_text="Crop for optimal display (Square)")
-    
-    description = models.TextField(blank=True, help_text="Short bio or description")
-    video_url = models.URLField(blank=True, null=True, help_text="YouTube/Vimeo link")
-    
-    # Detailed profile content
-    from ckeditor.fields import RichTextField
-    manifesto = RichTextField(blank=True, help_text="Candidate's specific manifesto")
-    
-    social_handle_twitter = models.CharField(max_length=100, blank=True)
-    social_handle_facebook = models.CharField(max_length=100, blank=True)
-    
-    is_active = models.BooleanField(default=True, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    class Meta:
-        ordering = ['role', 'name']
-
-    def __str__(self):
-        ctx = ""
-        if self.constituency: ctx = f" ({self.constituency.name})"
-        elif self.county: ctx = f" ({self.county.name})"
-        return f"{self.name} - {self.get_role_display()}{ctx}"
-
-    def get_embed_url(self):
-        """Convert standard YouTube/Vimeo URLs to embed URLs"""
-        if not self.video_url:
-            return None
-        
-        import re
-        youtube_regex = (
-            r'(?:https?:\/\/)?(?:www\.)?'
-            r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
-            r'([a-zA-Z0-9_-]{11})'
-        )
-        match = re.search(youtube_regex, self.video_url)
-        if match:
-            video_id = match.group(1)
-            return f"https://www.youtube.com/embed/{video_id}?rel=0"
-            
-        if 'vimeo.com' in self.video_url:
-             video_id = self.video_url.split('/')[-1]
-             if video_id.isdigit():
-                 return f"https://player.vimeo.com/video/{video_id}"
-
-        return self.video_url
 
 
 class FloatingImage(models.Model):
@@ -584,87 +413,4 @@ class FloatingImage(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_position_display()})"
 
-
-class AspirantRegistration(models.Model):
-    """Model for storing aspirant registration data"""
-    # Position Choices with Fees (Updated for Roots context)
-    POSITION_CHOICES = [
-        ('governor', 'Governor - KES 10,000'),
-        ('senator', 'Senator - KES 5,000'),
-        ('woman_rep', 'Woman Representative - KES 5,000'),
-        ('mp', 'Member of Parliament (MP) - KES 5,000'),
-        ('mca', 'Member of County Assembly (MCA) - KES 2,000'),
-    ]
-    
-    MEMBERSHIP_STATUS_CHOICES = [
-        ('existing', 'Existing Roots Party Member'),
-        ('new', 'New Member'),
-    ]
-    
-    APPLICATION_STATUS_CHOICES = [
-        ('draft', 'Draft - Incomplete'),
-        ('submitted', 'Submitted - Pending Review'),
-        ('under_review', 'Under Review'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-    ]
-
-    # Personal Information
-    id_number = models.CharField(max_length=20, verbose_name="ID Number")
-    surname = models.CharField(max_length=100)
-    other_names = models.CharField(max_length=200)
-    phone_number = models.CharField(max_length=20, help_text="Used for verification and notifications")
-    date_of_birth = models.DateField(null=True, blank=True)
-    email = models.EmailField(blank=True, null=True, verbose_name="Email Address (Optional)")
-
-    # Photo Upload
-    photo = models.ImageField(upload_to='aspirants/photos/', blank=True, null=True, help_text="Passport photo (JPG/PNG, max 2MB)")
-
-    # Position of Interest
-    position = models.CharField(max_length=50, choices=POSITION_CHOICES, verbose_name="Select Position", blank=True)
-
-    # Location Details (Target Jurisdiction)
-    county = models.ForeignKey('County', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Target County")
-    constituency = models.CharField(max_length=100, blank=True, null=True, verbose_name="Target Constituency")
-    ward = models.CharField(max_length=100, blank=True, null=True, verbose_name="Target Ward")
-
-    # Additional Details
-    is_incumbent = models.BooleanField(default=False, verbose_name="Are you a current elected leader?")
-    membership_status = models.CharField(max_length=20, choices=MEMBERSHIP_STATUS_CHOICES, default='new', verbose_name="Party Membership Status")
-    
-    # Declaration
-    agreed_to_terms = models.BooleanField(default=False, verbose_name="I agree to the Terms and Conditions")
-    
-    # Application Status & Draft Mode
-    status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, default='submitted', db_index=True)
-    draft_token = models.CharField(max_length=64, unique=True, null=True, blank=True, help_text="Token for resuming draft applications")
-    
-    # Meta
-    payment_status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('completed', 'Completed')])
-    is_verified = models.BooleanField(default=False, verbose_name="Verified Aspirant", help_text="Check this to mark the aspirant as verified.")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.surname} {self.other_names} - {self.get_position_display()}"
-    
-    def save(self, *args, **kwargs):
-        # Generate draft token if not set
-        if not self.draft_token:
-            import secrets
-            self.draft_token = secrets.token_urlsafe(32)
-        super().save(*args, **kwargs)
-        
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Aspirant Application'
-        verbose_name_plural = 'Aspirant Applications'
-        indexes = [
-            models.Index(fields=['id_number']),
-            models.Index(fields=['position']),
-            models.Index(fields=['county']),
-            models.Index(fields=['is_verified']),
-            models.Index(fields=['created_at']),
-            models.Index(fields=['status', 'created_at']),
-        ]
 

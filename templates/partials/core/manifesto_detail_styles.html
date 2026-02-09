@@ -1,0 +1,23 @@
+<style>
+    @keyframes sway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
+    .animate-sway {
+        animation: sway 4s ease-in-out infinite;
+    }
+    @keyframes pulse-slow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
+    }
+    @keyframes ping-slow {
+        0% { transform: scale(1); opacity: 0.5; }
+        75%, 100% { transform: scale(1.3); opacity: 0; }
+    }
+    .animate-ping-slow {
+        animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+</style>

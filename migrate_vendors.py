@@ -4,7 +4,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-from core.models import Vendor, Product
+from commerce.models import Vendor, Product
 
 def migrate_vendors():
     # 1. Create Default Vendor

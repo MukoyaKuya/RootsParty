@@ -14,33 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 
 from django.urls import path, re_path, include
 from django.views.static import serve
 from django.views.generic import TemplateView
 
-# --- Monkeypatch for Jazzmin compatibility with Django 5.0+ ---
-# Fixes TypeError: args or kwargs must be provided in format_html
 # Placed here to ensure AppRegistry is ready
 import django
-from django.utils.html import format_html
-try:
-    from jazzmin.templatetags import jazzmin as jazzmin_tags
-    def patched_format_html(html_str, *args, **kwargs):
-        if not args and not kwargs:
-            from django.utils.safestring import mark_safe
-            return mark_safe(html_str)
-        return format_html(html_str, *args, **kwargs)
-    
-    jazzmin_tags.format_html = patched_format_html
-except ImportError:
-    pass
 # -------------------------------------------------------------
 
 from core import views as core_views
 from users import views as user_views
 from finance import views as finance_views
+from aspirants import views as aspirants_views
 
 urlpatterns = [
     # PWA (Keep outside i18n)
@@ -74,11 +62,9 @@ urlpatterns += [
     path('gallery/', core_views.gallery, name='gallery'),
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
     path('events/', core_views.events, name='events'),
-    path('roles/<slug:slug>/', core_views.role_detail, name='role_detail'),
+    path('roles/<slug:slug>/', aspirants_views.role_detail, name='role_detail'),
     path('events/<int:event_id>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
-    path('shop/', core_views.shop, name='shop'),
-    path('shop/<slug:vendor_slug>/', core_views.vendor_detail, name='vendor_detail'),
-    path('shop/<slug:vendor_slug>/<slug:product_slug>/', core_views.product_detail, name='product_detail'),
+    path('shop/', include('commerce.urls')),
     path('resources/', core_views.resources, name='resources'),
     path('analytics/', core_views.dashboard, name='dashboard'),
     path('contact/', core_views.contact, name='contact'),
@@ -92,21 +78,9 @@ urlpatterns += [
     path('counties/', core_views.counties, name='counties'),
     path('counties/map/', core_views.county_map, name='county_map'),
     path('counties/<slug:slug>/', core_views.county_detail, name='county_detail'),
-    # Aspirants
-    path('aspirants/', core_views.aspirant_list, name='aspirant_list'),
-    path('aspirants/<int:aspirant_id>/', core_views.aspirant_detail, name='aspirant_detail'),
-    path('aspirants/<int:aspirant_id>/pdf/', core_views.download_aspirant_pdf, name='download_aspirant_pdf'),
-    path('aspirants/report/pdf/', core_views.download_aspirants_list_pdf, name='download_aspirants_list_pdf'),
-    path('aspirants/register/', core_views.aspirant_registration, name='aspirant_registration'),
-    path('aspirants/register/<str:draft_token>/', core_views.aspirant_registration, name='aspirant_registration_resume'),
-    path('aspirants/status/', core_views.aspirant_status, name='aspirant_status'),
-    path('check-aspirant-id/', core_views.check_aspirant_id, name='check_aspirant_id'),
+    # Aspirants App
+    path('aspirants/', include('aspirants.urls')),
 
-
-    # MP Roles
-    path('roles/mp/', core_views.mp_list, name='mp_list'),
-    path('roles/mp/<slug:county_slug>/', core_views.mp_county_detail, name='mp_county_detail'),
-    path('roles/mp/constituency/<slug:constituency_slug>/', core_views.mp_candidate_detail, name='mp_candidate_detail'),
     
     # Legal Pages
     path('privacy-policy/', core_views.privacy_policy, name='privacy_policy'),
@@ -136,8 +110,8 @@ urlpatterns += [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    # Serve media files on Cloud Run manually
+elif not os.environ.get('GS_BUCKET_NAME'):
+    # Serve media files on Cloud Run manually ONLY if not using GCS
     urlpatterns += [
         re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     ]

@@ -6,10 +6,11 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from .models import (
-    Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, 
-    Event, GatePass, Vendor, Product, Aspirant, Constituency,
+    Leader, ManifestoItem, ManifestoEvidence, BlogPost, County,
+    Event, GatePass, Vendor, Product, Constituency,
     CarouselImage, HomeVideo, NewsletterSubscriber, ContactMessage
 )
+from aspirants.models import Aspirant
 
 
 class LeaderModelTest(TestCase):

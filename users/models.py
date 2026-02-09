@@ -1,11 +1,11 @@
 from django.db import models
 
 class Member(models.Model):
-    full_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, db_index=True)
     surname = models.CharField(max_length=100, blank=True, null=True)
     other_names = models.CharField(max_length=255, blank=True, null=True)
     id_number = models.CharField(max_length=20, unique=True)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15, db_index=True)
     email = models.EmailField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     occupation = models.CharField(max_length=100, blank=True, null=True)
@@ -15,8 +15,8 @@ class Member(models.Model):
     is_coordinator_applicant = models.BooleanField(default=False, db_index=True)
     
     # Location Details
-    county = models.ForeignKey('core.County', on_delete=models.SET_NULL, null=True, blank=True, related_name='members')
-    constituency = models.CharField(max_length=100, blank=True, null=True)
+    county = models.ForeignKey('core.County', on_delete=models.SET_NULL, null=True, blank=True, related_name='members', db_index=True)
+    constituency = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     ward = models.CharField(max_length=100, blank=True, null=True)
     polling_center = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

@@ -1,77 +1,321 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ product.name }} - {{ vendor.name }} - Roots Party{% endblock %}
 
-{% block content %}
-<div class="mt-8 mb-24 max-w-6xl mx-auto px-4">
-    
-    <!-- Breadcrumb -->
-    <div class="mb-8 text-sm font-bold uppercase flex items-center gap-2 opacity-70">
-        <a href="{% url 'shop' %}" class="hover:text-roots-red transition-colors">Shops</a>
-        <span>→</span>
-        <a href="{% url 'vendor_detail' vendor.slug %}" class="hover:text-roots-red transition-colors">{{ vendor.name }}</a>
-        <span>→</span>
-        <span class="text-roots-black">{{ product.name }}</span>
-    </div>
+{% block extra_css %}
+<style>
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(1deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        
-        <!-- Product Image -->
-        <div class="border-6 border-roots-black bg-white rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a] overflow-hidden">
-            {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto">
-            {% else %}
-            <div class="aspect-square bg-gray-200 flex items-center justify-center font-black uppercase text-9xl text-gray-400">
-                📦
+    .float-anim {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 4px solid #000000;
+        box-shadow: 8px 8px 0px 0px #000000;
+        border-radius: 20px;
+    }
+
+    .product-image-container:hover .product-image {
+        transform: scale(1.05) rotate(-1deg);
+    }
+
+    .product-image {
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .price-tag {
+        background: #E60000;
+        color: white;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 900;
+        transform: rotate(-2deg);
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        border: 4px solid #000000;
+    }
+
+    .price-tag:hover {
+        transform: rotate(0deg) scale(1.1);
+        box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .cta-button {
+        background: #000000;
+        color: #FFFFFF;
+        font-weight: 900;
+        text-transform: uppercase;
+        padding: 20px;
+        border: 4px solid #000000;
+        box-shadow: 6px 6px 0px 0px #E60000;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    .cta-button:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 10px 10px 0px 0px #E60000;
+        background: #E60000;
+        border-color: #E60000;
+    }
+
+    .cta-button:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0px 0px 0px 0px #E60000;
+    }
+
+    .roots-gradient {
+        background: radial-gradient(circle at 10% 20%, rgba(230, 0, 0, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(34, 197, 94, 0.05) 0%, transparent 40%);
+    }
+
+    .badge-verified {
+        background: #22c55e;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: inline-flex;
+        items-center;
+        gap: 4px;
+        border: 2px solid #000000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="roots-gradient min-h-screen pt-4 pb-24 px-4 overflow-hidden">
+    
+    <div class="max-w-7xl mx-auto">
+        <!-- Breadcrumb & Top Bar -->
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-6 animate-fade-in">
+            <nav class="group flex items-center gap-3 bg-roots-black text-white px-6 py-3 rounded-full border-4 border-roots-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]">
+                <a href="{% url 'shop' %}" class="hover:text-roots-red transition-colors font-black uppercase tracking-widest text-sm">Shops</a>
+                <span class="opacity-50 text-xl leading-none">/</span>
+                <a href="{% url 'vendor_detail' vendor.slug %}" class="hover:text-roots-red transition-colors font-black uppercase tracking-widest text-sm">{{ vendor.name }}</a>
+                <span class="opacity-50 text-xl leading-none">/</span>
+                <span class="text-roots-red font-black uppercase tracking-widest text-sm">{{ product.name }}</span>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                {% if vendor.is_verified %}
+                <div class="badge-verified">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.491 4.491 0 0 1-3.497-1.307 4.491 4.491 0 0 1-1.307-3.497A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.491 4.491 0 0 1 1.307-3.497 4.491 4.491 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                    </svg>
+                    Official Vendor
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
 
-        <!-- Product Details -->
-        <div class="flex flex-col">
-            <div class="border-6 border-roots-black bg-white rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a] p-8 md:p-12 flex-grow">
-                
-                <h1 class="text-5xl md:text-6xl font-black uppercase leading-tight mb-6">
-                    {{ product.name }}
-                </h1>
-                
-                <div class="mb-8 inline-block">
-                    <div class="bg-roots-red text-white font-black text-4xl px-6 py-3 border-4 border-roots-black transform-rotate-1 rounded-lg shadow-[3px_3px_0px_0px_#1a1a1a]">
-                        KES {{ product.price|floatformat:0 }}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- Left Side: Product Image -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="product-image-container relative bg-white glass-card overflow-hidden group max-h-[400px] cursor-pointer" onclick="openLightbox('{{ product.image.url }}')">
+                    <div class="absolute inset-0 bg-roots-black/5 group-hover:bg-transparent transition-colors z-10"></div>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image w-full h-[400px] object-cover object-top">
+                    {% else %}
+                    <div class="h-[400px] bg-gray-100 flex items-center justify-center">
+                        <span class="text-9xl grayscale opacity-20">📦</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Decorative Elements -->
+                    <div class="absolute top-3 left-3 z-20">
+                        <div class="bg-roots-black text-white px-3 py-0.5 font-black uppercase text-[10px] tracking-widest border-2 border-roots-black">
+                            Premium Roots Merch
+                        </div>
                     </div>
                 </div>
-
-                <div class="mb-8 pb-8 border-b-4 border-dashed border-gray-300">
-                    <h2 class="text-2xl font-black uppercase mb-3">Description</h2>
-                    <p class="text-lg font-bold opacity-80 leading-relaxed">
-                        {{ product.description|default:"High-quality Roots Party merchandise. Show your support for the movement!" }}
-                    </p>
-                </div>
-
-                <div class="mb-8">
-                    <h2 class="text-2xl font-black uppercase mb-3">Vendor</h2>
-                    <a href="{% url 'vendor_detail' vendor.slug %}" class="text-lg font-black text-roots-red hover:underline">
-                        {{ vendor.name }} →
+                
+                <!-- Product Navigation -->
+                <div class="grid grid-cols-2 gap-3">
+                    {% if prev_product %}
+                    <a href="{% url 'product_detail' vendor.slug prev_product.slug %}" class="glass-card p-3 flex items-center justify-between group hover:bg-roots-black hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 transform transition-transform group-hover:-translate-x-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                        <span class="font-black uppercase tracking-tighter text-base">Prev</span>
                     </a>
-                    {% if vendor.contact_email %}
-                    <p class="text-sm font-bold opacity-70 mt-1">{{ vendor.contact_email }}</p>
+                    {% else %}
+                    <div class="glass-card p-3 flex items-center justify-between opacity-30 cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                        <span class="font-black uppercase tracking-tighter text-base">Prev</span>
+                    </div>
+                    {% endif %}
+
+                    {% if next_product %}
+                    <a href="{% url 'product_detail' vendor.slug next_product.slug %}" class="glass-card p-3 flex items-center justify-between group hover:bg-roots-black hover:text-white transition-all">
+                        <span class="font-black uppercase tracking-tighter text-base">Next</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 transform transition-transform group-hover:translate-x-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                    {% else %}
+                    <div class="glass-card p-3 flex items-center justify-between opacity-30 cursor-not-allowed">
+                        <span class="font-black uppercase tracking-tighter text-base">Next</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                    </div>
                     {% endif %}
                 </div>
+            </div>
 
-                <!-- WhatsApp Button -->
-                <a href="https://wa.me/{{ vendor.contact_phone|default:'254700000000' }}?text=Hi!%20I'm%20interested%20in%20buying%20{{ product.name|urlencode }}%20for%20KES%20{{ product.price }}" target="_blank" class="brutal-btn w-full text-center flex items-center justify-center gap-3 text-xl mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669-.149-.198 0-.42.001-.643.001-.223 0-.585.085-.89.42-.305.334-1.171 1.143-1.171 2.788 0 1.649 1.201 3.243 1.368 3.468.166.223 2.364 3.612 5.728 5.066 2.399 1.034 2.888.828 3.408.778.52-.05 1.758-.718 2.006-1.411.248-.693.248-1.288.173-1.412-.074-.124-.272-.199-.57-.347z"/>
-                    </svg>
-                    Order via WhatsApp
-                </a>
+            <!-- Right Side: Details & CTA -->
+            <div class="lg:col-span-5 lg:sticky lg:top-24">
+                <div class="flex flex-col gap-4">
+                    
+                    <div class="glass-card p-5 md:p-6 relative overflow-hidden">
+                        <!-- Background Pattern -->
+                        <div class="absolute top-0 right-0 p-3 opacity-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                            </svg>
+                        </div>
 
-                <a href="{% url 'vendor_detail' vendor.slug %}" class="block text-center brutalbtn-secondary w-full text-lg">
-                    ← Browse More from {{ vendor.name }}
-                </a>
+                        <div class="relative z-10">
+                            <h1 class="text-3xl md:text-4xl font-black uppercase leading-none mb-3 tracking-tighter break-words">
+                                {{ product.name }}
+                            </h1>
+                            
+                            <div class="flex items-center gap-3 mb-4">
+                                {% if product.is_available %}
+                                <div class="price-tag text-2xl md:text-3xl px-6 py-2 border-[3px] border-roots-black inline-block">
+                                    KES {{ product.price|floatformat:0 }}
+                                </div>
+                                <div class="text-xs font-black uppercase tracking-widest opacity-40">
+                                    Tax Incl.
+                                </div>
+                                {% else %}
+                                <div class="bg-roots-black text-white text-2xl md:text-3xl px-6 py-2 border-[3px] border-roots-black inline-block rotate-1 shadow-[3px_3px_0px_0px_#E60000]">
+                                    OUT OF STOCK
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="space-y-3 mb-6">
+                                <div class="group">
+                                    <h2 class="text-xs font-black uppercase mb-1 text-gray-500 tracking-widest">Vendor</h2>
+                                    <div class="flex items-center justify-between">
+                                        <a href="{% url 'vendor_detail' vendor.slug %}" class="text-xl font-black text-roots-black hover:text-roots-red transition-all flex items-center gap-2">
+                                            {{ vendor.name }}
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:translate-x-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    {% if vendor.contact_email %}
+                                    <p class="text-xs font-bold opacity-40 mt-1 uppercase tracking-tighter">{{ vendor.contact_email }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- CTA Section -->
+                            <div class="space-y-3">
+                                {% if product.is_available %}
+                                <a href="https://wa.me/{{ vendor.contact_phone|default:'254700000000' }}?text=Hi!%20I'm%20interested%20in%20buying%20{{ product.name|urlencode }}%20for%20KES%20{{ product.price }}" 
+                                   target="_blank" 
+                                   class="cta-button w-full text-center flex items-center justify-center gap-3 text-xl py-3.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                    </svg>
+                                    Order via WhatsApp
+                                </a>
+                                {% else %}
+                                <div class="w-full text-center bg-gray-100 text-gray-400 p-4 border-[3px] border-dashed border-gray-300 font-black uppercase text-lg">
+                                    Currently Unavailable
+                                </div>
+                                {% endif %}
+                                
+                                <a href="{% url 'vendor_detail' vendor.slug %}" class="block text-center bg-transparent text-roots-black border-4 border-roots-black px-6 py-3 font-black uppercase text-sm hover:bg-roots-black hover:text-white transition-all transform hover:translate-y-[-2px] active:translate-y-[2px]">
+                                    ← More from this Vendor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'report_vendor' vendor.slug %}" class="glass-card p-4 bg-roots-black text-white text-center font-black uppercase tracking-tighter text-sm border-roots-red border-dashed hover:bg-roots-red transition-all block group">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0-6.086.71l3.114-.732V4.658l-3.33.832a9 9 0 0 1-6.208-.682l-.108-.054a9 9 0 0 0-6.086-.71L3 4.5m0 10.5V4.5" />
+                            </svg>
+                            Report Vendor
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related / Movement Section -->
+        <div class="mt-24 pt-24 border-t-8 border-roots-black">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                <div class="max-w-xl">
+                    <h2 class="text-6xl font-black uppercase mb-6 leading-none italic">Part of the <span class="text-roots-red underline decoration-roots-black">Wave</span></h2>
+                    <p class="text-2xl font-bold leading-tight opacity-70">The Roots Party is not just a political movement; it's a lifestyle. Wear your values and join the push for economic liberation.</p>
+                </div>
+                <div class="flex-shrink-0 animate-bounce">
+                    <div class="w-32 h-32 bg-roots-red rounded-full flex items-center justify-center border-4 border-roots-black shadow-[4px_4px_0px_0px_#000000]">
+                        <span class="text-white font-black text-4xl transform rotate-12">JOIN</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
 </div>
+
+<!-- Image Lightbox Modal -->
+<div id="image-lightbox" class="fixed inset-0 z-[110] hidden bg-roots-black/95 backdrop-blur-md items-center justify-center p-4 md:p-12" onclick="closeLightbox()">
+    <button class="absolute top-6 right-6 text-white hover:text-roots-red transition-colors z-[120]" onclick="closeLightbox()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-10 h-10">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+    </button>
+    <div class="relative max-w-5xl w-full h-full flex items-center justify-center select-none" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="Full size preview" class="max-w-full max-h-full object-contain border-8 border-white shadow-[20px_20px_0px_0px_#E60000] rounded-2xl">
+    </div>
+</div>
+
+<script>
+    function openLightbox(imgUrl) {
+        const lightbox = document.getElementById('image-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        lightboxImg.src = imgUrl;
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('image-lightbox');
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
 {% endblock %}

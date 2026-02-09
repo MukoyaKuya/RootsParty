@@ -19,11 +19,10 @@ detect-secrets==1.5.0
 disposable-email-domains==0.0.153
 distlib==0.4.0
 dj-database-url==3.0.1
-Django==6.0
-django-ckeditor==6.7.3
+Django==5.2.10
+django-ckeditor-5==0.2.0
 django-csp==4.0
 django-htmx==1.27.0
-django-jazzmin==3.0.1
 django-js-asset==3.1.2
 django-mathfilters==1.0.0
 django-ratelimit==4.1.0
@@ -120,11 +119,11 @@ whitenoise==6.11.0
 zope.event==6.1
 zope.interface==8.1.1
 django-image-cropping==1.7
-easy-thumbnails
-djangorestframework
-django-filter
-drf-spectacular
-django-unfold
+easy-thumbnails==2.9
+djangorestframework==3.15.2
+django-filter==24.3
+drf-spectacular==0.28.0
+django-unfold==0.41.0
 
 # Redis Caching (Performance Optimization)
 django-redis==5.4.0

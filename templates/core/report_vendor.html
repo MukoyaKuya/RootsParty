@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Report Vendor - {{ vendor.name }} - Roots Party{% endblock %}
+
+{% block content %}
+<div class="roots-gradient min-h-screen pt-12 pb-24 px-4 overflow-hidden">
+    <div class="max-w-3xl mx-auto">
+        
+        <!-- Breadcrumb -->
+        <div class="mb-12">
+            <nav class="inline-flex items-center gap-3 bg-roots-black text-white px-6 py-2 rounded-full border-2 border-roots-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                <a href="{% url 'vendor_detail' vendor.slug %}" class="hover:text-roots-red transition-colors font-black uppercase tracking-widest text-xs">{{ vendor.name }}</a>
+                <span class="opacity-50">/</span>
+                <span class="text-roots-red font-black uppercase tracking-widest text-xs">Report Vendor</span>
+            </nav>
+        </div>
+
+        <div class="glass-card p-8 md:p-12 relative overflow-hidden bg-white">
+            <h1 class="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-8">
+                Report <span class="text-roots-red">{{ vendor.name }}</span>
+            </h1>
+            
+            <p class="text-xl font-bold opacity-70 mb-12 italic leading-tight">
+                Help us keep the Roots Party Marketplace safe. Please provide details about your issue with this vendor.
+            </p>
+
+            <form method="post" class="space-y-8">
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <label class="font-black uppercase tracking-widest text-sm text-gray-500">Issue Type</label>
+                    {{ form.issue_type }}
+                    {% if form.issue_type.errors %}
+                        <p class="text-roots-red font-bold uppercase text-xs mt-2">{{ form.issue_type.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="space-y-2">
+                    <label class="font-black uppercase tracking-widest text-sm text-gray-500">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <p class="text-roots-red font-bold uppercase text-xs mt-2">{{ form.description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="space-y-2">
+                    <label class="font-black uppercase tracking-widest text-sm text-gray-500">Your Email (Optional)</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p class="text-roots-red font-bold uppercase text-xs mt-2">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="pt-8">
+                    <button type="submit" class="cta-button w-full text-center text-2xl py-6">
+                        Submit Report
+                    </button>
+                    
+                    <a href="{% url 'vendor_detail' vendor.slug %}" class="block text-center mt-6 font-black uppercase text-sm opacity-50 hover:opacity-100 transition-opacity">
+                        Nevermind, take me back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 4px solid #000000;
+        box-shadow: 12px 12px 0px 0px #000000;
+        border-radius: 24px;
+    }
+    
+    .cta-button {
+        background: #000000;
+        color: #FFFFFF;
+        font-weight: 900;
+        text-transform: uppercase;
+        border: 4px solid #000000;
+        box-shadow: 6px 6px 0px 0px #E60000;
+        transition: all 0.2s ease;
+        border-radius: 16px;
+    }
+
+    .cta-button:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 10px 10px 0px 0px #E60000;
+        background: #E60000;
+        border-color: #E60000;
+    }
+
+    .cta-button:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0px 0px 0px 0px #E60000;
+    }
+
+    .roots-gradient {
+        background: radial-gradient(circle at 10% 20%, rgba(230, 0, 0, 0.03) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(34, 197, 94, 0.03) 0%, transparent 40%);
+    }
+</style>
+{% endblock %}

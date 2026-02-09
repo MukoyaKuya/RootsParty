@@ -139,8 +139,16 @@
 
                     <!-- Polling Center -->
                     <div>
-                        <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Polling Center</label>
-                        <input type="text" name="polling_center" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400" placeholder="(Optional)">
+                        <label class="block text-sm font-black uppercase text-roots-black mb-2 tracking-wider">Polling Center / Area</label>
+                        <div class="relative">
+                            <input type="text" name="polling_center" id="id_polling_center" class="w-full bg-gray-50 border-4 border-roots-black p-4 text-lg font-bold text-roots-black focus:border-roots-red focus:outline-none focus:shadow-[8px_8px_0px_0px_rgba(230,0,0,1)] transition-all uppercase placeholder-gray-400 rounded-none" placeholder="E.G. MOI PRIMARY SCHOOL">
+                            <button type="button" onclick="detectLocation()" class="absolute right-4 top-1/2 -translate-y-1/2 text-roots-red hover:text-roots-black transition-colors" title="Detect current location">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -324,5 +332,54 @@
             wardSelect.classList.remove('hidden'); // Show select
         }
     }
+
+    // Google Maps Autocomplete & Detection Logic
+    function detectLocation(event) {
+        if (navigator.geolocation) {
+            const btn = event ? event.currentTarget : document.querySelector('button[onclick="detectLocation()"]');
+            const originalSvg = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById('id_polling_center').value = data.display_name.toUpperCase();
+                            btn.innerHTML = originalSvg;
+                        })
+                        .catch(() => {
+                            document.getElementById('id_polling_center').value = `${lat}, ${lng}`;
+                            btn.innerHTML = originalSvg;
+                        });
+                },
+                () => {
+                    alert("Unable to retrieve your location. Please type it manually.");
+                    btn.innerHTML = originalSvg;
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    }
+
+    {% if google_maps_api_key %}
+    function initAutocomplete() {
+        const input = document.getElementById('id_polling_center');
+        const options = {
+            componentRestrictions: { country: "ke" },
+            fields: ["address_components", "geometry", "formatted_address"],
+            types: ["establishment", "geocode"]
+        };
+        const autocomplete = new google.maps.places.Autocomplete(input, options);
+    }
+    {% endif %}
 </script>
+
+{% if google_maps_api_key %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+{% endif %}
 {% endblock %}

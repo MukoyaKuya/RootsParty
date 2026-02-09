@@ -6,7 +6,16 @@ from .models import Donation
 def donate(request):
     if request.method == "POST":
         phone = request.POST.get('phone')
-        amount = request.POST.get('custom_amount') or request.POST.get('amount')
+        amount_raw = request.POST.get('custom_amount') or request.POST.get('amount')
+        
+        # Validate amount
+        try:
+            from decimal import Decimal, InvalidOperation
+            amount = Decimal(amount_raw)
+            if amount <= 0:
+                raise ValueError("Amount must be positive")
+        except (InvalidOperation, ValueError, TypeError):
+            return JsonResponse({'status': 'error', 'message': 'Please provide a valid donation amount.'}, status=400)
         
         # Trigger STK Push (Mock)
         success = MpesaService.trigger_stk_push(phone, amount)

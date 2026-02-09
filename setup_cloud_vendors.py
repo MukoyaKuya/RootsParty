@@ -19,7 +19,7 @@ if not os.environ.get('DATABASE_URL'):
 django.setup()
 
 from django.core.management import call_command
-from core.models import Vendor, Product
+from commerce.models import Vendor, Product
 
 print("Running migrations on production database...")
 call_command('migrate', '--noinput')

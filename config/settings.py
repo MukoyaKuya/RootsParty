@@ -54,7 +54,19 @@ if not _allowed_hosts:
 else:
     ALLOWED_HOSTS = _allowed_hosts.split(',')
 
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://rootsparty.co.ke,http://127.0.0.1:8080,https://roots-party-1073897174388.europe-north1.run.app').split(',')
+# CSRF Trusted Origins
+_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS')
+if _csrf_origins:
+    CSRF_TRUSTED_ORIGINS = _csrf_origins.split(',')
+else:
+    # Default fallback for development
+    CSRF_TRUSTED_ORIGINS = [
+        'http://127.0.0.1:8080',
+        'http://localhost:8080',
+    ]
+
+# Site Base URL (Used for absolute links and embeds)
+SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://127.0.0.1:8080' if DEBUG else 'https://rootsparty.co.ke')
 
 
 # Application definition
@@ -74,12 +86,14 @@ INSTALLED_APPS = [
     'django_ratelimit',
     'easy_thumbnails',
     'image_cropping',
-    'ckeditor',
+    'django_ckeditor_5',
 
     # Local
     'core',
     'users',
     'finance',
+    'aspirants',
+    'commerce',
     'rest_framework',
     'django_filters',
     'drf_spectacular',  # API documentation
@@ -138,7 +152,6 @@ if os.environ.get('REDIS_URL'):
             'LOCATION': os.environ.get('REDIS_URL'),
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'PARSER_CLASS': 'redis.connection.HiredisParser',  # Faster C parser
                 'CONNECTION_POOL_KWARGS': {
                     'max_connections': 50,
                     'retry_on_timeout': True,
@@ -395,7 +408,9 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Roots Party <info@rootsparty.co.ke>')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'info@rootsparty.co.ke')
 
-# Jazzmin Configuration
+# Location APIs
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
+
 # Unfold Admin Configuration
 from django.urls import reverse_lazy
 from django.templatetags.static import static
@@ -512,12 +527,17 @@ UNFOLD = {
                      {
                         "title": "Leadership Roles",
                         "icon": "badge",
-                        "link": reverse_lazy("admin:core_leadershiprole_changelist"),
+                        "link": reverse_lazy("admin:aspirants_leadershiprole_changelist"),
                     },
                     {
                         "title": "Aspirants",
                         "icon": "person_search",
-                        "link": reverse_lazy("admin:core_aspirant_changelist"),
+                        "link": reverse_lazy("admin:aspirants_aspirant_changelist"),
+                    },
+                    {
+                        "title": "Aspirant Applications",
+                        "icon": "how_to_reg",
+                        "link": reverse_lazy("admin:aspirants_aspirantregistration_changelist"),
                     },
                     {
                         "title": "Members",
@@ -558,12 +578,12 @@ UNFOLD = {
                     {
                         "title": "Vendors",
                         "icon": "store",
-                        "link": reverse_lazy("admin:core_vendor_changelist"),
+                        "link": reverse_lazy("admin:commerce_vendor_changelist"),
                     },
                     {
                         "title": "Products",
                         "icon": "shopping_bag",
-                        "link": reverse_lazy("admin:core_product_changelist"),
+                        "link": reverse_lazy("admin:commerce_product_changelist"),
                     },
                     {
                          "title": "Donations",
@@ -605,4 +625,65 @@ UNFOLD = {
             },
         ],
     },
+}
+
+# CKEditor 5 Configuration
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                   'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+    },
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|',
+            'bulletedList', 'numberedList',
+            '|',
+            'blockQuote',
+        ],
+        'toolbar': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+        'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
+                    'bulletedList', 'numberedList', 'todoList', '|',  'blockQuote', 'imageUpload', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
+                    'insertTable',],
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
+                        'imageStyle:alignCenter', 'imageStyle:alignRight', 'imageStyle:full', 'imageStyle:side',
+                        '|'],
+            'styles': [
+                'full',
+                'side',
+                'alignLeft',
+                'alignCenter',
+                'alignRight',
+            ]
+        },
+        'table': {
+            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells',
+                               'tableProperties', 'tableCellProperties'],
+            'tableProperties': {
+                'borderColors': 'hsl(0, 0%, 0%)',
+                'backgroundColors': 'hsl(0, 0%, 0%)',
+            },
+            'tableCellProperties': {
+                'borderColors': 'hsl(0, 0%, 0%)',
+                'backgroundColors': 'hsl(0, 0%, 0%)',
+            }
+        },
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
+            ]
+        }
+    },
+    'list': {
+        'properties': {
+            'styles': 'true',
+            'startIndex': 'true',
+            'reversed': 'true',
+        }
+    }
 }

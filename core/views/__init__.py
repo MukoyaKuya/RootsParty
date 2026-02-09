@@ -1,0 +1,53 @@
+"""
+Core app views package. Re-exports all view functions so that
+`from core import views` and `from core.views import home` continue to work.
+"""
+from .pages import (
+    home,
+    about,
+    manifesto,
+    manifesto_detail,
+    manifesto_list,
+    gallery,
+    leader_detail,
+    events,
+    download_gate_pass,
+    resources,
+    cannabis_country_detail,
+    blog_list,
+    blog_detail,
+    counties,
+    county_map,
+    county_detail,
+    privacy_policy,
+    terms_of_service,
+    cookie_policy,
+)
+from .dashboard_views import dashboard, dashboard_callback
+from .contact_views import contact, subscribe
+
+__all__ = [
+    'home',
+    'about',
+    'manifesto',
+    'manifesto_detail',
+    'manifesto_list',
+    'gallery',
+    'leader_detail',
+    'events',
+    'download_gate_pass',
+    'resources',
+    'dashboard',
+    'dashboard_callback',
+    'cannabis_country_detail',
+    'contact',
+    'subscribe',
+    'blog_list',
+    'blog_detail',
+    'counties',
+    'county_map',
+    'county_detail',
+    'privacy_policy',
+    'terms_of_service',
+    'cookie_policy',
+]

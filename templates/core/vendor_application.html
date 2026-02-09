@@ -1,0 +1,489 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Apply for Vendor Store - Roots Party{% endblock %}
+
+{% block content %}
+<!-- Brutal Toast Notification -->
+<div id="brutal-toast" class="fixed top-8 left-1/2 -translate-x-1/2 z-[999] hidden animate-slide-down">
+    <div class="bg-roots-red text-white border-4 border-black px-8 py-4 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex items-center gap-4">
+        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        <span id="toast-message" class="font-black uppercase tracking-widest text-sm"></span>
+    </div>
+</div>
+
+<div class="roots-gradient min-h-screen pt-12 pb-24 px-4 overflow-hidden">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Breadcrumb -->
+        <div class="mb-12">
+            <nav class="inline-flex items-center gap-3 bg-roots-black text-white px-6 py-2 rounded-full border-2 border-roots-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                <a href="{% url 'shop' %}" class="hover:text-roots-red transition-colors font-black uppercase tracking-widest text-xs">Shop</a>
+                <span class="opacity-50">/</span>
+                <span class="text-roots-red font-black uppercase tracking-widest text-xs">Vendor Application</span>
+            </nav>
+        </div>
+
+        <div class="glass-card p-8 md:p-16 relative overflow-hidden bg-white">
+            <div class="relative z-10">
+                <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">
+                    Join the <span class="text-roots-red">Production</span> Economy
+                </h1>
+                
+                <p class="text-xl md:text-2xl font-bold opacity-70 mb-12 italic leading-tight max-w-2xl">
+                    The Roots Party Marketplace is for patriots producing quality local goods. Tell us about your business and let's build Kenya together.
+                </p>
+
+                <form method="post" class="space-y-12">
+                    {% csrf_token %}
+                    
+                    <!-- Section 1: Contact Information -->
+                    <div class="relative group">
+                        <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
+                        <h2 class="text-2xl font-black uppercase text-roots-black mb-8 flex items-center">
+                            <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">1</span> 
+                            Contact Person & Identity
+                        </h2>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Contact Person (Full Name)</label>
+                                {{ form.full_name }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Business Name</label>
+                                {{ form.business_name }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Email Address</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Phone Number</label>
+                                {{ form.phone_number }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Store Location -->
+                    <div class="relative group">
+                        <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
+                        <h2 class="text-2xl font-black uppercase text-roots-black mb-8 flex items-center">
+                            <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">2</span> 
+                            Store Location Details
+                        </h2>
+                        
+                        <div class="space-y-8 bg-gray-50 p-6 md:p-10 border-4 border-roots-black rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <!-- County -->
+                                <div class="space-y-2">
+                                    <label class="font-black uppercase tracking-widest text-xs text-gray-400">County *</label>
+                                    <select name="county" id="field-county" required onchange="fetchConstituencies(this.value)" class="w-full bg-white border-4 border-roots-black p-4 font-black uppercase text-base focus:outline-none focus:border-roots-red transition-all rounded-xl appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1em_1em] bg-[right_1rem_center] bg-no-repeat">
+                                        <option value="">Select County</option>
+                                        {% for county in counties %}
+                                            <option value="{{ county.id }}" data-name="{{ county.name }}">{{ county.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Constituency -->
+                                <div class="space-y-2">
+                                    <label class="font-black uppercase tracking-widest text-xs text-gray-400">Sub-County *</label>
+                                    <select name="constituency" id="field-constituency" required onchange="fetchWards(this.value)" disabled class="w-full bg-white border-4 border-roots-black p-4 font-black uppercase text-base focus:outline-none focus:border-roots-red transition-all rounded-xl appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1em_1em] bg-[right_1rem_center] bg-no-repeat disabled:opacity-50">
+                                        <option value="">Select...</option>
+                                    </select>
+                                    <div id="loader-constituency" class="hidden w-full h-14 bg-gray-200 animate-pulse rounded-xl border-4 border-gray-300"></div>
+                                </div>
+
+                                <!-- Ward -->
+                                <div class="space-y-2">
+                                    <label class="font-black uppercase tracking-widest text-xs text-gray-400">Ward *</label>
+                                    <select name="ward" id="field-ward" required disabled class="w-full bg-white border-4 border-roots-black p-4 font-black uppercase text-base focus:outline-none focus:border-roots-red transition-all rounded-xl appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1em_1em] bg-[right_1rem_center] bg-no-repeat disabled:opacity-50">
+                                        <option value="">Select...</option>
+                                    </select>
+                                    <div id="loader-ward" class="hidden w-full h-14 bg-gray-200 animate-pulse rounded-xl border-4 border-gray-300"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-4 border-t-4 border-gray-200 border-dashed">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-400">Physical Address / Stall Number *</label>
+                                <div class="relative">
+                                    {{ form.location }}
+                                    <button type="button" onclick="detectLocation()" class="absolute right-4 top-1/2 -translate-y-1/2 text-roots-red hover:text-roots-black transition-colors" title="Detect current location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p class="text-[10px] font-black uppercase text-gray-400 mt-2">Example: River Road, Cara House Room 402</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Business Description -->
+                    <div class="relative group">
+                        <div class="absolute -left-4 top-0 bottom-0 w-1 bg-gray-200 group-hover:bg-roots-red transition-colors"></div>
+                        <h2 class="text-2xl font-black uppercase text-roots-black mb-8 flex items-center">
+                            <span class="bg-roots-red text-white w-10 h-10 border-4 border-black flex items-center justify-center mr-4 text-xl rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">3</span> 
+                            Products & Vision
+                        </h2>
+
+                        <div class="space-y-8">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <label class="font-black uppercase tracking-widest text-xs text-gray-500">Select Primary Product Categories *</label>
+                                    <span id="category-counter" class="font-black text-[10px] tracking-widest text-gray-400">0/4 SELECTED</span>
+                                </div>
+                                {{ form.product_categories }}
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="category-grid">
+                                    <button type="button" onclick="selectCategory('Apparel', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="shirt" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Apparel</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Watches', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="watch" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Watches</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Photo Frames', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="frame" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Photo Frames</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Phone Covers', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="smartphone" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Covers</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Mugs', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="cup-soda" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Mugs</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Stickers', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="tag" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Stickers</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Posters', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="image" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Posters</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Totebags', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Totebags</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Notebooks', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="book" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Notebooks</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Keychains', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="key" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Keychains</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Wellness', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="leaf" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Wellness</span>
+                                    </button>
+                                    <button type="button" onclick="selectCategory('Other', this)" class="category-card p-4 border-4 border-roots-black rounded-2xl flex flex-col items-center gap-3 transition-all hover:bg-roots-red hover:text-white group">
+                                        <i data-lucide="layers" class="w-8 h-8"></i>
+                                        <span class="font-black uppercase text-[10px] tracking-tighter">Other</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Describe Your Business</label>
+                                {{ form.business_description }}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="font-black uppercase tracking-widest text-xs text-gray-500">Social Links / Website</label>
+                                {{ form.social_links }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t-4 border-roots-black">
+                        <button type="submit" class="cta-button w-full text-center text-4xl py-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            Submit Application
+                        </button>
+                        
+                        <a href="{% url 'shop' %}" class="block text-center mt-12 font-black uppercase text-sm opacity-50 hover:opacity-100 transition-opacity tracking-widest underline decoration-4 underline-offset-8">
+                            Back to Roots Marketplace
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Background Decoration -->
+            <div class="absolute -right-20 -top-20 text-[20rem] font-black italic text-gray-50 opacity-5 select-none -rotate-12">
+                ROOTS
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 4px solid #000000;
+        box-shadow: 16px 16px 0px 0px #000000;
+        border-radius: 32px;
+    }
+    
+    .cta-button {
+        background: #000000;
+        color: #FFFFFF;
+        font-weight: 900;
+        text-transform: uppercase;
+        border: 4px solid #000000;
+        box-shadow: 8px 8px 0px 0px #E60000;
+        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 20px;
+    }
+
+    .cta-button:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 14px 14px 0px 0px #E60000;
+        background: #E60000;
+        border-color: #E60000;
+    }
+
+    .cta-button:active {
+        transform: translate(6px, 6px);
+        box-shadow: 0px 0px 0px 0px #E60000;
+    }
+
+    @keyframes slideDown {
+        from { transform: translate(-50%, -2rem); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .animate-slide-down {
+        animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    // Initialize Lucide
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+
+    const MAX_CATEGORIES = 4;
+    let selectedCategories = [];
+
+    function showToast(message) {
+        const toast = document.getElementById('brutal-toast');
+        const m = document.getElementById('toast-message');
+        m.textContent = message;
+        toast.classList.remove('hidden');
+        
+        // Final check for icons
+        if (window.lucide) lucide.createIcons();
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 3000);
+    }
+
+    function selectCategory(category, element) {
+        const index = selectedCategories.indexOf(category);
+        
+        if (index > -1) {
+            // Remove if already selected
+            selectedCategories.splice(index, 1);
+            element.classList.remove('bg-roots-red', 'text-white', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]', '-translate-y-1');
+            element.classList.add('bg-white', 'text-roots-black');
+        } else {
+            // Check limit
+            if (selectedCategories.length >= MAX_CATEGORIES) {
+                showToast(`YOU CAN ONLY SELECT UP TO ${MAX_CATEGORIES} CATEGORIES.`);
+                return;
+            }
+            
+            // Add new selection
+            selectedCategories.push(category);
+            element.classList.remove('bg-white', 'text-roots-black');
+            element.classList.add('bg-roots-red', 'text-white', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]', '-translate-y-1');
+        }
+        
+        // Update hidden input
+        document.getElementById('id_product_categories').value = selectedCategories.join(', ');
+        
+        // Update counter label
+        const counter = document.getElementById('category-counter');
+        if (counter) {
+            counter.textContent = `${selectedCategories.length}/${MAX_CATEGORIES} SELECTED`;
+            if (selectedCategories.length > 0) {
+                counter.classList.add('text-roots-red');
+            } else {
+                counter.classList.remove('text-roots-red');
+            }
+        }
+    }
+
+    const API_KEY = "keyPub1569gsvndc123kg9sjhg";
+    const API_BASE = "https://kenyaareadata.vercel.app/api/areas";
+    
+    const MAPPINGS = {
+        'Elgoyo Marakwet': 'Elgeyo/Marakwet',
+        'Homabay': 'Homa Bay',
+        'Murang\'a': "Murang'A",
+        'Tharaka Nithi': 'Tharaka - Nithi',
+        'Trans Zoia': 'Trans Nzoia',
+        'Transzoia': 'Trans Nzoia',
+        'Nairobi': 'Nairobi City'
+    };
+
+    function getMappedCountyName(rawName) {
+        if (!rawName) return '';
+        let name = rawName.replace(' County', '').replace(' City', '').trim();
+        if (MAPPINGS[name]) return MAPPINGS[name];
+        return name;
+    }
+
+    async function fetchConstituencies(countyId) {
+        const constituencySelect = document.getElementById('field-constituency');
+        const wardSelect = document.getElementById('field-ward');
+        const loader = document.getElementById('loader-constituency');
+        
+        constituencySelect.innerHTML = '<option value="">Select Sub-County</option>';
+        constituencySelect.disabled = true;
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+
+        if (!countyId) return;
+
+        const countySelect = document.getElementById('field-county');
+        const countyNameRaw = countySelect.options[countySelect.selectedIndex].getAttribute('data-name');
+        const countyName = getMappedCountyName(countyNameRaw);
+
+        try {
+            loader.classList.remove('hidden');
+            constituencySelect.classList.add('hidden');
+            
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}`);
+            const data = await response.json();
+            
+            if (data && data[countyName]) {
+                const constituencies = Object.keys(data[countyName]).sort();
+                constituencies.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    constituencySelect.appendChild(opt);
+                });
+                constituencySelect.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            loader.classList.add('hidden');
+            constituencySelect.classList.remove('hidden');
+        }
+    }
+
+    async function fetchWards(constituencyName) {
+        const wardSelect = document.getElementById('field-ward');
+        const loader = document.getElementById('loader-ward');
+        
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+
+        if (!constituencyName) return;
+
+        const countySelect = document.getElementById('field-county');
+        const countyNameRaw = countySelect.options[countySelect.selectedIndex].getAttribute('data-name');
+        const countyName = getMappedCountyName(countyNameRaw);
+
+        try {
+            loader.classList.remove('hidden');
+            wardSelect.classList.add('hidden');
+
+            const response = await fetch(`${API_BASE}?apiKey=${API_KEY}&county=${encodeURIComponent(countyName)}&constituency=${encodeURIComponent(constituencyName)}`);
+            const data = await response.json();
+
+            let wards = data[countyName] ? data[countyName][constituencyName] : (data[constituencyName] || []);
+            
+            if (wards && wards.length > 0) {
+                wards.sort().forEach(w => {
+                    const opt = document.createElement('option');
+                    opt.value = w;
+                    opt.textContent = w;
+                    wardSelect.appendChild(opt);
+                });
+                wardSelect.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            loader.classList.add('hidden');
+            wardSelect.classList.remove('hidden');
+        }
+    }
+</script>
+
+{% if google_maps_api_key %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places"></script>
+<script>
+    function initAutocomplete() {
+        const input = document.getElementById('id_location');
+        const options = {
+            componentRestrictions: { country: "ke" }, // Restrict to Kenya
+            fields: ["address_components", "geometry", "formatted_address"],
+            types: ["address", "establishment"]
+        };
+        const autocomplete = new google.maps.places.Autocomplete(input, options);
+        
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>
+{% endif %}
+
+<script>
+    function detectLocation() {
+        if (navigator.geolocation) {
+            const btn = event.currentTarget;
+            const originalSvg = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    // Simple Reverse Geocoding via Nominatim (Free/No Key)
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById('id_location').value = data.display_name;
+                            btn.innerHTML = originalSvg;
+                        })
+                        .catch(() => {
+                            document.getElementById('id_location').value = `${lat}, ${lng}`;
+                            btn.innerHTML = originalSvg;
+                        });
+                },
+                () => {
+                    showToast("UNABLE TO RETRIEVE YOUR LOCATION. PLEASE TYPE IT MANUALLY.");
+                    btn.innerHTML = originalSvg;
+                }
+            );
+        } else {
+            showToast("GEOLOCATION IS NOT SUPPORTED BY YOUR BROWSER.");
+        }
+    }
+</script>
+{% endblock %}
