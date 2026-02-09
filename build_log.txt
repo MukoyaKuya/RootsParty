@@ -1,0 +1,1188 @@
+---- REMOTE BUILD OUTPUT ----
+starting build "0870aa3d-4917-41a6-9bda-ed13894d555a"
+
+FETCHSOURCE
+Fetching storage object: gs://gen-lang-client-0549116861_cloudbuild/source/1770640209.902242-9b16b06eb09848e9ae376c55193f618a.tgz#1770640236261360
+Copying gs://gen-lang-client-0549116861_cloudbuild/source/1770640209.902242-9b16b06eb09848e9ae376c55193f618a.tgz#1770640236261360...
+/ [0 files][    0.0 B/ 12.2 MiB]                                                
+/ [1 files][ 12.2 MiB/ 12.2 MiB]                                                
+
+Operation completed over 1 objects/12.2 MiB.                                     
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  71.48MB
+
+
+Step 1/13 : FROM python:3.12-slim
+3.12-slim: Pulling from library/python
+0c8d55a45c0d: Already exists
+690eaffcf0e9: Pulling fs layer
+9395e1d7be50: Pulling fs layer
+4948ee383266: Pulling fs layer
+4948ee383266: Download complete
+690eaffcf0e9: Verifying Checksum
+690eaffcf0e9: Download complete
+9395e1d7be50: Verifying Checksum
+9395e1d7be50: Download complete
+690eaffcf0e9: Pull complete
+9395e1d7be50: Pull complete
+4948ee383266: Pull complete
+Digest: sha256:9e01bf1ae5db7649a236da7be1e94ffbbbdd7a93f867dd0d8d5720d9e1f89fab
+Status: Downloaded newer image for python:3.12-slim
+ b3b92273ebb4
+Step 2/13 : ENV PYTHONDONTWRITEBYTECODE=1
+ Running in 5b714dd6c43c
+Removing intermediate container 5b714dd6c43c
+ 9838fd5a1689
+Step 3/13 : ENV PYTHONUNBUFFERED=1
+ Running in 159e0364ab8f
+Removing intermediate container 159e0364ab8f
+ 54440d33fdb9
+Step 4/13 : ENV PORT=8080
+ Running in 0e846aca856a
+Removing intermediate container 0e846aca856a
+ 45c93ceab87f
+Step 5/13 : WORKDIR /app
+ Running in 2f3fcd9e8daf
+Removing intermediate container 2f3fcd9e8daf
+ 0306bd1adfc5
+Step 6/13 : RUN apt-get update && apt-get install -y     libpq-dev     gcc     && rm -rf /var/lib/apt/lists/*
+ Running in 88300e7576a1
+Hit:1 http://deb.debian.org/debian trixie InRelease
+Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9670 kB]
+Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [5412 B]
+Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [102 kB]
+Fetched 9869 kB in 1s (7540 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+  cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
+  gcc-x86-64-linux-gnu krb5-locales libasan8 libatomic1 libbinutils
+  libc-dev-bin libc6-dev libcc1-0 libcom-err2 libcrypt-dev libctf-nobfd0
+  libctf0 libgcc-14-dev libgomp1 libgprofng0 libgssapi-krb5-2 libhwasan0
+  libisl23 libitm1 libjansson4 libk5crypto3 libkeyutils1 libkrb5-3
+  libkrb5support0 libldap-common libldap2 liblsan0 libmpc3 libmpfr6 libpq5
+  libquadmath0 libsasl2-2 libsasl2-modules libsasl2-modules-db libsframe1
+  libssl-dev libtsan2 libubsan1 linux-libc-dev manpages manpages-dev
+  rpcsvc-proto
+Suggested packages:
+  binutils-doc gprofng-gui binutils-gold cpp-doc gcc-14-locales cpp-14-doc
+  gcc-multilib make autoconf automake libtool flex bison gdb gcc-doc
+  gcc-14-multilib gcc-14-doc gdb-x86-64-linux-gnu libc-devtools glibc-doc
+  krb5-doc krb5-user postgresql-doc-17 libsasl2-modules-gssapi-mit
+  | libsasl2-modules-gssapi-heimdal libsasl2-modules-ldap libsasl2-modules-otp
+  libsasl2-modules-sql libssl-doc man-browser
+The following NEW packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+  cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc gcc-14
+  gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu krb5-locales libasan8
+  libatomic1 libbinutils libc-dev-bin libc6-dev libcc1-0 libcom-err2
+  libcrypt-dev libctf-nobfd0 libctf0 libgcc-14-dev libgomp1 libgprofng0
+  libgssapi-krb5-2 libhwasan0 libisl23 libitm1 libjansson4 libk5crypto3
+  libkeyutils1 libkrb5-3 libkrb5support0 libldap-common libldap2 liblsan0
+  libmpc3 libmpfr6 libpq-dev libpq5 libquadmath0 libsasl2-2 libsasl2-modules
+  libsasl2-modules-db libsframe1 libssl-dev libtsan2 libubsan1 linux-libc-dev
+  manpages manpages-dev rpcsvc-proto
+0 upgraded, 53 newly installed, 0 to remove and 0 not upgraded.
+Need to get 64.8 MB of archives.
+After this operation, 244 MB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian trixie/main amd64 krb5-locales all 1.21.3-5 [101 kB]
+Get:2 http://deb.debian.org/debian trixie/main amd64 manpages all 6.9.1-1 [1393 kB]
+Get:3 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
+Get:4 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
+Get:5 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
+Get:6 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
+Get:7 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
+Get:8 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
+Get:9 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
+Get:10 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
+Get:11 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
+Get:12 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
+Get:13 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
+Get:14 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
+Get:15 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
+Get:16 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
+Get:17 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
+Get:18 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
+Get:19 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
+Get:20 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+Get:21 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
+Get:22 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+Get:23 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
+Get:24 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
+Get:25 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
+Get:26 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
+Get:27 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
+Get:28 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
+Get:29 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
+Get:30 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
+Get:31 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
+Get:32 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
+Get:33 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
+Get:34 http://deb.debian.org/debian trixie/main amd64 libc-dev-bin amd64 2.41-12+deb13u1 [58.5 kB]
+Get:35 http://deb.debian.org/debian trixie/main amd64 linux-libc-dev all 6.12.63-1 [2720 kB]
+Get:36 http://deb.debian.org/debian trixie/main amd64 libcrypt-dev amd64 1:4.4.38-1 [119 kB]
+Get:37 http://deb.debian.org/debian trixie/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+Get:38 http://deb.debian.org/debian trixie/main amd64 libc6-dev amd64 2.41-12+deb13u1 [1994 kB]
+Get:39 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b7 [25.0 kB]
+Get:40 http://deb.debian.org/debian trixie/main amd64 libkrb5support0 amd64 1.21.3-5 [33.0 kB]
+Get:41 http://deb.debian.org/debian trixie/main amd64 libk5crypto3 amd64 1.21.3-5 [81.5 kB]
+Get:42 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
+Get:43 http://deb.debian.org/debian trixie/main amd64 libkrb5-3 amd64 1.21.3-5 [326 kB]
+Get:44 http://deb.debian.org/debian trixie/main amd64 libgssapi-krb5-2 amd64 1.21.3-5 [138 kB]
+Get:45 http://deb.debian.org/debian trixie/main amd64 libldap-common all 2.6.10+dfsg-1 [35.1 kB]
+Get:46 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9 [19.8 kB]
+Get:47 http://deb.debian.org/debian trixie/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9 [57.5 kB]
+Get:48 http://deb.debian.org/debian trixie/main amd64 libldap2 amd64 2.6.10+dfsg-1 [194 kB]
+Get:49 http://deb.debian.org/debian trixie/main amd64 libpq5 amd64 17.7-0+deb13u1 [228 kB]
+Get:50 http://deb.debian.org/debian-security trixie-security/main amd64 libssl-dev amd64 3.5.4-1~deb13u2 [2958 kB]
+Get:51 http://deb.debian.org/debian trixie/main amd64 libpq-dev amd64 17.7-0+deb13u1 [151 kB]
+Get:52 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules amd64 2.1.28+dfsg1-9 [66.7 kB]
+Get:53 http://deb.debian.org/debian trixie/main amd64 manpages-dev all 6.9.1-1 [2122 kB]
+[91mdebconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+[0m[91mdebconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 53.)
+debconf: falling back to frontend: Teletype
+[0m[91mdebconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+[0mFetched 64.8 MB in 1s (109 MB/s)
+Selecting previously unselected package krb5-locales.
+
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 5645 files and directories currently installed.)
+
+Preparing to unpack .../00-krb5-locales_1.21.3-5_all.deb ...
+
+Unpacking krb5-locales (1.21.3-5) ...
+
+Selecting previously unselected package manpages.
+
+Preparing to unpack .../01-manpages_6.9.1-1_all.deb ...
+
+Unpacking manpages (6.9.1-1) ...
+
+Selecting previously unselected package libsframe1:amd64.
+
+Preparing to unpack .../02-libsframe1_2.44-3_amd64.deb ...
+
+Unpacking libsframe1:amd64 (2.44-3) ...
+
+Selecting previously unselected package binutils-common:amd64.
+
+Preparing to unpack .../03-binutils-common_2.44-3_amd64.deb ...
+
+Unpacking binutils-common:amd64 (2.44-3) ...
+
+Selecting previously unselected package libbinutils:amd64.
+
+Preparing to unpack .../04-libbinutils_2.44-3_amd64.deb ...
+
+Unpacking libbinutils:amd64 (2.44-3) ...
+
+Selecting previously unselected package libgprofng0:amd64.
+
+Preparing to unpack .../05-libgprofng0_2.44-3_amd64.deb ...
+
+Unpacking libgprofng0:amd64 (2.44-3) ...
+
+Selecting previously unselected package libctf-nobfd0:amd64.
+
+Preparing to unpack .../06-libctf-nobfd0_2.44-3_amd64.deb ...
+
+Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+
+Selecting previously unselected package libctf0:amd64.
+
+Preparing to unpack .../07-libctf0_2.44-3_amd64.deb ...
+
+Unpacking libctf0:amd64 (2.44-3) ...
+
+Selecting previously unselected package libjansson4:amd64.
+
+Preparing to unpack .../08-libjansson4_2.14-2+b3_amd64.deb ...
+
+Unpacking libjansson4:amd64 (2.14-2+b3) ...
+
+Selecting previously unselected package binutils-x86-64-linux-gnu.
+
+Preparing to unpack .../09-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+
+Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+
+Selecting previously unselected package binutils.
+
+Preparing to unpack .../10-binutils_2.44-3_amd64.deb ...
+
+Unpacking binutils (2.44-3) ...
+
+Selecting previously unselected package libisl23:amd64.
+
+Preparing to unpack .../11-libisl23_0.27-1_amd64.deb ...
+
+Unpacking libisl23:amd64 (0.27-1) ...
+
+Selecting previously unselected package libmpfr6:amd64.
+
+Preparing to unpack .../12-libmpfr6_4.2.2-1_amd64.deb ...
+
+Unpacking libmpfr6:amd64 (4.2.2-1) ...
+
+Selecting previously unselected package libmpc3:amd64.
+
+Preparing to unpack .../13-libmpc3_1.3.1-1+b3_amd64.deb ...
+
+Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+
+Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+
+Preparing to unpack .../14-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+
+Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+
+Selecting previously unselected package cpp-14.
+
+Preparing to unpack .../15-cpp-14_14.2.0-19_amd64.deb ...
+
+Unpacking cpp-14 (14.2.0-19) ...
+
+Selecting previously unselected package cpp-x86-64-linux-gnu.
+
+Preparing to unpack .../16-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+
+Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+
+Selecting previously unselected package cpp.
+
+Preparing to unpack .../17-cpp_4%3a14.2.0-1_amd64.deb ...
+
+Unpacking cpp (4:14.2.0-1) ...
+
+Selecting previously unselected package libcc1-0:amd64.
+
+Preparing to unpack .../18-libcc1-0_14.2.0-19_amd64.deb ...
+
+Unpacking libcc1-0:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libgomp1:amd64.
+
+Preparing to unpack .../19-libgomp1_14.2.0-19_amd64.deb ...
+
+Unpacking libgomp1:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libitm1:amd64.
+
+Preparing to unpack .../20-libitm1_14.2.0-19_amd64.deb ...
+
+Unpacking libitm1:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libatomic1:amd64.
+
+Preparing to unpack .../21-libatomic1_14.2.0-19_amd64.deb ...
+
+Unpacking libatomic1:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libasan8:amd64.
+
+Preparing to unpack .../22-libasan8_14.2.0-19_amd64.deb ...
+
+Unpacking libasan8:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package liblsan0:amd64.
+
+Preparing to unpack .../23-liblsan0_14.2.0-19_amd64.deb ...
+
+Unpacking liblsan0:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libtsan2:amd64.
+
+Preparing to unpack .../24-libtsan2_14.2.0-19_amd64.deb ...
+
+Unpacking libtsan2:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libubsan1:amd64.
+
+Preparing to unpack .../25-libubsan1_14.2.0-19_amd64.deb ...
+
+Unpacking libubsan1:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libhwasan0:amd64.
+
+Preparing to unpack .../26-libhwasan0_14.2.0-19_amd64.deb ...
+
+Unpacking libhwasan0:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libquadmath0:amd64.
+
+Preparing to unpack .../27-libquadmath0_14.2.0-19_amd64.deb ...
+
+Unpacking libquadmath0:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package libgcc-14-dev:amd64.
+
+Preparing to unpack .../28-libgcc-14-dev_14.2.0-19_amd64.deb ...
+
+Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+
+Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+
+Preparing to unpack .../29-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+
+Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+
+Selecting previously unselected package gcc-14.
+
+Preparing to unpack .../30-gcc-14_14.2.0-19_amd64.deb ...
+
+Unpacking gcc-14 (14.2.0-19) ...
+
+Selecting previously unselected package gcc-x86-64-linux-gnu.
+
+Preparing to unpack .../31-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+
+Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+
+Selecting previously unselected package gcc.
+
+Preparing to unpack .../32-gcc_4%3a14.2.0-1_amd64.deb ...
+
+Unpacking gcc (4:14.2.0-1) ...
+
+Selecting previously unselected package libc-dev-bin.
+
+Preparing to unpack .../33-libc-dev-bin_2.41-12+deb13u1_amd64.deb ...
+
+Unpacking libc-dev-bin (2.41-12+deb13u1) ...
+
+Selecting previously unselected package linux-libc-dev.
+
+Preparing to unpack .../34-linux-libc-dev_6.12.63-1_all.deb ...
+
+Unpacking linux-libc-dev (6.12.63-1) ...
+
+Selecting previously unselected package libcrypt-dev:amd64.
+
+Preparing to unpack .../35-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+
+Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+
+Selecting previously unselected package rpcsvc-proto.
+
+Preparing to unpack .../36-rpcsvc-proto_1.4.3-1_amd64.deb ...
+
+Unpacking rpcsvc-proto (1.4.3-1) ...
+
+Selecting previously unselected package libc6-dev:amd64.
+
+Preparing to unpack .../37-libc6-dev_2.41-12+deb13u1_amd64.deb ...
+
+Unpacking libc6-dev:amd64 (2.41-12+deb13u1) ...
+
+Selecting previously unselected package libcom-err2:amd64.
+
+Preparing to unpack .../38-libcom-err2_1.47.2-3+b7_amd64.deb ...
+
+Unpacking libcom-err2:amd64 (1.47.2-3+b7) ...
+
+Selecting previously unselected package libkrb5support0:amd64.
+
+Preparing to unpack .../39-libkrb5support0_1.21.3-5_amd64.deb ...
+
+Unpacking libkrb5support0:amd64 (1.21.3-5) ...
+
+Selecting previously unselected package libk5crypto3:amd64.
+
+Preparing to unpack .../40-libk5crypto3_1.21.3-5_amd64.deb ...
+
+Unpacking libk5crypto3:amd64 (1.21.3-5) ...
+
+Selecting previously unselected package libkeyutils1:amd64.
+
+Preparing to unpack .../41-libkeyutils1_1.6.3-6_amd64.deb ...
+
+Unpacking libkeyutils1:amd64 (1.6.3-6) ...
+
+Selecting previously unselected package libkrb5-3:amd64.
+
+Preparing to unpack .../42-libkrb5-3_1.21.3-5_amd64.deb ...
+
+Unpacking libkrb5-3:amd64 (1.21.3-5) ...
+
+Selecting previously unselected package libgssapi-krb5-2:amd64.
+
+Preparing to unpack .../43-libgssapi-krb5-2_1.21.3-5_amd64.deb ...
+
+Unpacking libgssapi-krb5-2:amd64 (1.21.3-5) ...
+
+Selecting previously unselected package libldap-common.
+
+Preparing to unpack .../44-libldap-common_2.6.10+dfsg-1_all.deb ...
+
+Unpacking libldap-common (2.6.10+dfsg-1) ...
+
+Selecting previously unselected package libsasl2-modules-db:amd64.
+
+Preparing to unpack .../45-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
+
+Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+
+Selecting previously unselected package libsasl2-2:amd64.
+
+Preparing to unpack .../46-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
+
+Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+
+Selecting previously unselected package libldap2:amd64.
+
+Preparing to unpack .../47-libldap2_2.6.10+dfsg-1_amd64.deb ...
+
+Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
+
+Selecting previously unselected package libpq5:amd64.
+
+Preparing to unpack .../48-libpq5_17.7-0+deb13u1_amd64.deb ...
+
+Unpacking libpq5:amd64 (17.7-0+deb13u1) ...
+
+Selecting previously unselected package libssl-dev:amd64.
+
+Preparing to unpack .../49-libssl-dev_3.5.4-1~deb13u2_amd64.deb ...
+
+Unpacking libssl-dev:amd64 (3.5.4-1~deb13u2) ...
+
+Selecting previously unselected package libpq-dev.
+
+Preparing to unpack .../50-libpq-dev_17.7-0+deb13u1_amd64.deb ...
+
+Unpacking libpq-dev (17.7-0+deb13u1) ...
+
+Selecting previously unselected package libsasl2-modules:amd64.
+
+Preparing to unpack .../51-libsasl2-modules_2.1.28+dfsg1-9_amd64.deb ...
+
+Unpacking libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+
+Selecting previously unselected package manpages-dev.
+
+Preparing to unpack .../52-manpages-dev_6.9.1-1_all.deb ...
+
+Unpacking manpages-dev (6.9.1-1) ...
+
+Setting up libkeyutils1:amd64 (1.6.3-6) ...
+
+Setting up manpages (6.9.1-1) ...
+
+Setting up libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+
+Setting up binutils-common:amd64 (2.44-3) ...
+
+Setting up linux-libc-dev (6.12.63-1) ...
+
+Setting up libctf-nobfd0:amd64 (2.44-3) ...
+
+Setting up krb5-locales (1.21.3-5) ...
+
+Setting up libcom-err2:amd64 (1.47.2-3+b7) ...
+
+Setting up libgomp1:amd64 (14.2.0-19) ...
+
+Setting up libldap-common (2.6.10+dfsg-1) ...
+
+Setting up libsframe1:amd64 (2.44-3) ...
+
+Setting up libjansson4:amd64 (2.14-2+b3) ...
+
+Setting up libkrb5support0:amd64 (1.21.3-5) ...
+
+Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+
+Setting up rpcsvc-proto (1.4.3-1) ...
+
+Setting up libmpfr6:amd64 (4.2.2-1) ...
+
+Setting up libquadmath0:amd64 (14.2.0-19) ...
+
+Setting up libssl-dev:amd64 (3.5.4-1~deb13u2) ...
+
+Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+
+Setting up libatomic1:amd64 (14.2.0-19) ...
+
+Setting up libk5crypto3:amd64 (1.21.3-5) ...
+
+Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+
+Setting up libubsan1:amd64 (14.2.0-19) ...
+
+Setting up libhwasan0:amd64 (14.2.0-19) ...
+
+Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+
+Setting up libasan8:amd64 (14.2.0-19) ...
+
+Setting up libkrb5-3:amd64 (1.21.3-5) ...
+
+Setting up libtsan2:amd64 (14.2.0-19) ...
+
+Setting up libbinutils:amd64 (2.44-3) ...
+
+Setting up libisl23:amd64 (0.27-1) ...
+
+Setting up libc-dev-bin (2.41-12+deb13u1) ...
+
+Setting up libcc1-0:amd64 (14.2.0-19) ...
+
+Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
+
+Setting up liblsan0:amd64 (14.2.0-19) ...
+
+Setting up libitm1:amd64 (14.2.0-19) ...
+
+Setting up libctf0:amd64 (2.44-3) ...
+
+Setting up manpages-dev (6.9.1-1) ...
+
+Setting up libgprofng0:amd64 (2.44-3) ...
+
+Setting up libgssapi-krb5-2:amd64 (1.21.3-5) ...
+
+Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+
+Setting up cpp-14 (14.2.0-19) ...
+
+Setting up libc6-dev:amd64 (2.41-12+deb13u1) ...
+
+Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+
+Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+
+Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+
+Setting up libpq5:amd64 (17.7-0+deb13u1) ...
+
+Setting up libpq-dev (17.7-0+deb13u1) ...
+
+Setting up binutils (2.44-3) ...
+
+Setting up cpp (4:14.2.0-1) ...
+
+Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+
+Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+
+Setting up gcc-14 (14.2.0-19) ...
+
+Setting up gcc (4:14.2.0-1) ...
+
+Processing triggers for libc-bin (2.41-12+deb13u1) ...
+
+Removing intermediate container 88300e7576a1
+ 001c46155672
+Step 7/13 : COPY requirements.txt /app/
+ 092e98b96f67
+Step 8/13 : RUN pip install --upgrade pip && pip install -r requirements.txt
+ Running in 899f52d273be
+Requirement already satisfied: pip in /usr/local/lib/python3.12/site-packages (25.0.1)
+Collecting pip
+  Downloading pip-26.0.1-py3-none-any.whl.metadata (4.7 kB)
+Downloading pip-26.0.1-py3-none-any.whl (1.8 MB)
+   ???????????????????????????????????????? 1.8/1.8 MB 54.4 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 25.0.1
+    Uninstalling pip-25.0.1:
+      Successfully uninstalled pip-25.0.1
+Successfully installed pip-26.0.1
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0mCollecting annotated-types==0.7.0 (from -r requirements.txt (line 1))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting anyio==4.12.0 (from -r requirements.txt (line 2))
+  Downloading anyio-4.12.0-py3-none-any.whl.metadata (4.3 kB)
+Collecting asgiref==3.11.0 (from -r requirements.txt (line 3))
+  Downloading asgiref-3.11.0-py3-none-any.whl.metadata (9.3 kB)
+Collecting Authlib==1.6.6 (from -r requirements.txt (line 4))
+  Downloading authlib-1.6.6-py2.py3-none-any.whl.metadata (9.8 kB)
+Collecting bandit==1.9.2 (from -r requirements.txt (line 5))
+  Downloading bandit-1.9.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting boolean.py==5.0 (from -r requirements.txt (line 6))
+  Downloading boolean_py-5.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting CacheControl==0.14.4 (from -r requirements.txt (line 7))
+  Downloading cachecontrol-0.14.4-py3-none-any.whl.metadata (3.1 kB)
+Collecting cachetools==6.2.3 (from -r requirements.txt (line 8))
+  Downloading cachetools-6.2.3-py3-none-any.whl.metadata (5.6 kB)
+Collecting certifi==2025.11.12 (from -r requirements.txt (line 9))
+  Downloading certifi-2025.11.12-py3-none-any.whl.metadata (2.5 kB)
+Collecting cffi==2.0.0 (from -r requirements.txt (line 10))
+  Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting cfgv==3.5.0 (from -r requirements.txt (line 11))
+  Downloading cfgv-3.5.0-py2.py3-none-any.whl.metadata (8.9 kB)
+Collecting charset-normalizer==3.4.4 (from -r requirements.txt (line 12))
+  Downloading charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+Collecting click==8.3.1 (from -r requirements.txt (line 13))
+  Downloading click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting colorama==0.4.6 (from -r requirements.txt (line 14))
+  Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Collecting cryptography==46.0.3 (from -r requirements.txt (line 15))
+  Downloading cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting cyclonedx-python-lib==11.6.0 (from -r requirements.txt (line 16))
+  Downloading cyclonedx_python_lib-11.6.0-py3-none-any.whl.metadata (6.8 kB)
+Collecting defusedxml==0.7.1 (from -r requirements.txt (line 17))
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+Collecting detect-secrets==1.5.0 (from -r requirements.txt (line 18))
+  Downloading detect_secrets-1.5.0-py3-none-any.whl.metadata (23 kB)
+Collecting disposable-email-domains==0.0.153 (from -r requirements.txt (line 19))
+  Downloading disposable_email_domains-0.0.153-py2.py3-none-any.whl.metadata (1.9 kB)
+Collecting distlib==0.4.0 (from -r requirements.txt (line 20))
+  Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+Collecting dj-database-url==3.0.1 (from -r requirements.txt (line 21))
+  Downloading dj_database_url-3.0.1-py3-none-any.whl.metadata (14 kB)
+Collecting Django==5.2.10 (from -r requirements.txt (line 22))
+  Downloading django-5.2.10-py3-none-any.whl.metadata (4.1 kB)
+Collecting django-ckeditor-5==0.2.0 (from -r requirements.txt (line 23))
+  Downloading django_ckeditor_5-0.2.0-py3-none-any.whl.metadata (10 kB)
+Collecting django-csp==4.0 (from -r requirements.txt (line 24))
+  Downloading django_csp-4.0-py3-none-any.whl.metadata (3.6 kB)
+Collecting django-htmx==1.27.0 (from -r requirements.txt (line 25))
+  Downloading django_htmx-1.27.0-py3-none-any.whl.metadata (2.7 kB)
+Collecting django-js-asset==3.1.2 (from -r requirements.txt (line 26))
+  Downloading django_js_asset-3.1.2-py3-none-any.whl.metadata (6.4 kB)
+Collecting django-mathfilters==1.0.0 (from -r requirements.txt (line 27))
+  Downloading django_mathfilters-1.0.0-py3-none-any.whl.metadata (3.4 kB)
+Collecting django-ratelimit==4.1.0 (from -r requirements.txt (line 28))
+  Downloading django_ratelimit-4.1.0-py2.py3-none-any.whl.metadata (2.3 kB)
+Collecting django-recaptcha==4.1.0 (from -r requirements.txt (line 29))
+  Downloading django_recaptcha-4.1.0-py3-none-any.whl.metadata (12 kB)
+Collecting django-storages==1.14.6 (from -r requirements.txt (line 30))
+  Downloading django_storages-1.14.6-py3-none-any.whl.metadata (4.7 kB)
+Collecting dparse==0.6.4 (from -r requirements.txt (line 31))
+  Downloading dparse-0.6.4-py3-none-any.whl.metadata (5.5 kB)
+Collecting filelock==3.20.1 (from -r requirements.txt (line 32))
+  Downloading filelock-3.20.1-py3-none-any.whl.metadata (2.1 kB)
+Collecting gevent==25.9.1 (from -r requirements.txt (line 33))
+  Downloading gevent-25.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (14 kB)
+Collecting git-filter-repo==2.47.0 (from -r requirements.txt (line 34))
+  Downloading git_filter_repo-2.47.0-py3-none-any.whl.metadata (31 kB)
+Collecting google-ai-generativelanguage==0.6.15 (from -r requirements.txt (line 35))
+  Downloading google_ai_generativelanguage-0.6.15-py3-none-any.whl.metadata (5.7 kB)
+Collecting google-api-core==2.28.1 (from -r requirements.txt (line 36))
+  Downloading google_api_core-2.28.1-py3-none-any.whl.metadata (3.3 kB)
+Collecting google-api-python-client==2.187.0 (from -r requirements.txt (line 37))
+  Downloading google_api_python_client-2.187.0-py3-none-any.whl.metadata (7.0 kB)
+Collecting google-auth==2.43.0 (from -r requirements.txt (line 38))
+  Downloading google_auth-2.43.0-py2.py3-none-any.whl.metadata (6.6 kB)
+Collecting google-auth-httplib2==0.2.1 (from -r requirements.txt (line 39))
+  Downloading google_auth_httplib2-0.2.1-py3-none-any.whl.metadata (3.0 kB)
+Collecting google-cloud-core==2.5.0 (from -r requirements.txt (line 40))
+  Downloading google_cloud_core-2.5.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-cloud-logging==3.11.4 (from -r requirements.txt (line 41))
+  Downloading google_cloud_logging-3.11.4-py2.py3-none-any.whl.metadata (5.0 kB)
+Collecting google-cloud-storage==3.7.0 (from -r requirements.txt (line 42))
+  Downloading google_cloud_storage-3.7.0-py3-none-any.whl.metadata (14 kB)
+Collecting google-crc32c==1.7.1 (from -r requirements.txt (line 43))
+  Downloading google_crc32c-1.7.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.3 kB)
+Collecting google-generativeai==0.8.5 (from -r requirements.txt (line 44))
+  Downloading google_generativeai-0.8.5-py3-none-any.whl.metadata (3.9 kB)
+Collecting google-resumable-media==2.8.0 (from -r requirements.txt (line 45))
+  Downloading google_resumable_media-2.8.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting googleapis-common-protos==1.72.0 (from -r requirements.txt (line 46))
+  Downloading googleapis_common_protos-1.72.0-py3-none-any.whl.metadata (9.4 kB)
+Collecting greenlet==3.3.0 (from -r requirements.txt (line 47))
+  Downloading greenlet-3.3.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)
+Collecting grpcio==1.76.0 (from -r requirements.txt (line 48))
+  Downloading grpcio-1.76.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.7 kB)
+Collecting grpcio-status==1.71.2 (from -r requirements.txt (line 49))
+  Downloading grpcio_status-1.71.2-py3-none-any.whl.metadata (1.1 kB)
+Collecting gunicorn==23.0.0 (from -r requirements.txt (line 50))
+  Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+Collecting h11==0.16.0 (from -r requirements.txt (line 51))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting httpcore==1.0.9 (from -r requirements.txt (line 52))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting httplib2==0.31.0 (from -r requirements.txt (line 53))
+  Downloading httplib2-0.31.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting httpx==0.28.1 (from -r requirements.txt (line 54))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting identify==2.6.15 (from -r requirements.txt (line 55))
+  Downloading identify-2.6.15-py2.py3-none-any.whl.metadata (4.4 kB)
+Collecting idna==3.11 (from -r requirements.txt (line 56))
+  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+Collecting Jinja2==3.1.6 (from -r requirements.txt (line 57))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting joblib==1.5.3 (from -r requirements.txt (line 58))
+  Downloading joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
+Collecting Levenshtein==0.27.3 (from -r requirements.txt (line 59))
+  Downloading levenshtein-0.27.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.7 kB)
+Collecting license-expression==30.4.4 (from -r requirements.txt (line 60))
+  Downloading license_expression-30.4.4-py3-none-any.whl.metadata (11 kB)
+Collecting Markdown==3.10 (from -r requirements.txt (line 61))
+  Downloading markdown-3.10-py3-none-any.whl.metadata (5.1 kB)
+Collecting markdown-it-py==4.0.0 (from -r requirements.txt (line 62))
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting MarkupSafe==3.0.3 (from -r requirements.txt (line 63))
+  Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting marshmallow==4.1.1 (from -r requirements.txt (line 64))
+  Downloading marshmallow-4.1.1-py3-none-any.whl.metadata (7.4 kB)
+Collecting mdurl==0.1.2 (from -r requirements.txt (line 65))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting msgpack==1.1.2 (from -r requirements.txt (line 66))
+  Downloading msgpack-1.1.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+Collecting nltk==3.9.2 (from -r requirements.txt (line 67))
+  Downloading nltk-3.9.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting nodeenv==1.10.0 (from -r requirements.txt (line 68))
+  Downloading nodeenv-1.10.0-py2.py3-none-any.whl.metadata (24 kB)
+Collecting packageurl-python==0.17.6 (from -r requirements.txt (line 69))
+  Downloading packageurl_python-0.17.6-py3-none-any.whl.metadata (5.1 kB)
+Collecting packaging==25.0 (from -r requirements.txt (line 70))
+  Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting Pillow==11.0.0 (from -r requirements.txt (line 71))
+  Downloading pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pip-api==0.0.34 (from -r requirements.txt (line 72))
+  Downloading pip_api-0.0.34-py3-none-any.whl.metadata (6.6 kB)
+Collecting pip-requirements-parser==32.0.1 (from -r requirements.txt (line 73))
+  Downloading pip_requirements_parser-32.0.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting pip_audit==2.10.0 (from -r requirements.txt (line 74))
+  Downloading pip_audit-2.10.0-py3-none-any.whl.metadata (28 kB)
+Collecting platformdirs==4.5.1 (from -r requirements.txt (line 75))
+  Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+Collecting pre_commit==4.5.1 (from -r requirements.txt (line 76))
+  Downloading pre_commit-4.5.1-py2.py3-none-any.whl.metadata (1.2 kB)
+Collecting proto-plus==1.26.1 (from -r requirements.txt (line 77))
+  Downloading proto_plus-1.26.1-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf==5.29.5 (from -r requirements.txt (line 78))
+  Downloading protobuf-5.29.5-cp38-abi3-manylinux2014_x86_64.whl.metadata (592 bytes)
+Collecting psycopg2-binary==2.9.11 (from -r requirements.txt (line 79))
+  Downloading psycopg2_binary-2.9.11-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+Collecting py-serializable==2.1.0 (from -r requirements.txt (line 80))
+  Downloading py_serializable-2.1.0-py3-none-any.whl.metadata (4.3 kB)
+Collecting pyasn1==0.6.1 (from -r requirements.txt (line 81))
+  Downloading pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+Collecting pyasn1_modules==0.4.2 (from -r requirements.txt (line 82))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pycparser==2.23 (from -r requirements.txt (line 83))
+  Downloading pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+Collecting pydantic==2.12.5 (from -r requirements.txt (line 84))
+  Downloading pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+Collecting pydantic_core==2.41.5 (from -r requirements.txt (line 85))
+  Downloading pydantic_core-2.41.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Collecting Pygments==2.19.2 (from -r requirements.txt (line 86))
+  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting pyparsing==3.2.5 (from -r requirements.txt (line 87))
+  Downloading pyparsing-3.2.5-py3-none-any.whl.metadata (5.0 kB)
+Collecting python-dotenv==1.2.1 (from -r requirements.txt (line 88))
+  Downloading python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+Collecting python-Levenshtein==0.27.3 (from -r requirements.txt (line 89))
+  Downloading python_levenshtein-0.27.3-py3-none-any.whl.metadata (3.9 kB)
+Collecting PyYAML==6.0.3 (from -r requirements.txt (line 90))
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting qrcode==8.2 (from -r requirements.txt (line 91))
+  Downloading qrcode-8.2-py3-none-any.whl.metadata (17 kB)
+Collecting RapidFuzz==3.14.3 (from -r requirements.txt (line 92))
+  Downloading rapidfuzz-3.14.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (12 kB)
+Collecting regex==2025.11.3 (from -r requirements.txt (line 93))
+  Downloading regex-2025.11.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting reportlab==4.4.7 (from -r requirements.txt (line 94))
+  Downloading reportlab-4.4.7-py3-none-any.whl.metadata (1.7 kB)
+Collecting requests==2.32.5 (from -r requirements.txt (line 95))
+  Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+Collecting rich==14.2.0 (from -r requirements.txt (line 96))
+  Downloading rich-14.2.0-py3-none-any.whl.metadata (18 kB)
+Collecting rsa==4.9.1 (from -r requirements.txt (line 97))
+  Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting ruamel.yaml==0.18.17 (from -r requirements.txt (line 98))
+  Downloading ruamel_yaml-0.18.17-py3-none-any.whl.metadata (27 kB)
+Collecting ruamel.yaml.clib==0.2.15 (from -r requirements.txt (line 99))
+  Downloading ruamel_yaml_clib-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (3.5 kB)
+Collecting safety==3.7.0 (from -r requirements.txt (line 100))
+  Downloading safety-3.7.0-py3-none-any.whl.metadata (11 kB)
+Collecting safety-schemas==0.0.16 (from -r requirements.txt (line 101))
+  Downloading safety_schemas-0.0.16-py3-none-any.whl.metadata (1.1 kB)
+Collecting shellingham==1.5.4 (from -r requirements.txt (line 102))
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting sortedcontainers==2.4.0 (from -r requirements.txt (line 103))
+  Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+Collecting sqlparse==0.5.5 (from -r requirements.txt (line 104))
+  Downloading sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Collecting stevedore==5.6.0 (from -r requirements.txt (line 105))
+  Downloading stevedore-5.6.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting tenacity==9.1.2 (from -r requirements.txt (line 106))
+  Downloading tenacity-9.1.2-py3-none-any.whl.metadata (1.2 kB)
+Collecting tomli==2.3.0 (from -r requirements.txt (line 107))
+  Downloading tomli-2.3.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting tomli_w==1.2.0 (from -r requirements.txt (line 108))
+  Downloading tomli_w-1.2.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting tomlkit==0.13.3 (from -r requirements.txt (line 109))
+  Downloading tomlkit-0.13.3-py3-none-any.whl.metadata (2.8 kB)
+Collecting tqdm==4.67.1 (from -r requirements.txt (line 110))
+  Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+Collecting typer==0.20.0 (from -r requirements.txt (line 111))
+  Downloading typer-0.20.0-py3-none-any.whl.metadata (16 kB)
+Collecting typing-inspection==0.4.2 (from -r requirements.txt (line 112))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting typing_extensions==4.15.0 (from -r requirements.txt (line 113))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting tzdata==2025.3 (from -r requirements.txt (line 114))
+  Downloading tzdata-2025.3-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting uritemplate==4.2.0 (from -r requirements.txt (line 115))
+  Downloading uritemplate-4.2.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting urllib3==2.6.1 (from -r requirements.txt (line 116))
+  Downloading urllib3-2.6.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting virtualenv==20.35.4 (from -r requirements.txt (line 117))
+  Downloading virtualenv-20.35.4-py3-none-any.whl.metadata (4.6 kB)
+Collecting whitenoise==6.11.0 (from -r requirements.txt (line 118))
+  Downloading whitenoise-6.11.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting zope.event==6.1 (from -r requirements.txt (line 119))
+  Downloading zope_event-6.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting zope.interface==8.1.1 (from -r requirements.txt (line 120))
+  Downloading zope_interface-8.1.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl.metadata (45 kB)
+Collecting django-image-cropping==1.7 (from -r requirements.txt (line 121))
+  Downloading django_image_cropping-1.7-py3-none-any.whl.metadata (15 kB)
+Collecting easy-thumbnails==2.9 (from -r requirements.txt (line 122))
+  Downloading easy_thumbnails-2.9-py3-none-any.whl.metadata (14 kB)
+Collecting djangorestframework==3.15.2 (from -r requirements.txt (line 123))
+  Downloading djangorestframework-3.15.2-py3-none-any.whl.metadata (10 kB)
+Collecting django-filter==24.3 (from -r requirements.txt (line 124))
+  Downloading django_filter-24.3-py3-none-any.whl.metadata (5.2 kB)
+Collecting drf-spectacular==0.28.0 (from -r requirements.txt (line 125))
+  Downloading drf_spectacular-0.28.0-py3-none-any.whl.metadata (14 kB)
+Collecting django-unfold==0.41.0 (from -r requirements.txt (line 126))
+  Downloading django_unfold-0.41.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting django-redis==5.4.0 (from -r requirements.txt (line 129))
+  Downloading django_redis-5.4.0-py3-none-any.whl.metadata (32 kB)
+Collecting redis==5.2.1 (from -r requirements.txt (line 130))
+  Downloading redis-5.2.1-py3-none-any.whl.metadata (9.1 kB)
+Collecting hiredis==3.0.0 (from -r requirements.txt (line 131))
+  Downloading hiredis-3.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.2 kB)
+Collecting google-cloud-appengine-logging<2.0.0dev,>=0.1.3 (from google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading google_cloud_appengine_logging-1.8.0-py3-none-any.whl.metadata (10 kB)
+Collecting google-cloud-audit-log<1.0.0dev,>=0.2.4 (from google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading google_cloud_audit_log-0.4.0-py3-none-any.whl.metadata (9.3 kB)
+Collecting grpc-google-iam-v1<1.0.0dev,>=0.12.4 (from google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading grpc_google_iam_v1-0.14.3-py3-none-any.whl.metadata (9.2 kB)
+Collecting opentelemetry-api>=1.9.0 (from google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading opentelemetry_api-1.39.1-py3-none-any.whl.metadata (1.5 kB)
+Requirement already satisfied: pip in /usr/local/lib/python3.12/site-packages (from pip-api==0.0.34->-r requirements.txt (line 72)) (26.0.1)
+Collecting django-appconf>=1.0.2 (from django-image-cropping==1.7->-r requirements.txt (line 121))
+  Downloading django_appconf-1.2.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting jsonschema>=2.6.0 (from drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting inflection>=0.3.1 (from drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading inflection-0.5.1-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting attrs>=22.2.0 (from jsonschema>=2.6.0->drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=2.6.0->drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema>=2.6.0->drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema>=2.6.0->drf-spectacular==0.28.0->-r requirements.txt (line 125))
+  Downloading rpds_py-0.30.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting importlib-metadata<8.8.0,>=6.0 (from opentelemetry-api>=1.9.0->google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting zipp>=3.20 (from importlib-metadata<8.8.0,>=6.0->opentelemetry-api>=1.9.0->google-cloud-logging==3.11.4->-r requirements.txt (line 41))
+  Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.12.0-py3-none-any.whl (113 kB)
+Downloading asgiref-3.11.0-py3-none-any.whl (24 kB)
+Downloading authlib-1.6.6-py2.py3-none-any.whl (244 kB)
+Downloading bandit-1.9.2-py3-none-any.whl (134 kB)
+Downloading boolean_py-5.0-py3-none-any.whl (26 kB)
+Downloading cachecontrol-0.14.4-py3-none-any.whl (22 kB)
+Downloading msgpack-1.1.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (427 kB)
+Downloading cachetools-6.2.3-py3-none-any.whl (11 kB)
+Downloading certifi-2025.11.12-py3-none-any.whl (159 kB)
+Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)
+Downloading cfgv-3.5.0-py2.py3-none-any.whl (7.4 kB)
+Downloading charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+Downloading click-8.3.1-py3-none-any.whl (108 kB)
+Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Downloading cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+   ???????????????????????????????????????? 4.5/4.5 MB 111.7 MB/s  0:00:00
+Downloading cyclonedx_python_lib-11.6.0-py3-none-any.whl (511 kB)
+Downloading license_expression-30.4.4-py3-none-any.whl (120 kB)
+Downloading packageurl_python-0.17.6-py3-none-any.whl (36 kB)
+Downloading py_serializable-2.1.0-py3-none-any.whl (23 kB)
+Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading detect_secrets-1.5.0-py3-none-any.whl (120 kB)
+Downloading disposable_email_domains-0.0.153-py2.py3-none-any.whl (31 kB)
+Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+Downloading dj_database_url-3.0.1-py3-none-any.whl (8.8 kB)
+Downloading django-5.2.10-py3-none-any.whl (8.3 MB)
+   ???????????????????????????????????????? 8.3/8.3 MB 140.8 MB/s  0:00:00
+Downloading django_ckeditor_5-0.2.0-py3-none-any.whl (1.9 MB)
+   ???????????????????????????????????????? 1.9/1.9 MB 104.2 MB/s  0:00:00
+Downloading django_csp-4.0-py3-none-any.whl (25 kB)
+Downloading django_htmx-1.27.0-py3-none-any.whl (62 kB)
+Downloading django_js_asset-3.1.2-py3-none-any.whl (5.9 kB)
+Downloading django_mathfilters-1.0.0-py3-none-any.whl (5.9 kB)
+Downloading django_ratelimit-4.1.0-py2.py3-none-any.whl (11 kB)
+Downloading django_recaptcha-4.1.0-py3-none-any.whl (39 kB)
+Downloading django_storages-1.14.6-py3-none-any.whl (33 kB)
+Downloading dparse-0.6.4-py3-none-any.whl (11 kB)
+Downloading filelock-3.20.1-py3-none-any.whl (16 kB)
+Downloading gevent-25.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 111.0 MB/s  0:00:00
+Downloading git_filter_repo-2.47.0-py3-none-any.whl (76 kB)
+Downloading google_ai_generativelanguage-0.6.15-py3-none-any.whl (1.3 MB)
+   ???????????????????????????????????????? 1.3/1.3 MB 44.2 MB/s  0:00:00
+Downloading google_api_core-2.28.1-py3-none-any.whl (173 kB)
+Downloading google_auth-2.43.0-py2.py3-none-any.whl (223 kB)
+Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
+Downloading proto_plus-1.26.1-py3-none-any.whl (50 kB)
+Downloading protobuf-5.29.5-cp38-abi3-manylinux2014_x86_64.whl (319 kB)
+Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+Downloading urllib3-2.6.1-py3-none-any.whl (131 kB)
+Downloading google_api_python_client-2.187.0-py3-none-any.whl (14.6 MB)
+   ???????????????????????????????????????? 14.6/14.6 MB 148.4 MB/s  0:00:00
+Downloading google_auth_httplib2-0.2.1-py3-none-any.whl (9.5 kB)
+Downloading httplib2-0.31.0-py3-none-any.whl (91 kB)
+Downloading pyparsing-3.2.5-py3-none-any.whl (113 kB)
+Downloading uritemplate-4.2.0-py3-none-any.whl (11 kB)
+Downloading google_cloud_core-2.5.0-py3-none-any.whl (29 kB)
+Downloading google_cloud_logging-3.11.4-py2.py3-none-any.whl (219 kB)
+Downloading google_cloud_storage-3.7.0-py3-none-any.whl (303 kB)
+Downloading google_crc32c-1.7.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (32 kB)
+Downloading google_resumable_media-2.8.0-py3-none-any.whl (81 kB)
+Downloading google_generativeai-0.8.5-py3-none-any.whl (155 kB)
+Downloading greenlet-3.3.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (609 kB)
+   ???????????????????????????????????????? 609.9/609.9 kB 33.5 MB/s  0:00:00
+Downloading grpcio-1.76.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.6 MB)
+   ???????????????????????????????????????? 6.6/6.6 MB 149.9 MB/s  0:00:00
+Downloading grpcio_status-1.71.2-py3-none-any.whl (14 kB)
+Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading identify-2.6.15-py2.py3-none-any.whl (99 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading joblib-1.5.3-py3-none-any.whl (309 kB)
+Downloading levenshtein-0.27.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+Downloading rapidfuzz-3.14.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (3.2 MB)
+   ???????????????????????????????????????? 3.2/3.2 MB 132.5 MB/s  0:00:00
+Downloading markdown-3.10-py3-none-any.whl (107 kB)
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading marshmallow-4.1.1-py3-none-any.whl (48 kB)
+Downloading nltk-3.9.2-py3-none-any.whl (1.5 MB)
+   ???????????????????????????????????????? 1.5/1.5 MB 69.9 MB/s  0:00:00
+Downloading nodeenv-1.10.0-py2.py3-none-any.whl (23 kB)
+Downloading packaging-25.0-py3-none-any.whl (66 kB)
+Downloading pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.4 MB)
+   ???????????????????????????????????????? 4.4/4.4 MB 126.3 MB/s  0:00:00
+Downloading pip_api-0.0.34-py3-none-any.whl (120 kB)
+Downloading pip_requirements_parser-32.0.1-py3-none-any.whl (35 kB)
+Downloading pip_audit-2.10.0-py3-none-any.whl (61 kB)
+Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
+Downloading pre_commit-4.5.1-py2.py3-none-any.whl (226 kB)
+Downloading psycopg2_binary-2.9.11-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
+   ???????????????????????????????????????? 4.2/4.2 MB 136.8 MB/s  0:00:00
+Downloading pyasn1-0.6.1-py3-none-any.whl (83 kB)
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Downloading pycparser-2.23-py3-none-any.whl (118 kB)
+Downloading pydantic-2.12.5-py3-none-any.whl (463 kB)
+Downloading pydantic_core-2.41.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 110.4 MB/s  0:00:00
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ???????????????????????????????????????? 1.2/1.2 MB 72.0 MB/s  0:00:00
+Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+Downloading python_levenshtein-0.27.3-py3-none-any.whl (9.5 kB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ???????????????????????????????????????? 807.9/807.9 kB 43.8 MB/s  0:00:00
+Downloading qrcode-8.2-py3-none-any.whl (45 kB)
+Downloading regex-2025.11.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (803 kB)
+   ???????????????????????????????????????? 803.5/803.5 kB 39.0 MB/s  0:00:00
+Downloading reportlab-4.4.7-py3-none-any.whl (2.0 MB)
+   ???????????????????????????????????????? 2.0/2.0 MB 92.6 MB/s  0:00:00
+Downloading rich-14.2.0-py3-none-any.whl (243 kB)
+Downloading ruamel_yaml-0.18.17-py3-none-any.whl (121 kB)
+Downloading ruamel_yaml_clib-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (788 kB)
+   ???????????????????????????????????????? 788.2/788.2 kB 45.6 MB/s  0:00:00
+Downloading safety-3.7.0-py3-none-any.whl (312 kB)
+Downloading safety_schemas-0.0.16-py3-none-any.whl (39 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Downloading stevedore-5.6.0-py3-none-any.whl (54 kB)
+Downloading tenacity-9.1.2-py3-none-any.whl (28 kB)
+Downloading tomli-2.3.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (250 kB)
+Downloading tomli_w-1.2.0-py3-none-any.whl (6.7 kB)
+Downloading tomlkit-0.13.3-py3-none-any.whl (38 kB)
+Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+Downloading typer-0.20.0-py3-none-any.whl (47 kB)
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+Downloading virtualenv-20.35.4-py3-none-any.whl (6.0 MB)
+   ???????????????????????????????????????? 6.0/6.0 MB 143.1 MB/s  0:00:00
+Downloading whitenoise-6.11.0-py3-none-any.whl (20 kB)
+Downloading zope_event-6.1-py3-none-any.whl (6.4 kB)
+Downloading zope_interface-8.1.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (264 kB)
+Downloading django_image_cropping-1.7-py3-none-any.whl (43 kB)
+Downloading easy_thumbnails-2.9-py3-none-any.whl (77 kB)
+Downloading djangorestframework-3.15.2-py3-none-any.whl (1.1 MB)
+   ???????????????????????????????????????? 1.1/1.1 MB 71.4 MB/s  0:00:00
+Downloading django_filter-24.3-py3-none-any.whl (95 kB)
+Downloading drf_spectacular-0.28.0-py3-none-any.whl (103 kB)
+Downloading django_unfold-0.41.0-py3-none-any.whl (804 kB)
+   ???????????????????????????????????????? 804.1/804.1 kB 45.6 MB/s  0:00:00
+Downloading django_redis-5.4.0-py3-none-any.whl (31 kB)
+Downloading redis-5.2.1-py3-none-any.whl (261 kB)
+Downloading hiredis-3.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (169 kB)
+Downloading google_cloud_appengine_logging-1.8.0-py3-none-any.whl (18 kB)
+Downloading google_cloud_audit_log-0.4.0-py3-none-any.whl (44 kB)
+Downloading grpc_google_iam_v1-0.14.3-py3-none-any.whl (32 kB)
+Downloading django_appconf-1.2.0-py3-none-any.whl (6.5 kB)
+Downloading inflection-0.5.1-py2.py3-none-any.whl (9.5 kB)
+Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading opentelemetry_api-1.39.1-py3-none-any.whl (66 kB)
+Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading rpds_py-0.30.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (394 kB)
+Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+Installing collected packages: sortedcontainers, django-mathfilters, distlib, disposable-email-domains, boolean.py, zope.interface, zope.event, zipp, whitenoise, urllib3, uritemplate, tzdata, typing_extensions, tqdm, tomlkit, tomli_w, tomli, tenacity, stevedore, sqlparse, shellingham, ruamel.yaml.clib, rpds-py, regex, redis, RapidFuzz, qrcode, PyYAML, python-dotenv, pyparsing, Pygments, pycparser, pyasn1, psycopg2-binary, protobuf, platformdirs, pip-api, Pillow, packaging, packageurl-python, nodeenv, msgpack, mdurl, marshmallow, MarkupSafe, Markdown, license-expression, joblib, inflection, idna, identify, hiredis, h11, greenlet, google-crc32c, git-filter-repo, filelock, django-ratelimit, defusedxml, colorama, click, charset-normalizer, cfgv, certifi, cachetools, attrs, asgiref, annotated-types, virtualenv, typing-inspection, ruamel.yaml, rsa, requests, reportlab, referencing, pydantic_core, pyasn1_modules, py-serializable, proto-plus, pip-requirements-parser, nltk, markdown-it-py, Levenshtein, Jinja2, importlib-metadata, httplib2, httpcore, gunicorn, grpcio, googleapis-common-protos, google-resumable-media, gevent, dparse, Django, cffi, anyio, rich, python-Levenshtein, pydantic, pre_commit, opentelemetry-api, jsonschema-specifications, httpx, grpcio-status, google-cloud-audit-log, google-auth, easy-thumbnails, djangorestframework, django-unfold, django-storages, django-redis, django-recaptcha, django-js-asset, django-htmx, django-filter, django-csp, django-ckeditor-5, django-appconf, dj-database-url, detect-secrets, cyclonedx-python-lib, cryptography, CacheControl, typer, safety-schemas, jsonschema, grpc-google-iam-v1, google-auth-httplib2, google-api-core, django-image-cropping, bandit, Authlib, safety, pip_audit, google-cloud-core, google-api-python-client, drf-spectacular, google-cloud-storage, google-cloud-appengine-logging, google-ai-generativelanguage, google-generativeai, google-cloud-logging
+
+Successfully installed Authlib-1.6.6 CacheControl-0.14.4 Django-5.2.10 Jinja2-3.1.6 Levenshtein-0.27.3 Markdown-3.10 MarkupSafe-3.0.3 Pillow-11.0.0 PyYAML-6.0.3 Pygments-2.19.2 RapidFuzz-3.14.3 annotated-types-0.7.0 anyio-4.12.0 asgiref-3.11.0 attrs-25.4.0 bandit-1.9.2 boolean.py-5.0 cachetools-6.2.3 certifi-2025.11.12 cffi-2.0.0 cfgv-3.5.0 charset-normalizer-3.4.4 click-8.3.1 colorama-0.4.6 cryptography-46.0.3 cyclonedx-python-lib-11.6.0 defusedxml-0.7.1 detect-secrets-1.5.0 disposable-email-domains-0.0.153 distlib-0.4.0 dj-database-url-3.0.1 django-appconf-1.2.0 django-ckeditor-5-0.2.0 django-csp-4.0 django-filter-24.3 django-htmx-1.27.0 django-image-cropping-1.7 django-js-asset-3.1.2 django-mathfilters-1.0.0 django-ratelimit-4.1.0 django-recaptcha-4.1.0 django-redis-5.4.0 django-storages-1.14.6 django-unfold-0.41.0 djangorestframework-3.15.2 dparse-0.6.4 drf-spectacular-0.28.0 easy-thumbnails-2.9 filelock-3.20.1 gevent-25.9.1 git-filter-repo-2.47.0 google-ai-generativelanguage-0.6.15 google-api-core-2.28.1 google-api-python-client-2.187.0 google-auth-2.43.0 google-auth-httplib2-0.2.1 google-cloud-appengine-logging-1.8.0 google-cloud-audit-log-0.4.0 google-cloud-core-2.5.0 google-cloud-logging-3.11.4 google-cloud-storage-3.7.0 google-crc32c-1.7.1 google-generativeai-0.8.5 google-resumable-media-2.8.0 googleapis-common-protos-1.72.0 greenlet-3.3.0 grpc-google-iam-v1-0.14.3 grpcio-1.76.0 grpcio-status-1.71.2 gunicorn-23.0.0 h11-0.16.0 hiredis-3.0.0 httpcore-1.0.9 httplib2-0.31.0 httpx-0.28.1 identify-2.6.15 idna-3.11 importlib-metadata-8.7.1 inflection-0.5.1 joblib-1.5.3 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 license-expression-30.4.4 markdown-it-py-4.0.0 marshmallow-4.1.1 mdurl-0.1.2 msgpack-1.1.2 nltk-3.9.2 nodeenv-1.10.0 opentelemetry-api-1.39.1 packageurl-python-0.17.6 packaging-25.0 pip-api-0.0.34 pip-requirements-parser-32.0.1 pip_audit-2.10.0 platformdirs-4.5.1 pre_commit-4.5.1 proto-plus-1.26.1 protobuf-5.29.5 psycopg2-binary-2.9.11 py-serializable-2.1.0 pyasn1-0.6.1 pyasn1_modules-0.4.2 pycparser-2.23 pydantic-2.12.5 pydantic_core-2.41.5 pyparsing-3.2.5 python-Levenshtein-0.27.3 python-dotenv-1.2.1 qrcode-8.2 redis-5.2.1 referencing-0.37.0 regex-2025.11.3 reportlab-4.4.7 requests-2.32.5 rich-14.2.0 rpds-py-0.30.0 rsa-4.9.1 ruamel.yaml-0.18.17 ruamel.yaml.clib-0.2.15 safety-3.7.0 safety-schemas-0.0.16 shellingham-1.5.4 sortedcontainers-2.4.0 sqlparse-0.5.5 stevedore-5.6.0 tenacity-9.1.2 tomli-2.3.0 tomli_w-1.2.0 tomlkit-0.13.3 tqdm-4.67.1 typer-0.20.0 typing-inspection-0.4.2 typing_extensions-4.15.0 tzdata-2025.3 uritemplate-4.2.0 urllib3-2.6.1 virtualenv-20.35.4 whitenoise-6.11.0 zipp-3.23.0 zope.event-6.1 zope.interface-8.1.1
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0mRemoving intermediate container 899f52d273be
+ 6a7303fb39dc
+Step 9/13 : COPY . /app/
+ 7305c099b6af
+Step 10/13 : RUN useradd -m -u 1000 appuser &&     chown -R appuser:appuser /app
+ Running in 9cca8a74efb9
+Removing intermediate container 9cca8a74efb9
+ e997c0af71bd
+Step 11/13 : USER appuser
+ Running in 9a148d3f440e
+Removing intermediate container 9a148d3f440e
+ 8ca8329b7265
+Step 12/13 : RUN SECRET_KEY=dummy-key-for-build ALLOWED_HOSTS=127.0.0.1 python manage.py collectstatic --noinput
+ Running in 99820723177e
+[91mTraceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 174, in get_package_libraries
+[0m[91m    module = import_module(entry[1])
+ [0m[91m            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[0m[91m    return _bootstrap._gcd_import(name[level:], package, level)
+[0m[91m           ^^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[91m^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[0m[91m  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/local/lib/python3.12/site-packages/easy_thumbnails/templatetags/easy_thumbnails_tags.py", line 8, in <module>
+[0m[91m    from .thumbnail import *
+  File "/usr/local/lib/python3.12/site-packages/easy_thumbnails/templatetags/thumbnail.py", line 12, in <module>
+[0m[91m    from easy_thumbnails.files import get_thumbnailer
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/easy_thumbnails/files.py", line 13, in <module>
+[0m[91m    from easy_thumbnails import engine, exceptions, models, utils, signals, storage
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/easy_thumbnails/storage.py", line 43, in <module>
+[0m[91m    thumbnail_default_storage = get_storage()
+         [0m[91m                     [0m[91m  ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/easy_thumbnails/storage.py", line 18, in get_storage
+[0m[91m    from django.core.files.storage import get_storage_class[0m[91m
+ImportError: cannot import name 'get_storage_class' from 'django.core.files.storage' (/usr/local/lib/python3.12/site-packages/django/core/files/storage/__init__.py)[0m[91m
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/manage.py", line 23, in <module>
+[0m[91m    main()
+[0m[91m  File "/app/manage.py", line 19, in main
+[0m[91m    execute_from_command_line(sys.argv)
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+[0m[91m    utility.execute()
+  File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 416, in execute
+[0m[91m    django.setup()
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/django/__init__.py", line 24, in setup
+[0m[91m    apps.populate(settings.INSTALLED_APPS)[0m[91m
+  File "/usr/local/lib/python3.12/site-packages/django/apps/registry.py", line 124, in populate
+[0m[91m    app_config.ready()
+  File "/usr/local/lib/python3.12/site-packages/django/contrib/admin/apps.py", line 27, in ready
+[0m[91m    self.module.autodiscover()
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/django/contrib/admin/__init__.py", line 52, in autodiscover
+[0m[91m    autodiscover_modules("admin", register_to=site)
+[0m[91m  File "/usr/local/lib/python3.12/site-packages/django/utils/module_loading.py", line 58, in autodiscover_modules
+[0m[91m    import_module("%s.%s" % (app_config.name, module_to_search))[0m[91m
+  File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[0m[91m    return _bootstrap._gcd_import(name[level:], package, level)
+[0m[91m           ^^[0m[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^^^^^^^^
+[0m[91m  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/usr/local/lib/python3.12/site-packages/unfold/admin.py", line 226, in <module>
+[0m[91m    class ModelAdmin(ModelAdminMixin, BaseModelAdmin):
+  File "/usr/local/lib/python3.12/site-packages/unfold/admin.py", line 542, in ModelAdmin
+[0m[91m    @display(description=mark_safe(checkbox.render("action_toggle_all", 1)))
+[0m[91m            [0m[91m                       ^^^^[0m[91m^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/forms/widgets.py", line 330, in render
+[0m[91m    return self._render(self.template_name, context, renderer)
+[0m[91m   [0m[91m        ^^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/forms/widgets.py", line 335, in _render
+[0m[91m    return mark_safe(renderer.render(template_name, context))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/forms/renderers.py", line 30, in render
+    template = self.get_template(template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^[0m[91m^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/forms/renderers.py", line 36, in get_template
+    return self.engine.get_template(template_name)
+           ^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+[0m[91m    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/forms/renderers.py", line 40, in engine
+[0m[91m    return self.backend(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 26, in __init__
+[0m[91m    options["libraries"] = self.get_templatetag_libraries(libraries)
+    [0m[91m                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 88, in get_templatetag_libraries
+[0m[91m    libraries = get_installed_libraries()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 163, in get_installed_libraries
+[0m[91m    module_name: full_name for module_name, full_name in get_template_tag_modules()
+[0m[91m                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 151, in get_template_tag_modules
+[0m[91m    for name in get_package_libraries(pkg):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/template/backends/django.py", line 176, in get_package_libraries
+[0m[91m    raise InvalidTemplateLibrary(
+django.template.library.InvalidTemplateLibrary: Invalid template library specified. ImportError raised when trying to load 'easy_thumbnails.templatetags.easy_thumbnails_tags': cannot import name 'get_storage_class' from 'django.core.files.storage' (/usr/local/lib/python3.12/site-packages/django/core/files/storage/__init__.py)
+The command '/bin/sh -c SECRET_KEY=dummy-key-for-build ALLOWED_HOSTS=127.0.0.1 python manage.py collectstatic --noinput' returned a non-zero code: 1
+ERROR
+ERROR: build step 0 "gcr.io/cloud-builders/gcb-internal" failed: step exited with non-zero status: 1
+[0m
+-----------------------------

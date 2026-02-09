@@ -123,7 +123,7 @@ easy-thumbnails==2.10.1
 djangorestframework==3.15.2
 django-filter==24.3
 drf-spectacular==0.28.0
-django-unfold==0.41.0
+django-unfold==0.76.0
 
 # Redis Caching (Performance Optimization)
 django-redis==5.4.0
