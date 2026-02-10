@@ -9,7 +9,15 @@ class Migration(migrations.Migration):
         ('core', '0044_remove_aspirant_constituency_remove_aspirant_county_and_more'),
     ]
 
+    def convert_timeline_to_json(apps, schema_editor):
+        ManifestoEvidence = apps.get_model('core', 'ManifestoEvidence')
+        for item in ManifestoEvidence.objects.all():
+            if not item.timeline or item.timeline.strip() == '':
+                item.timeline = '{}'
+                item.save()
+
     operations = [
+        migrations.RunPython(convert_timeline_to_json, migrations.RunPython.noop),
         migrations.AlterField(
             model_name='manifestoevidence',
             name='timeline',
