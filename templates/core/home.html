@@ -308,7 +308,7 @@
                 <!-- Image Placeholder -->
                 <div class="aspect-video bg-black border-b-4 border-roots-black overflow-hidden relative">
                     {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                    <img src="{% thumbnail post.image 800x450 crop %}" alt="{{ post.title }}" loading="lazy"
                         class="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-500">
                     {% else %}
                     <div

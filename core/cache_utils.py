@@ -204,10 +204,9 @@ def get_cached_blog_posts(limit: int = 10, timeout: int = 600) -> List[Dict[str,
         from core.models import BlogPost
         result = list(
             BlogPost.objects
-            .select_related('county')
             .values(
                 'id', 'title', 'slug', 'excerpt', 'image',
-                'county__name', 'created_at', 'is_featured'
+                'created_at', 'is_featured'
             )
             .order_by('-created_at')[:limit]
         )

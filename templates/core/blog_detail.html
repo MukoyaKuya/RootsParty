@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static cropping thumbnail %}
 
 {% block title %}{{ post.title }} - Roots Party News{% endblock %}
 
@@ -40,7 +40,7 @@
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-gray-200 border-4 border-roots-black rounded-none flex items-center justify-center font-black text-3xl text-roots-black overflow-hidden relative group">
                         {% if post.author_image %}
-                            <img src="{{ post.author_image.url }}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                            <img src="{% thumbnail post.author_image 200x200 crop %}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
                         {% else %}
                             {{ post.author|slice:":1"|upper }}
                         {% endif %}
@@ -110,7 +110,7 @@
             </div>
         </div>
         <div class="relative overflow-hidden group">
-            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700" onerror="this.parentElement.style.display='none'">
+            <img src="{% thumbnail post.image 1200x0 %}" alt="{{ post.title }}" class="w-full filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700" onerror="this.parentElement.style.display='none'">
              <!-- Scanlines overlay -->
             <div class="absolute inset-0 bg-repeat-y opacity-10 pointer-events-none" style="background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 50%); background-size: 100% 4px;"></div>
         </div>

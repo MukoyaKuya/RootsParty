@@ -229,6 +229,7 @@ else:
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.gzip.GZipMiddleware',  # Enable Gzip Compression
     'csp.middleware.CSPMiddleware',  # Content Security Policy
     'whitenoise.middleware.WhiteNoiseMiddleware', # Add whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',

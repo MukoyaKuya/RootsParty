@@ -50,6 +50,7 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 
+@cache_page(60 * 15)
 def about(request):
     leaders = Leader.objects.all()
     try:

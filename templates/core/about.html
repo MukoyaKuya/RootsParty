@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cropping thumbnail %}
 
 
 {% block content %}
@@ -10,7 +11,6 @@
             <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
                 Who We <span class="text-white bg-roots-black px-4 transform -rotate-1 inline-block rounded-lg shadow-[3px_3px_0px_0px_#E60000]">Are?</span>
             </h1>
-
         </div>
         <div class="relative group">
             <div class="absolute inset-0 bg-roots-red translate-x-2 translate-y-2 -z-10 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform"></div>
@@ -145,7 +145,7 @@
                 <div class="border-4 border-roots-black bg-white p-4 items-center flex flex-col text-center hover:bg-roots-black hover:text-white transition-colors">
                     <div class="w-48 h-48 rounded-full border-4 border-roots-black overflow-hidden mb-4 bg-gray-200 flex items-center justify-center group-hover:border-white relative">
                         {% if leader.image %}
-                        <img src="{{ leader.image.url }}" class="w-full h-full object-cover" loading="lazy">
+                        <img src="{% thumbnail leader.image 400x400 crop %}" class="w-full h-full object-cover" loading="lazy">
                         {% else %}
                         <span class="w-16 h-16 bg-gray-400 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
