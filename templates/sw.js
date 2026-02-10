@@ -3,7 +3,7 @@ const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
   '/static/images/logo-192.png',
-  '/static/images/logo-512.png', 
+  '/static/images/logo-512.png',
   // Add other critical static assets here
   'https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap',
   'https://cdn.tailwindcss.com',
@@ -39,31 +39,32 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch Event (Network First, fall back to cache)
+// Fetch Event (Stale-While-Revalidate for App Shell)
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // App Shell strategy: Stale-While-Revalidate
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-
-        // Clone the response
-        var responseToCache = response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(cache => {
-            cache.put(event.request, responseToCache);
+    caches.match(event.request)
+      .then(cachedResponse => {
+        const fetchPromise = fetch(event.request)
+          .then(networkResponse => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return networkResponse;
+          })
+          .catch(() => {
+            // Fallback for failed network if no cache
+            return cachedResponse;
           });
 
-        return response;
-      })
-      .catch(() => {
-        // If network fails, try cache
-        return caches.match(event.request);
+        return cachedResponse || fetchPromise;
       })
   );
 });

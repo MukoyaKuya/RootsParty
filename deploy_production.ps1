@@ -11,7 +11,7 @@ Write-Host ""
 $PROJECT_ID = "gen-lang-client-0549116861"  # Updated from gcloud config
 $REGION = "europe-north1"
 $SERVICE_NAME = "roots-party"
-$IMAGE_NAME = "gcr.io/$PROJECT_ID/$SERVICE_NAME"
+$IMAGE_NAME = "europe-north1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE_NAME"
 
 # Step 1: Check Prerequisites
 Write-Host "[1/8] Checking Prerequisites..." -ForegroundColor Yellow
