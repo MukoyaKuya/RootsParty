@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from image_cropping import ImageRatioField
+from .models_splash import Splash
 
 class Leader(models.Model):
     name = models.CharField(max_length=100)

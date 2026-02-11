@@ -3,7 +3,7 @@ from django.utils.html import mark_safe
 from django.urls import reverse
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, NewsletterSubscriber, CarouselImage, Constituency, FloatingImage
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, NewsletterSubscriber, CarouselImage, Constituency, FloatingImage, Splash
 from .models_site_settings import SiteSettings
 
 class LeaderImageInline(TabularInline):
@@ -413,3 +413,8 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
         }
 
 
+@admin.register(Splash)
+class SplashAdmin(ModelAdmin):
+    list_display = ('title', 'is_active', 'updated_at')
+    list_filter = ('is_active',)
+    search_fields = ('title',)
