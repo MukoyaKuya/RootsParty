@@ -90,6 +90,8 @@ def check_aspirant_id(request):
         return HttpResponse('<span class="text-roots-red font-bold uppercase block mt-1 bg-roots-black text-white p-2">⚠️ Error: Comrade already has an application!</span>')
     return HttpResponse('')
 
+from django.db.models import Case, When, Value, IntegerField
+
 def aspirant_list(request):
     """List all aspirants with filtering"""
     role = request.GET.get('role', 'all')
@@ -97,6 +99,19 @@ def aspirant_list(request):
     
     if role != 'all':
         aspirants = aspirants.filter(role=role)
+    else:
+        # Define priority for roles
+        role_priority = Case(
+            When(role='president', then=Value(1)),
+            When(role='governor', then=Value(2)),
+            When(role='senator', then=Value(3)),
+            When(role='woman_rep', then=Value(4)),
+            When(role='mp', then=Value(5)),
+            When(role='mca', then=Value(6)),
+            default=Value(7),
+            output_field=IntegerField(),
+        )
+        aspirants = aspirants.order_by(role_priority, 'name')
         
     return render(request, 'aspirants/aspirant_list.html', {
         'aspirants': aspirants,

@@ -24,6 +24,15 @@
     <meta name="theme-color" content="#1a1a1a">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="apple-touch-icon" href="/static/images/logo-192.png">
+    
+    <!-- Splash Asset Preload (Safe Speed Boost) -->
+    {% if request.path == '/' %}
+        {% if splash %}
+            <link rel="preload" href="{{ splash.image.url }}" as="image">
+        {% else %}
+            <link rel="preload" href="{{ site_settings.logo_url }}" as="image">
+        {% endif %}
+    {% endif %}
 
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -83,8 +92,8 @@
         .splash-logo {
             width: auto;
             height: auto;
-            max-width: min(450px, 80vw);
-            max-height: min(450px, 80vh);
+            max-width: min({{ splash.logo_width|default:450 }}px, 80vw);
+            max-height: min({{ splash.logo_width|default:450 }}px, 80vh);
             background: white;
             object-fit: contain;
         }

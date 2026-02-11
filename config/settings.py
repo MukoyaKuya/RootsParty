@@ -180,6 +180,7 @@ elif DEBUG:
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
             'LOCATION': 'unique-snowflake',
+            'VERSION': 2,
         }
     }
 else:

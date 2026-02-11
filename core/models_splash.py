@@ -18,6 +18,7 @@ class Splash(models.Model):
 
     title = models.CharField(max_length=100, default="Main Splash Screen", help_text="Internal name for this splash screen")
     image = models.ImageField(upload_to='site/splash/', help_text="Upload the splash screen image")
+    logo_width = models.IntegerField(default=450, help_text="Target width of the logo in pixels. The image will be automatically resized and optimized on upload.")
     animation = models.CharField(
         max_length=20, 
         choices=ANIMATION_CHOICES, 
@@ -37,10 +38,47 @@ class Splash(models.Model):
         return f"{self.title} ({'Active' if self.is_active else 'Inactive'})"
 
     def save(self, *args, **kwargs):
+        # Process image before saving
+        if self.image:
+            try:
+                from PIL import Image
+                import io
+                from django.core.files.base import ContentFile
+                
+                img = Image.open(self.image)
+                
+                # Only resize if larger than target width
+                if img.width > self.logo_width:
+                    output_width = self.logo_width
+                    ratio = output_width / float(img.width)
+                    new_height = int(float(img.height) * ratio)
+                    img = img.resize((output_width, new_height), Image.Resampling.LANCZOS)
+                
+                # Compress and optimize (convert to WebP or high-quality PNG)
+                output = io.BytesIO()
+                # If PNG, use optimize=True. If user wants WebP, we could do that too.
+                # For now let's use optimized PNG or JPG depending on transparency.
+                if img.mode in ('RGBA', 'P'):
+                    img.save(output, format='PNG', optimize=True)
+                    extension = 'png'
+                else:
+                    img.save(output, format='JPEG', quality=85, optimize=True)
+                    extension = 'jpg'
+                
+                output.seek(0)
+                
+                # Replace the image with the optimized version
+                name = self.image.name.split('.')[0]
+                self.image.save(f"{name}_optimized.{extension}", ContentFile(output.read()), save=False)
+                
+            except Exception as e:
+                print(f"Image optimization failed: {e}")
+
         super().save(*args, **kwargs)
-        # Clear site settings cache
-        from django.core.cache import cache
-        cache.delete('site_settings_singleton')
+        
+        # Clear home cache
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
 
     @classmethod
     def get_active(cls):

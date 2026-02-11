@@ -50,6 +50,16 @@ class ManifestoItem(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
 class ManifestoEvidence(models.Model):
     item = models.ForeignKey(ManifestoItem, on_delete=models.CASCADE, related_name='evidence')
     country = models.CharField(max_length=100)
@@ -357,14 +367,17 @@ class HomeVideo(models.Model):
             return f"https://www.youtube-nocookie.com/embed/{video_id}?rel=0&origin={settings.SITE_BASE_URL}"
             
         # Basic Vimeo Check (keep simple for now)
-        if 'vimeo.com' in self.video_url:
-             # Vimeo usually needs the ID extracted, simple split for now
-             # format: https://vimeo.com/123456789
-             video_id = self.video_url.split('/')[-1]
-             if video_id.isdigit():
-                 return f"https://player.vimeo.com/video/{video_id}"
-
         return self.video_url
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
 
 
 class CarouselImage(models.Model):
@@ -383,6 +396,16 @@ class CarouselImage(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
 
 
 class NewsletterSubscriber(models.Model):
@@ -414,5 +437,15 @@ class FloatingImage(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.get_position_display()})"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
 
 
