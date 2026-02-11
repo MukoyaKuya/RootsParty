@@ -9,26 +9,51 @@
     <header class="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
         <div class="space-y-4">
             <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
-                Who We <span class="text-white bg-roots-black px-4 transform -rotate-1 inline-block rounded-lg shadow-[3px_3px_0px_0px_#E60000]">Are?</span>
+                {% if page_content.title %}
+                    {{ page_content.title|safe }}
+                {% else %}
+                    Who We <span class="text-white bg-roots-black px-4 transform -rotate-1 inline-block rounded-lg shadow-[3px_3px_0px_0px_#E60000]">Are?</span>
+                {% endif %}
             </h1>
+            {% if page_content.subtitle %}
+            <p class="text-xl font-bold uppercase tracking-widest text-roots-red">{{ page_content.subtitle }}</p>
+            {% endif %}
         </div>
         <div class="relative group">
             <div class="absolute inset-0 bg-roots-red translate-x-2 translate-y-2 -z-10 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform"></div>
             <div class="border-4 border-roots-black p-2 bg-white">
-                <img src="{{ site_settings.logo_url }}" alt="Roots Party Logo" class="w-48 h-48 md:w-64 md:h-64 object-contain">
+                {% if page_content.image %}
+                    <img src="{{ page_content.image.url }}" alt="Roots Party Logo" class="w-48 h-48 md:w-64 md:h-64 object-contain">
+                {% else %}
+                    <img src="{{ site_settings.logo_url }}" alt="Roots Party Logo" class="w-48 h-48 md:w-64 md:h-64 object-contain">
+                {% endif %}
             </div>
         </div>
     </header>
 
     <!-- Preamble -->
     <section class="border-4 border-roots-black p-8 bg-roots-red text-white shadow-[12px_12px_0px_0px_#1a1a1a]">
-        <h2 class="text-4xl font-black uppercase mb-6 text-roots-black bg-white inline-block px-2 transform -rotate-1">Our Preamble</h2>
-        <p class="text-xl font-bold leading-relaxed mb-6">
-            The Roots Party of Kenya is a revolutionary political movement committed to restoring dignity, justice, and prosperity for every Kenyan. Our mission is clear: empower the people and reclaim the nation.
-        </p>
-        <p class="text-xl font-bold leading-relaxed">
-            We believe in harnessing our own resources, revitalizing our economy, and reclaiming our sovereignty. We reject foreign dependency, corruption, and inequality.
-        </p>
+        <h2 class="text-4xl font-black uppercase mb-6 text-roots-black bg-white inline-block px-2 transform -rotate-1">
+            {% if page_content.content %}Our Preamble{% else %}Our Preamble{% endif %}
+        </h2>
+        {% if page_content.content %}
+            <div class="text-xl font-bold leading-relaxed space-y-4">
+                {{ page_content.content|linebreaks }}
+            </div>
+        {% else %}
+            <p class="text-xl font-bold leading-relaxed mb-6">
+                The Roots Party of Kenya is a revolutionary political movement committed to restoring dignity, justice, and prosperity for every Kenyan. Our mission is clear: empower the people and reclaim the nation.
+            </p>
+            <p class="text-xl font-bold leading-relaxed">
+                We believe in harnessing our own resources, revitalizing our economy, and reclaiming our sovereignty. We reject foreign dependency, corruption, and inequality.
+            </p>
+        {% endif %}
+        
+        {% if page_content.description %}
+            <div class="mt-8 pt-8 border-t-4 border-white/30 text-xl font-bold leading-relaxed">
+                {{ page_content.description|linebreaks }}
+            </div>
+        {% endif %}
     </section>
 
     <!-- Vision, Mission & Core Values -->

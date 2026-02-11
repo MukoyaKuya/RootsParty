@@ -182,6 +182,7 @@ class PageContent(models.Model):
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=300, blank=True)
     content = models.TextField(blank=True, help_text="Main content area")
+    description = models.TextField(blank=True, help_text="Secondary content area or detailed description")
     image = models.ImageField(upload_to='pages/', blank=True, null=True)
     kpi_value = models.IntegerField(blank=True, null=True, help_text="Optional override for main stat (e.g. Member Count)")
     
