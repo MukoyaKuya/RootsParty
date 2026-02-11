@@ -9,9 +9,13 @@ from .models_splash import Splash
 def site_settings(request):
     """
     Add site settings to template context.
-    This makes the logo and other site settings available in all templates.
-    """
+    # Safe fetch for splash screen to avoid 500 errors if table doesn't exist yet
+    try:
+        active_splash = Splash.get_active()
+    except Exception:
+        active_splash = None
+
     return {
         'site_settings': SiteSettings.get_settings(),
-        'splash': Splash.get_active()
+        'splash': active_splash
     }
