@@ -10,14 +10,17 @@ import mimetypes
 mimetypes.add_type("image/jpeg", ".jfif", True)
 
 # Google Cloud Logging (Production Only)
-if os.environ.get('GOOGLE_CLOUD_PROJECT'):
-    try:
-        import google.cloud.logging
-        client = google.cloud.logging.Client()
-        client.setup_logging()
-        print("✅ Google Cloud Logging configured")
-    except Exception as e:
-        print(f"⚠️ Google Cloud Logging setup failed: {e}")
+def setup_cloud_logging():
+    if os.environ.get('GOOGLE_CLOUD_PROJECT') and not os.environ.get('DEBUG', 'False') == 'True':
+        try:
+            import google.cloud.logging
+            client = google.cloud.logging.Client()
+            client.setup_logging()
+            print("✅ Google Cloud Logging configured")
+        except Exception as e:
+            print(f"⚠️ Google Cloud Logging setup failed: {e}")
+
+setup_cloud_logging()
 
 
 

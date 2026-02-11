@@ -34,4 +34,4 @@ USER appuser
 RUN SECRET_KEY=dummy-key-for-build ALLOWED_HOSTS=127.0.0.1 python manage.py collectstatic --noinput
 
 # Run gunicorn
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 config.wsgi:application
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 --preload config.wsgi:application

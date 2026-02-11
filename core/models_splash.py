@@ -36,6 +36,12 @@ class Splash(models.Model):
     def __str__(self):
         return f"{self.title} ({'Active' if self.is_active else 'Inactive'})"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Clear global context cache
+        from django.core.cache import cache
+        cache.delete('site_global_context')
+
     @classmethod
     def get_active(cls):
         """Get the latest active splash screen"""

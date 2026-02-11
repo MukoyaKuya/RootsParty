@@ -90,7 +90,8 @@ gcloud run deploy $SERVICE_NAME `
     --memory 512Mi `
     --cpu 1 `
     --max-instances 10 `
-    --timeout 300
+    --timeout 300 `
+    --cpu-boost
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "❌ ERROR: Cloud Run deployment failed!" -ForegroundColor Red
