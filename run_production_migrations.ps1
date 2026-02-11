@@ -18,7 +18,7 @@ Write-Host "Creating migration job..." -ForegroundColor Yellow
 
 # Use gcloud run jobs to execute migrations
 gcloud run jobs create migrate-roots-party `
-    --image gcr.io/$PROJECT_ID/$SERVICE_NAME:latest `
+    --image "europe-north1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE_NAME:latest" `
     --region $REGION `
     --command python `
     --args manage.py,migrate `
