@@ -97,6 +97,8 @@ class SiteSettings(models.Model):
         # Clear site settings cache
         from django.core.cache import cache
         cache.delete('site_settings_singleton')
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
     
     @classmethod
     def get_settings(cls):

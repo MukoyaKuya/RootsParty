@@ -8,7 +8,7 @@ The digital headquarters for the Roots Party of Kenya. A brutalist, high-impact 
 
 - **Backend**: Django 5.0+ (Python)
 - **Frontend**: TailwindCSS + HTMX (Digital Brutalist Aesthetic)
-- **Database**:
+- **Database**: 
   - **Local**: SQLite (Default)
   - **Production**: PostgreSQL (Neon/Cloud SQL)
 - **Storage**: Google Cloud Storage (Production) / Local (Development)
