@@ -165,7 +165,7 @@ if os.environ.get('REDIS_URL'):
                 'IGNORE_EXCEPTIONS': True,  # Don't crash if Redis is down
             },
             'KEY_PREFIX': 'roots_party',
-            'VERSION': 1,
+            'VERSION': 2,
             'TIMEOUT': 300,  # Default 5 minutes
         }
     }
