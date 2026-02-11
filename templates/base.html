@@ -163,6 +163,7 @@
 <body class="bg-roots-white text-roots-black min-h-screen grid-bg overflow-x-hidden">
 
     <!-- Splash Screen (Instant Load) -->
+    {% if request.path == '/' %}
     <div id="splash-screen">
         {% if splash %}
             <img src="{{ splash.image.url }}" alt="Roots Party" class="splash-logo anim-{{ splash.animation|default:'reveal' }}">
@@ -188,6 +189,7 @@
             }
         }, 8000);
     </script>
+    {% endif %}
 
     <!-- Global Loader -->
     <div id="global-loader" class="htmx-indicator fixed top-4 right-4 z-[60]">

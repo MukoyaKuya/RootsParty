@@ -38,9 +38,9 @@ class Splash(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Clear global context cache
+        # Clear site settings cache
         from django.core.cache import cache
-        cache.delete('site_global_context')
+        cache.delete('site_settings_singleton')
 
     @classmethod
     def get_active(cls):

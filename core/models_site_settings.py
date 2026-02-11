@@ -94,9 +94,9 @@ class SiteSettings(models.Model):
         # Ensure only one instance exists
         self.pk = 1
         super().save(*args, **kwargs)
-        # Clear global context cache
+        # Clear site settings cache
         from django.core.cache import cache
-        cache.delete('site_global_context')
+        cache.delete('site_settings_singleton')
     
     @classmethod
     def get_settings(cls):

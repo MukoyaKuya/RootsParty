@@ -12,21 +12,21 @@ def site_settings(request):
     Add site settings to template context.
     Uses caching to improve startup performance.
     """
-    cache_key = 'site_global_context'
-    context = cache.get(cache_key)
+    # Globally cached site settings
+    settings = cache.get('site_settings_singleton')
+    if settings is None:
+        settings = SiteSettings.get_settings()
+        cache.set('site_settings_singleton', settings, 3600)
 
-    if context is None:
-        # Safe fetch for splash screen to avoid 500 errors if table doesn't exist yet or other DB issues
+    active_splash = None
+    # Only show splash screen on the homepage
+    if request.path == '/':
         try:
             active_splash = Splash.get_active()
         except Exception:
             active_splash = None
 
-        context = {
-            'site_settings': SiteSettings.get_settings(),
-            'splash': active_splash
-        }
-        # Cache for 1 hour. Cache will be cleared on model save.
-        cache.set(cache_key, context, 3600)
-
-    return context
+    return {
+        'site_settings': settings,
+        'splash': active_splash
+    }
