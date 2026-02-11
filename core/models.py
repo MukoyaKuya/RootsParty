@@ -47,6 +47,16 @@ class ManifestoItem(models.Model):
     class Meta:
         ordering = ['order']
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
     def __str__(self):
         return self.title
 
@@ -339,6 +349,16 @@ class HomeVideo(models.Model):
         verbose_name = 'Home Video'
         verbose_name_plural = 'Home Videos'
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
     def __str__(self):
         return self.title
 
@@ -394,6 +414,16 @@ class CarouselImage(models.Model):
         verbose_name = 'Carousel Image'
         verbose_name_plural = 'Carousel Images'
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
     def __str__(self):
         return self.title
 
@@ -435,6 +465,16 @@ class FloatingImage(models.Model):
     class Meta:
         ordering = ['-created_at']
     
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache
+        invalidate_home_cache()
+
     def __str__(self):
         return f"{self.name} ({self.get_position_display()})"
 

@@ -274,6 +274,21 @@ def invalidate_content_cache():
             break
 
 
+def invalidate_home_cache():
+    """Clear homepage and stats-related caches."""
+    try:
+        # Clear specific stats
+        cache.delete('home:stats:v1')
+        
+        # Clear the cached homepage if using cache_page
+        # Note: In production we use roots_party:* prefix
+        cache.delete_pattern('*views.decorators.cache.cache_page*')
+        cache.delete_pattern('*views.decorators.cache.cache_header*')
+        
+    except AttributeError:
+        cache.clear()
+
+
 def invalidate_county_cache():
     """Clear county-related caches."""
     try:
