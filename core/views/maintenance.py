@@ -2,6 +2,7 @@ from django.core.management import call_command
 from django.http import HttpResponse
 import traceback
 import uuid
+from django.db import connection
 from core.models import Event, GatePass
 
 def trigger_migration(request):
@@ -11,35 +12,36 @@ def trigger_migration(request):
     try:
         results = []
         
-        # 1. Fake back to 49
-        results.append("Faking back to 0049...")
-        call_command('migrate', 'core', '0049', fake=True)
+        # Check current columns in core_event
+        columns = []
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'core_event'")
+            columns = [row[0] for row in cursor.fetchall()]
         
-        # 2. Add UUID field (null=True) via 0050
-        results.append("Running migration 0050 (Add UUID fields)...")
-        call_command('migrate', 'core', '0050')
+        results.append(f"Current columns in core_event: {columns}")
         
-        # 3. Populate unique UUIDs for existing objects
-        results.append("Populating unique UUIDs for existing objects...")
-        
-        events_count = 0
-        for event in Event.objects.all():
-            if not event.uuid:
-                event.uuid = uuid.uuid4()
-                event.save(update_fields=['uuid'])
-                events_count += 1
-        results.append(f"Updated {events_count} Events with new UUIDs.")
-        
-        gatepass_count = 0
-        for gp in GatePass.objects.all():
-            if not gp.uuid:
-                gp.uuid = uuid.uuid4()
-                gp.save(update_fields=['uuid'])
-                gatepass_count += 1
-        results.append(f"Updated {gatepass_count} GatePasses with new UUIDs.")
-        
-        # 4. Apply unique constraint via 0051 and remaining migrations
-        results.append("Running remaining migrations (including 0051 unique constraint)...")
+        if 'uuid' in columns:
+            results.append("Column 'uuid' already exists. Faking up to 0051...")
+            call_command('migrate', 'core', '0051', fake=True)
+        else:
+            results.append("Column 'uuid' missing. Running migrations normally...")
+            call_command('migrate', 'core', '0049', fake=True)
+            call_command('migrate', 'core', '0050')
+            
+            # Populate unique UUIDs
+            results.append("Populating unique UUIDs...")
+            for model in [Event, GatePass]:
+                count = 0
+                for obj in model.objects.filter(uuid__isnull=True):
+                    obj.uuid = uuid.uuid4()
+                    obj.save(update_fields=['uuid'])
+                    count += 1
+                results.append(f"Updated {count} {model.__name__} objects.")
+                
+            call_command('migrate', 'core', '0051')
+
+        # Run remaining migrations
+        results.append("Running remaining migrations...")
         call_command('migrate', 'core')
         
         results.append("Migration Successful!")
