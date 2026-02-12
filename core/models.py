@@ -61,16 +61,6 @@ class ManifestoItem(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
 class ManifestoEvidence(models.Model):
     item = models.ForeignKey(ManifestoItem, on_delete=models.CASCADE, related_name='evidence')
     country = models.CharField(max_length=100)
@@ -140,6 +130,7 @@ class GatePass(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='passes')
     code = models.CharField(max_length=20, unique=True)
+    pdf_file = models.FileField(upload_to='gate_passes/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -372,12 +363,6 @@ class HomeVideo(models.Model):
         
         # YouTube Logic
         import re
-        # Support for:
-        # - youtube.com/watch?v=ID
-        # - youtube.com/embed/ID
-        # - youtube.com/v/ID
-        # - youtube.com/shorts/ID
-        # - youtu.be/ID
         youtube_regex = (
             r'(?:https?:\/\/)?(?:www\.)?'
             r'(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)'
@@ -389,18 +374,7 @@ class HomeVideo(models.Model):
             # Use youtube-nocookie and SITE_BASE_URL to fix Error 153 on localhost
             return f"https://www.youtube-nocookie.com/embed/{video_id}?rel=0&origin={settings.SITE_BASE_URL}"
             
-        # Basic Vimeo Check (keep simple for now)
         return self.video_url
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
 
 
 class CarouselImage(models.Model):
@@ -430,16 +404,6 @@ class CarouselImage(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
 
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True)
@@ -448,6 +412,23 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+class PartyReport(models.Model):
+    """Generic model for background-generated reports (e.g. Aspirant List)"""
+    REPORT_TYPES = [
+        ('aspirants_list', 'Full Aspirants List'),
+        ('financial_summary', 'Financial Summary'),
+    ]
+    report_type = models.CharField(max_length=50, choices=REPORT_TYPES)
+    pdf_file = models.FileField(upload_to='reports/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_report_type_display()} - {self.created_at.strftime('%Y-%m-%d')}"
 
 
 
@@ -480,15 +461,5 @@ class FloatingImage(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_position_display()})"
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        from .cache_utils import invalidate_home_cache
-        invalidate_home_cache()
 
 
