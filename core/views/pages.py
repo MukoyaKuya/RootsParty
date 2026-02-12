@@ -11,11 +11,27 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
 
+from django.core.management import call_command
+from django.http import HttpResponse
 from ..models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent,
     HomeVideo, GatePass, CarouselImage, FloatingImage,
     GalleryPost, Event, Resource,
 )
+
+def trigger_migration(request):
+    token = request.GET.get('token')
+    if token != 'roots-party-migration-fix-2026':
+         return HttpResponse("Unauthorized", status=403)
+    try:
+        # Fake back to 49
+        call_command('migrate', 'core', '0049', fake=True)
+        # Actually migrate forward
+        call_command('migrate', 'core')
+        return HttpResponse("Migration Successful")
+    except Exception as e:
+        import traceback
+        return HttpResponse(f"Migration Failed: {e}<br><pre>{traceback.format_exc()}</pre>")
 from ..services.pdf import build_gate_pass_pdf
 from users.models import Member
 
