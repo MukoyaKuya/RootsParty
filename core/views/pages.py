@@ -120,7 +120,9 @@ def events(request):
         return render(request, 'core/events.html', {'upcoming_events': upcoming_events, 'past_events': past_events})
     except Exception as e:
         import traceback
-        return render(request, 'core/error_debug.html', {'error': str(e), 'traceback': traceback.format_exc()}, status=500)
+        from django.http import HttpResponse
+        error_html = f"<h1>Error: {e}</h1><pre>{traceback.format_exc()}</pre>"
+        return HttpResponse(error_html, status=500)
 
 
 def download_gate_pass(request, uuid):
