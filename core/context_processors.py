@@ -18,13 +18,18 @@ def site_settings(request):
         settings = SiteSettings.get_settings()
         cache.set('site_settings_singleton', settings, 3600)
 
-    active_splash = None
     # Only show splash screen on the homepage
+    active_splash = None
     if request.path == '/':
-        try:
-            active_splash = Splash.get_active()
-        except Exception:
-            active_splash = None
+        active_splash = cache.get('active_site_splash')
+        if active_splash is None:
+            try:
+                active_splash = Splash.get_active()
+                if active_splash:
+                    # Cache for 1 hour
+                    cache.set('active_site_splash', active_splash, 3600)
+            except Exception:
+                active_splash = None
 
     return {
         'site_settings': settings,

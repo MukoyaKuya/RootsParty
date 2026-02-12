@@ -54,16 +54,10 @@ class Splash(models.Model):
                     new_height = int(float(img.height) * ratio)
                     img = img.resize((output_width, new_height), Image.Resampling.LANCZOS)
                 
-                # Compress and optimize (convert to WebP or high-quality PNG)
+                # Convert to WebP for maximum performance
                 output = io.BytesIO()
-                # If PNG, use optimize=True. If user wants WebP, we could do that too.
-                # For now let's use optimized PNG or JPG depending on transparency.
-                if img.mode in ('RGBA', 'P'):
-                    img.save(output, format='PNG', optimize=True)
-                    extension = 'png'
-                else:
-                    img.save(output, format='JPEG', quality=85, optimize=True)
-                    extension = 'jpg'
+                img.save(output, format='WEBP', quality=85, method=6, lossless=False)
+                extension = 'webp'
                 
                 output.seek(0)
                 
@@ -74,9 +68,15 @@ class Splash(models.Model):
             except Exception as e:
                 print(f"Image optimization failed: {e}")
 
+        # Always ensure is_active uniqueness (latest stays active)
+        if self.is_active:
+            Splash.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
+
         super().save(*args, **kwargs)
         
-        # Clear home cache
+        # Clear specific splash cache and home cache
+        from django.core.cache import cache
+        cache.delete('active_site_splash')
         from .cache_utils import invalidate_home_cache
         invalidate_home_cache()
 
