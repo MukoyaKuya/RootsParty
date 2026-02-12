@@ -114,9 +114,13 @@ def manifesto_list(request):
 
 
 def events(request):
-    upcoming_events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
-    past_events = Event.objects.filter(date__lt=timezone.now()).order_by('-date')
-    return render(request, 'core/events.html', {'upcoming_events': upcoming_events, 'past_events': past_events})
+    try:
+        upcoming_events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
+        past_events = Event.objects.filter(date__lt=timezone.now()).order_by('-date')
+        return render(request, 'core/events.html', {'upcoming_events': upcoming_events, 'past_events': past_events})
+    except Exception as e:
+        import traceback
+        return render(request, 'core/error_debug.html', {'error': str(e), 'traceback': traceback.format_exc()}, status=500)
 
 
 def download_gate_pass(request, uuid):
