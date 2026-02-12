@@ -63,7 +63,6 @@ urlpatterns += [
     path('gallery/', core_views.gallery, name='gallery'),
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
     path('events/', core_views.events, name='events'),
-    path('system/migrate-db-fix/', core_views.trigger_migration, name='trigger_migration'),
     path('roles/<slug:slug>/', aspirants_views.role_detail, name='role_detail'),
     path('events/<uuid:uuid>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
     path('gate-pass/<int:gate_pass_id>/status/', core_views.check_gate_pass_status, name='check_gate_pass_status'),
