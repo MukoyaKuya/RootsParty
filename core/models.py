@@ -1,3 +1,4 @@
+import uuid
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -110,6 +111,7 @@ class PostImage(models.Model):
         return f"Image for {self.post.title}"
 
 class Event(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     location = models.CharField(max_length=200)
@@ -135,6 +137,7 @@ class Event(models.Model):
         return self.date > timezone.now()
 
 class GatePass(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='passes')
     code = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)

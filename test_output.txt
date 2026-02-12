@@ -1,0 +1,21 @@
+Creating test database for alias 'default'...
+
+.......E.
+======================================================================
+ERROR: test_media_ops_find_floating (core.tests.test_management_commands.ManagementCommandTests.test_media_ops_find_floating)
+Test media_ops find-floating.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Little Human\Desktop\RootsParty\core\tests\test_management_commands.py", line 80, in test_media_ops_find_floating
+    f.image.save('george.png', ContentFile(image_data))
+                                           ^^^^^^^^^^
+NameError: name 'image_data' is not defined
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.117s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+
+Found 9 test(s).
+System check identified no issues (2 silenced).

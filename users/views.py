@@ -150,64 +150,17 @@ def check_id_number(request):
 @require_http_methods(["POST"])
 def seed_members_view(request):
     try:
-        target_count = 75000
-        current_count = Member.objects.count()
-        
-        if current_count >= target_count:
-            # Reset KPI on finish
-            from core.models import PageContent
-            try:
-                pc = PageContent.objects.get(page_name='about')
-                pc.kpi_value = None
-                pc.save()
-            except Exception:
-                pass
-            return HttpResponse(f"""
-                <h1 style='color:green'>DONE! Total Members: {current_count}</h1>
-                <p>You can close this page.</p>
-            """)
-
-        # Insert batch of 1000
-        batch_limit = 1000
-        members = []
-        
-        # Calculate distinct start id for this batch based on current count
-        # and a random offset to avoid collisions in parallel/interactive runs
-        start_id = 70000000 + current_count + random.randint(1, 1000)
-        
-        first_names = ['John', 'Jane', 'James', 'Mary', 'Peter', 'Grace', 'David', 'Faith', 'Joseph', 'Esther', 'Samuel', 'Mercy', 'Daniel', 'Joyce', 'Francis', 'Alice', 'George', 'Ann', 'Michael', 'Rose', 'Wanjiku', 'Otieno', 'Nanjala', 'Kipchoge', 'Kamau', 'Muthoni', 'Ochieng', 'Achieng', 'Wanyama', 'Nafula', 'Kimani', 'Nyambura', 'Odhiambo', 'Anyango', 'Kipkorir', 'Chebet', 'Maina', 'Njeri', 'Omondi', 'Akoth', 'Mutua', 'Mwende', 'Rotich', 'Chepkemoi', 'Njoroge', 'Wairimu', 'Okoth', 'Atieno', 'Kibet', 'Jepkorir']
-        last_names = ['Kamau', 'Omondi', 'Kiptoo', 'Wanjiku', 'Juma', 'Odhiambo', 'Mutua', 'Wafula', 'Maina', 'Otieno', 'Kariuki', 'Njeri', 'Mwangi', 'Anyango', 'Njoroge', 'Wairimu', 'Kipkorir', 'Achieng', 'Kimani', 'Nyambura', 'Kibet', 'Chebet', 'Rotich', 'Chepkemoi', 'Koech', 'Jepchirchir', 'Kosgei', 'Jepkemboi', 'Cheruiyot', 'Cherono', 'Rono', 'Jepleting', 'Tanui', 'Jepkosgei', 'Lelei', 'Chepkoech', 'Mutai', 'Chepngeno', 'Lagat', 'Chelagat', 'Choge', 'Jepchumba', 'Sang', 'Chepchirchir', 'Kiprotich', 'Chepkirui', 'Korir', 'Chebet', 'Kirui', 'Chepkorir']
-
-        for i in range(batch_limit):
-            first = random.choice(first_names)
-            last = random.choice(last_names)
-            full_name = f"{first} {last}"
-            id_number = str(start_id + i)
-            phone = f"07{random.randint(10000000, 99999999)}"
-            
-            members.append(Member(full_name=full_name, id_number=id_number, phone_number=phone))
-            
-        Member.objects.bulk_create(members, ignore_conflicts=True)
-        
-        new_total = Member.objects.count()
-        remaining = target_count - new_total
-        
+        from .tasks import seed_members_task
+        task = seed_members_task.delay(target_count=75000)
         return HttpResponse(f"""
-            <h1>Seeding Progress...</h1>
-            <p>Added 1,000 members.</p>
-            <p><strong>Total: {new_total} / {target_count}</strong></p>
-            <p>Remaining: {remaining}</p>
-            <p><em>Auto-refreshing in 1 second to continue...</em></p>
-            <form id="autoForm" method="POST" action="">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{request.META.get('CSRF_COOKIE', '')}">
-            </form>
-            <script>
-                setTimeout(function() {{ document.getElementById('autoForm').submit(); }}, 1000);
-            </script>
+            <h1>Seeding Triggered!</h1>
+            <p>Task ID: {task.id}</p>
+            <p>The seeding is now running in the background via Celery.</p>
+            <p>Check the admin panel or your Celery worker logs for progress.</p>
+            <a href="/">Back to HQ</a>
         """)
-
     except Exception as e:
-        return HttpResponse(f"Error: {str(e)}")
+        return HttpResponse(f"Error triggering seeding: {str(e)}")
 
 def join_success(request):
     member_id = request.session.get('new_member_id')
@@ -220,9 +173,9 @@ def join_success(request):
     return render(request, 'users/success.html', {'member': member})
 
 
-def download_card(request, member_id):
+def download_card(request, uuid):
     """Generate membership card PDF (delegates to service layer)."""
-    member = get_object_or_404(Member, id=member_id)
+    member = get_object_or_404(Member, uuid=uuid)
     try:
         from .services import build_member_card_pdf
         buffer = build_member_card_pdf(member)

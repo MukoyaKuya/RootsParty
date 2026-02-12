@@ -1,0 +1,12 @@
+<div class="bg-roots-black text-white p-8 border-4 border-roots-red rounded-xl shadow-[3px_3px_0px_0px_#E60000] text-center animate-fade-in">
+    <div class="w-20 h-20 bg-roots-red rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10 text-white">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+        </svg>
+    </div>
+    <h2 class="text-3xl font-black uppercase mb-2">Message Sent!</h2>
+    <p class="font-bold text-lg text-gray-300 mb-6">Thank you for reaching out, Comrade. We'll get back to you as soon as possible.</p>
+    <button hx-get="{% url 'contact' %}" hx-target="#contact-form-container" hx-swap="innerHTML" class="inline-flex items-center gap-2 bg-roots-red text-white px-6 py-3 font-black uppercase border-4 border-white hover:bg-white hover:text-roots-red transition-all">
+        Send Another Message
+    </button>
+</div>

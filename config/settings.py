@@ -192,6 +192,17 @@ else:
         }
     }
 
+# Celery Configuration
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+# CELERY_TASK_ALWAYS_EAGER = DEBUG  # For testing/dev convenience
+
 # Proxy & Security Settings (Critical for Cloud Run + Nginx)
 
 # Proxy & Security Settings (Critical for Cloud Run + Nginx)
@@ -584,6 +595,16 @@ UNFOLD = {
                         "title": "Vendors",
                         "icon": "store",
                         "link": reverse_lazy("admin:commerce_vendor_changelist"),
+                    },
+                    {
+                        "title": "Vendor Applications",
+                        "icon": "how_to_reg",
+                        "link": reverse_lazy("admin:commerce_vendorapplication_changelist"),
+                    },
+                    {
+                        "title": "Vendor Reports",
+                        "icon": "report",
+                        "link": reverse_lazy("admin:commerce_vendorreport_changelist"),
                     },
                     {
                         "title": "Products",

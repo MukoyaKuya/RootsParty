@@ -1,6 +1,8 @@
+import uuid
 from django.db import models
 
 class Member(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     full_name = models.CharField(max_length=255, db_index=True)
     surname = models.CharField(max_length=100, blank=True, null=True)
     other_names = models.CharField(max_length=255, blank=True, null=True)

@@ -125,7 +125,6 @@ django-filter==24.3
 drf-spectacular==0.28.0
 django-unfold==0.76.0
 
-# Redis Caching (Performance Optimization)
-django-redis==5.4.0
+celery[redis]==5.4.0
 redis==5.2.1
-# hiredis==3.0.0
+django-redis==5.4.0

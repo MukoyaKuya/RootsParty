@@ -98,7 +98,7 @@
                             class="flex flex-col sm:flex-row gap-4 mt-auto border-t-4 border-dashed border-gray-300 pt-6">
                             <button type="button"
                                 class="brutal-btn flex-grow text-center text-lg hover:bg-roots-black hover:text-white transition-all transform active:scale-95 rsvp-btn"
-                                data-event-id="{{ event.id }}" data-event-title="{{ event.title|escapejs }}"
+                                data-event-uuid="{{ event.uuid }}" data-event-title="{{ event.title|escapejs }}"
                                 data-event-location="{{ event.location|escapejs }}"
                                 data-event-date="{{ event.date|date:'d M Y' }}"
                                 data-event-time="{{ event.date|date:'H:i' }}">
@@ -300,16 +300,16 @@
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('rsvp-btn') || e.target.closest('.rsvp-btn')) {
             const btn = e.target.classList.contains('rsvp-btn') ? e.target : e.target.closest('.rsvp-btn');
-            const eventId = btn.dataset.eventId;
+            const eventUuid = btn.dataset.eventUuid;
             const title = btn.dataset.eventTitle;
             const location = btn.dataset.eventLocation;
             const date = btn.dataset.eventDate;
             const time = btn.dataset.eventTime;
-            rsvpEvent(eventId, title, location, date, time);
+            rsvpEvent(eventUuid, title, location, date, time);
         }
     });
 
-    function rsvpEvent(eventId, title, location, date, time) {
+    function rsvpEvent(eventUuid, title, location, date, time) {
         // Populate modal content
         document.getElementById('rsvp-event-title').textContent = title;
         document.getElementById('rsvp-location').textContent = location;
@@ -317,7 +317,7 @@
         document.getElementById('rsvp-time').textContent = time;
 
         // Set download link
-        document.getElementById('rsvp-download-btn').href = "/events/" + eventId + "/gate-pass/";
+        document.getElementById('rsvp-download-btn').href = "/events/" + eventUuid + "/gate-pass/";
 
         // Show modal
         var modal = document.getElementById('rsvp-modal');
@@ -491,7 +491,7 @@
                             <button 
                                 type="button"
                                 class="brutal-btn flex-grow text-center text-lg hover:bg-roots-black hover:text-white transition-all transform active:scale-95"
-                                onclick="rsvpEvent('${event.id}', '${safeTitle}', '${safeLocation}', '${day} ${month} ${year}', '${time}')">
+                                onclick="rsvpEvent('${event.uuid}', '${safeTitle}', '${safeLocation}', '${day} ${month} ${year}', '${time}')">
                                 NIKO NDANI!
                             </button>
                              <a 

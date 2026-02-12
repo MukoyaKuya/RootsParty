@@ -118,9 +118,9 @@ def aspirant_list(request):
         'current_role': role
     })
 
-def aspirant_detail(request, aspirant_id):
+def aspirant_detail(request, uuid):
     """Generic detail view for any aspirant"""
-    aspirant = get_object_or_404(Aspirant, id=aspirant_id)
+    aspirant = get_object_or_404(Aspirant, uuid=uuid)
     return render(request, 'aspirants/aspirant_detail.html', {'aspirant': aspirant})
 
 def mp_list(request):
@@ -162,9 +162,9 @@ def mp_candidate_detail(request, constituency_slug):
     })
 
 @staff_member_required
-def download_aspirant_pdf(request, aspirant_id):
+def download_aspirant_pdf(request, uuid):
     """Generate PDF profile for an aspirant (delegates to service layer)."""
-    aspirant = get_object_or_404(AspirantRegistration, id=aspirant_id)
+    aspirant = get_object_or_404(AspirantRegistration, uuid=uuid)
     buffer = build_aspirant_profile_pdf(aspirant)
     filename = f"Profile_{aspirant.surname}_{aspirant.id_number}.pdf"
     return FileResponse(buffer, as_attachment=True, filename=filename)

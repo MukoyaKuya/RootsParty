@@ -62,10 +62,19 @@ View all messages at: /admin/core/contactmessage/
             except Exception:
                 pass
 
+            if request.headers.get('HX-Request'):
+                return render(request, 'partials/contact_success.html')
+            
             success = True
             form = ContactForm()
+        else:
+            if request.headers.get('HX-Request'):
+                return render(request, 'partials/contact_form.html', {'form': form})
     else:
         form = ContactForm()
+
+    if request.headers.get('HX-Request') and request.method == 'GET':
+        return render(request, 'partials/contact_form.html', {'form': form})
 
     return render(request, 'core/contact.html', {'form': form, 'success': success})
 

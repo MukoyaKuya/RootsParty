@@ -1,14 +1,18 @@
-<form hx-post="{% url 'subscribe' %}" hx-swap="outerHTML" class="flex flex-col gap-4">
+<form hx-post="{% url 'subscribe' %}" hx-swap="outerHTML" hx-target="this"
+    class="flex-1 w-full max-w-lg flex flex-col sm:flex-row gap-2 sm:gap-0 shrink-0">
     {% csrf_token %}
-    <div class="relative">
-        {{ form.email }}
+    <div class="relative flex-1">
+        <input type="email" name="email" value="{{ form.email.value|default:'' }}" placeholder="Enter your email"
+            class="w-full bg-white text-roots-black px-6 py-4 font-bold uppercase focus:outline-none border-4 {% if form.email.errors %}border-roots-red{% else %}border-transparent{% endif %} focus:border-roots-red min-w-0"
+            required aria-label="Email Address">
         {% if form.email.errors %}
-        <div class="absolute -bottom-6 left-0 text-roots-red font-bold text-xs bg-black px-2 py-1">
+        <div class="absolute -bottom-6 left-0 text-roots-red font-bold text-xs bg-black px-2 py-1 z-10">
             {{ form.email.errors.0 }}
         </div>
         {% endif %}
     </div>
-    <button type="submit" class="bg-roots-red text-white font-black uppercase px-8 py-4 border-2 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap shadow-[4px_4px_0px_0px_white] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
-        SIGN UP
+    <button type="submit"
+        class="bg-roots-red text-white px-6 md:px-8 py-4 font-black uppercase border-4 border-roots-red hover:bg-white hover:text-roots-red transition-all whitespace-nowrap w-full sm:w-auto">
+        Sign Up
     </button>
 </form>

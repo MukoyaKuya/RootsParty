@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
@@ -73,6 +74,7 @@ class LeadershipRole(models.Model):
         return slug_map.get(self.slug)
 
 class Aspirant(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     ROLE_CHOICES = (
         ('president', 'President'),
         ('governor', 'Governor'),
@@ -134,14 +136,15 @@ class Aspirant(models.Model):
             return f"https://www.youtube.com/embed/{video_id}?rel=0"
             
         if 'vimeo.com' in self.video_url:
-             video_id = self.video_url.split('/')[-1]
-             if video_id.isdigit():
-                 return f"https://player.vimeo.com/video/{video_id}"
+            video_id = self.video_url.split('/')[-1]
+            if video_id.isdigit():
+                return f"https://player.vimeo.com/video/{video_id}"
 
         return self.video_url
 
 class AspirantRegistration(models.Model):
     """Model for storing aspirant registration data"""
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     POSITION_CHOICES = [
         ('governor', 'Governor - KES 10,000'),
         ('senator', 'Senator - KES 5,000'),

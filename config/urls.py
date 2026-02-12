@@ -48,7 +48,7 @@ urlpatterns += [
     path('join/', user_views.join, name='join'),
     path('join-coordinator/', user_views.join_coordinator, name='join_coordinator'),
     path('join/success/', user_views.join_success, name='join_success'),
-    path('member/<int:member_id>/card/', user_views.download_card, name='download_card'),
+    path('member/<uuid:uuid>/card/', user_views.download_card, name='download_card'),
     path('check-id/', user_views.check_id_number, name='check_id'),
     path('seed-members-cloud/', user_views.seed_members_view, name='seed_members_cloud'),
     
@@ -63,7 +63,7 @@ urlpatterns += [
     path('leader/<slug:slug>/', core_views.leader_detail, name='leader_detail'),
     path('events/', core_views.events, name='events'),
     path('roles/<slug:slug>/', aspirants_views.role_detail, name='role_detail'),
-    path('events/<int:event_id>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
+    path('events/<uuid:uuid>/gate-pass/', core_views.download_gate_pass, name='download_gate_pass'),
     path('shop/', include('commerce.urls')),
     path('resources/', core_views.resources, name='resources'),
     path('analytics/', core_views.dashboard, name='dashboard'),

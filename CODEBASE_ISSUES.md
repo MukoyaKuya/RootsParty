@@ -12,11 +12,9 @@
 
 ---
 
-## 2. Donation amount validation (medium)
+## 2. Donation amount validation (resolved)
 
-- **finance/views.py** (lines 8–22): `amount` from `request.POST.get('custom_amount') or request.POST.get('amount')` is passed directly to `Donation.objects.create(amount=amount, ...)`.
-- **Donation.amount** is a `DecimalField`. Passing a non-numeric or empty string can raise `ValidationError` / `InvalidOperation` and is caught only by the broad `except Exception`, returning a generic 500.
-- **Recommendation:** Coerce and validate before create, e.g. `Decimal(amount)` with try/except and min/max checks; return 400 with a clear message for invalid amount.
+- **finance/views.py**: Now includes `Decimal` coercion and validation with error handling for non-numeric or non-positive values.
 
 ---
 
@@ -61,10 +59,9 @@
 
 ---
 
-## 9. Indentation style (low)
+## 9. Indentation style (resolved)
 
-- **aspirants/models.py** (lines 57–59): Inside `get_embed_url()`, the Vimeo block uses one extra space (13/17/18 spaces instead of 12/16/16). Works but is inconsistent with the rest of the file.
-- **Recommendation:** Normalize to 4 spaces per level for consistency.
+- **aspirants/models.py** (lines 57–59): Normalized to standard 4-space indentation.
 
 ---
 
@@ -84,9 +81,9 @@
 
 | Issue | Severity | Area | Status / Action |
 |-------|----------|------|-----------------|
-| Donation amount validation | Medium | finance/views | Coerce to Decimal; validate; return 400 on invalid |
+| Donation amount validation | — | finance/views | Resolved |
 | Production media / GCS | Low | Config / docs | Document that media must use MEDIA_URL in GCS prod |
-| Indentation (aspirants/models) | Low | Code quality | Normalize Vimeo block to 4 spaces per level |
+| Indentation (aspirants/models) | — | Code quality | Resolved |
 | Test DB / CI (PostgreSQL) | Low | Testing / CI | Use --keepdb or SQLite; document |
 | Silenced ratelimit checks | Low | Config | Document why E003/W001 are silenced |
 | Donation metric (COMPLETED) | — | core/cache_utils | Resolved |
@@ -94,6 +91,7 @@
 | Jazzmin / Unfold | — | Config | Resolved |
 | Bare except | — | users | Resolved |
 | Legacy admin template | — | Templates | Resolved |
+| Redundant Cache Logic | — | core/cache_utils | Resolved |
 
 ---
 

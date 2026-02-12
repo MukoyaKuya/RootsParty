@@ -1,6 +1,8 @@
+import uuid
 from django.db import models
 
 class Donation(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     phone_number = models.CharField(max_length=15)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     transaction_reference = models.CharField(max_length=50, unique=True, blank=True, null=True)

@@ -119,8 +119,8 @@ def events(request):
     return render(request, 'core/events.html', {'upcoming_events': upcoming_events, 'past_events': past_events})
 
 
-def download_gate_pass(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
+def download_gate_pass(request, uuid):
+    event = get_object_or_404(Event, uuid=uuid)
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     GatePass.objects.create(event=event, code=code)
     Event.objects.filter(pk=event.pk).update(gate_pass_downloads=F('gate_pass_downloads') + 1)

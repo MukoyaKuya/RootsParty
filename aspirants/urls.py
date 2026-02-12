@@ -9,7 +9,7 @@ urlpatterns = [
     path('status/', views.aspirant_status, name='aspirant_status'),
     path('check-id/', views.check_aspirant_id, name='check_aspirant_id'),
     path('list/', views.aspirant_list, name='aspirant_list'),
-    path('<int:aspirant_id>/', views.aspirant_detail, name='aspirant_detail'),
+    path('<uuid:uuid>/', views.aspirant_detail, name='aspirant_detail'),
     path('roles/<slug:slug>/', views.role_detail, name='role_detail'),
     
     # MP Selection flow
@@ -18,6 +18,6 @@ urlpatterns = [
     path('mps/candidate/<slug:constituency_slug>/', views.mp_candidate_detail, name='mp_candidate_detail'),
     
     # PDF Downloads (Staff only)
-    path('download/profile/<int:aspirant_id>/', views.download_aspirant_pdf, name='download_aspirant_pdf'),
+    path('download/profile/<uuid:uuid>/', views.download_aspirant_pdf, name='download_aspirant_pdf'),
     path('download/report/', views.download_aspirants_list_pdf, name='download_aspirants_list_pdf'),
 ]

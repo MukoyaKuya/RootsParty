@@ -8,8 +8,8 @@ class LeaderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Leader
-        fields = ['id', 'name', 'role', 'slug', 'image', 'bio', 'twitter_handle', 'nickname', 'order']
-        read_only_fields = ['id', 'slug']
+        fields = ['uuid', 'name', 'role', 'slug', 'image', 'bio', 'twitter_handle', 'nickname', 'order']
+        read_only_fields = ['uuid', 'slug']
 
 class EventSerializer(serializers.ModelSerializer):
     """Serializer for Event model."""
@@ -19,10 +19,10 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'id', 'title', 'location', 'date', 'slug', 'description', 
+            'uuid', 'title', 'location', 'date', 'slug', 'description', 
             'is_completed', 'is_upcoming', 'image', 'gate_pass_downloads'
         ]
-        read_only_fields = ['id', 'slug', 'is_upcoming', 'gate_pass_downloads']
+        read_only_fields = ['uuid', 'slug', 'is_upcoming', 'gate_pass_downloads']
 
 class ManifestoItemSerializer(serializers.ModelSerializer):
     """Serializer for ManifestoItem model."""
@@ -30,7 +30,7 @@ class ManifestoItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ManifestoItem
         fields = [
-            'id', 'title', 'slug', 'icon', 'summary', 'description', 
+            'uuid', 'title', 'slug', 'icon', 'summary', 'description', 
             'local_impact', 'target_revenue', 'order'
         ]
-        read_only_fields = ['id', 'slug']
+        read_only_fields = ['uuid', 'slug']
