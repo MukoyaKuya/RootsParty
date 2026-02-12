@@ -23,6 +23,7 @@ from .pages import (
     privacy_policy,
     terms_of_service,
     cookie_policy,
+    trigger_migration,
 )
 from .dashboard_views import dashboard, dashboard_callback
 from .contact_views import contact, subscribe
@@ -52,4 +53,5 @@ __all__ = [
     'privacy_policy',
     'terms_of_service',
     'cookie_policy',
+    'trigger_migration',
 ]
