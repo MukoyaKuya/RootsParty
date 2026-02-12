@@ -201,7 +201,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
-# CELERY_TASK_ALWAYS_EAGER = DEBUG  # For testing/dev convenience
+import sys
+CELERY_TASK_ALWAYS_EAGER = 'test' in sys.argv or DEBUG  # For testing/dev convenience
 
 # Proxy & Security Settings (Critical for Cloud Run + Nginx)
 

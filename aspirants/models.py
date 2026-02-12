@@ -184,6 +184,7 @@ class AspirantRegistration(models.Model):
     draft_token = models.CharField(max_length=64, unique=True, null=True, blank=True, help_text="Token for resuming draft applications")
     payment_status = models.CharField(max_length=20, default='pending', choices=[('pending', 'Pending'), ('completed', 'Completed')])
     is_verified = models.BooleanField(default=False, verbose_name="Verified Aspirant", help_text="Check this to mark the aspirant as verified.")
+    profile_pdf = models.FileField(upload_to='aspirants/profiles/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

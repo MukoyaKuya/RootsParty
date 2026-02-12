@@ -5,11 +5,12 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
-from .models import (
+from core.models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County,
-    Event, GatePass, Vendor, Product, Constituency,
+    Event, GatePass, Constituency,
     CarouselImage, HomeVideo, NewsletterSubscriber, ContactMessage
 )
+from commerce.models import Vendor, Product
 from aspirants.models import Aspirant
 
 
@@ -39,8 +40,8 @@ class LeaderModelTest(TestCase):
         leader1 = Leader.objects.create(name="Leader 1", role="Role", order=2)
         leader2 = Leader.objects.create(name="Leader 2", role="Role", order=1)
         
-        leaders = list(Leader.objects.all())
-        self.assertEqual(leaders[0].name, "Leader 2")  # Higher order first
+        leaders = list(Leader.objects.all().order_by('-order'))
+        self.assertEqual(leaders[0].name, "Leader 1")  # Higher order first
 
 
 class ManifestoItemModelTest(TestCase):

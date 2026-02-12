@@ -1,0 +1,15 @@
+<div class="animate-bounce mb-6">
+    <div class="bg-roots-black text-white p-4 border-l-8 border-roots-red">
+        <p class="text-xl font-black uppercase">Card Ready, Comrade!</p>
+    </div>
+</div>
+
+<a href="{{ member.membership_card.url }}" 
+   download 
+   class="block w-full bg-roots-red text-white text-center py-6 text-2xl font-black uppercase hover:bg-roots-black transition-all shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] border-4 border-roots-black">
+    Download Membership Card
+</a>
+
+<p class="mt-4 text-xs font-bold uppercase text-center opacity-50">
+    Member ID: #{{ member.id }}
+</p>

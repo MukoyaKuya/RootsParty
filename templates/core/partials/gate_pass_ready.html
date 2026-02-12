@@ -1,0 +1,22 @@
+<div class="status-content animate-bounce">
+    <div class="flex items-center space-x-4 mb-6">
+        <div class="w-12 h-12 bg-green-500 flex items-center justify-center text-white text-3xl font-bold">✓</div>
+        <p class="text-2xl font-bold uppercase tracking-tighter text-green-600">Gate Pass Ready!</p>
+    </div>
+    <p class="text-xl mb-4 italic">Event: {{ gate_pass.event.title|upper }}</p>
+    
+    <a href="{{ gate_pass.pdf_file.url }}" 
+       download 
+       class="block w-full bg-roots-red text-white text-center py-6 text-3xl font-black uppercase hover:bg-roots-black transition-colors shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-4 border-roots-black mb-4">
+        Download Gate Pass
+    </a>
+    
+    <p class="text-sm font-bold uppercase text-roots-black opacity-60">
+        Code: {{ gate_pass.code }}
+    </p>
+</div>
+
+<script>
+    // Optional: auto trigger download
+    // window.location.href = "{{ gate_pass.pdf_file.url }}";
+</script>

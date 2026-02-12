@@ -8,8 +8,8 @@ class LeaderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Leader
-        fields = ['uuid', 'name', 'role', 'slug', 'image', 'bio', 'twitter_handle', 'nickname', 'order']
-        read_only_fields = ['uuid', 'slug']
+        fields = ['id', 'name', 'role', 'slug', 'image', 'bio', 'twitter_handle', 'nickname', 'order']
+        read_only_fields = ['id', 'slug']
 
 class EventSerializer(serializers.ModelSerializer):
     """Serializer for Event model."""
@@ -30,7 +30,7 @@ class ManifestoItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ManifestoItem
         fields = [
-            'uuid', 'title', 'slug', 'icon', 'summary', 'description', 
+            'id', 'title', 'slug', 'icon', 'summary', 'description', 
             'local_impact', 'target_revenue', 'order'
         ]
-        read_only_fields = ['uuid', 'slug']
+        read_only_fields = ['id', 'slug']

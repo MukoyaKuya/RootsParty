@@ -19,5 +19,7 @@ urlpatterns = [
     
     # PDF Downloads (Staff only)
     path('download/profile/<uuid:uuid>/', views.download_aspirant_pdf, name='download_aspirant_pdf'),
+    path('download/profile/<uuid:uuid>/status/', views.check_aspirant_profile_status, name='check_aspirant_profile_status'),
     path('download/report/', views.download_aspirants_list_pdf, name='download_aspirants_list_pdf'),
+    path('download/report/<int:report_id>/status/', views.check_aspirant_report_status, name='check_aspirant_report_status'),
 ]

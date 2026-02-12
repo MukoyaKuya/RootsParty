@@ -1,0 +1,33 @@
+Creating test database for alias 'default'...
+
+.........C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\handlers\base.py:61: UserWarning: No directory at: C:\Users\Little Human\Desktop\RootsParty\staticfiles\
+  mw_instance = middleware(adapted_handler)
+.EE......................................................................
+======================================================================
+ERROR: test_filter_events_by_completion (core.tests.tests_api.EventAPITest.test_filter_events_by_completion)
+Test filtering events by completion status.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Little Human\Desktop\RootsParty\core\tests\tests_api.py", line 67, in setUp
+    date=timezone.now()
+         ^^^^^^^^
+NameError: name 'timezone' is not defined
+
+======================================================================
+ERROR: test_list_events (core.tests.tests_api.EventAPITest.test_list_events)
+Test listing all events.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Little Human\Desktop\RootsParty\core\tests\tests_api.py", line 67, in setUp
+    date=timezone.now()
+         ^^^^^^^^
+NameError: name 'timezone' is not defined
+
+----------------------------------------------------------------------
+Ran 82 tests in 25.903s
+
+FAILED (errors=2)
+Destroying test database for alias 'default'...
+
+Found 82 test(s).
+System check identified no issues (2 silenced).

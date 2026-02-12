@@ -1,7 +1,8 @@
 from django.test import TestCase, Client, AsyncClient
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Product, Event, Leader, ManifestoItem, BlogPost, ContactMessage, NewsletterSubscriber
+from core.models import Event, Leader, ManifestoItem, BlogPost, ContactMessage, NewsletterSubscriber
+from commerce.models import Product
 from django.utils import timezone
 import datetime
 
@@ -237,17 +238,11 @@ class GatePassPDFTest(TestCase):
             slug="test-rally",
         )
 
-    def test_download_gate_pass_returns_pdf(self):
-        """GET gate-pass URL returns 200 with application/pdf and attachment filename."""
-        url = reverse('download_gate_pass', args=[self.event.id])
+    def test_download_gate_pass_triggers_task(self):
+        """GET gate-pass URL returns 200 with processing template."""
+        url = reverse('download_gate_pass', args=[self.event.uuid])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get('Content-Type'), 'application/pdf')
-        self.assertTrue(
-            response.get('Content-Disposition', '').startswith('attachment'),
-            'Should be attachment',
-        )
-        self.assertIn('gate_pass_', response.get('Content-Disposition', ''))
-        if response.content:
-            self.assertTrue(response.content.startswith(b'%PDF'), 'Response should be PDF bytes')
+        self.assertTemplateUsed(response, 'core/gate_pass_processing.html')
+        self.assertContains(response, "Processing transaction")
 

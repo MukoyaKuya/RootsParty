@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-roots-black text-white flex flex-col items-center justify-center p-6 font-mono">
+    <div class="max-w-2xl w-full border-4 border-roots-red p-8 shadow-[10px_10px_0px_0px_rgba(230,0,0,1)] bg-white text-roots-black">
+        <h1 class="text-6xl font-black uppercase mb-6 leading-tight italic">
+            Generating Your <span class="bg-roots-red text-white px-2">Gate Pass</span>
+        </h1>
+        
+        <div id="status-container" 
+             hx-get="{% url 'check_gate_pass_status' gate_pass.id %}" 
+             hx-trigger="load, every 2s" 
+             hx-swap="innerHTML">
+            <div class="status-content">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-12 h-12 border-4 border-t-roots-red border-roots-black rounded-full animate-spin"></div>
+                    <p class="text-2xl font-bold uppercase tracking-tighter">Processing transaction...</p>
+                </div>
+                <p class="text-xl mb-4 italic">Event: {{ event.title|upper }}</p>
+                <div class="bg-roots-black text-white p-4 font-bold border-2 border-roots-red animate-pulse">
+                    PLEASE DO NOT REFRESH THIS PAGE. TINGIZA MTI!
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-8">
+        <a href="{% url 'events' %}" class="text-white hover:text-roots-red uppercase font-bold underline">
+            &larr; Back to Events
+        </a>
+    </div>
+</div>
+{% endblock %}

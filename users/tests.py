@@ -94,19 +94,10 @@ class PDFGenerationTest(TestCase):
             id_number='99887766', phone_number='0799887766'
         )
 
-    def test_download_card(self):
-        """Test that the PDF card download endpoint works."""
-        url = reverse('download_card', args=[self.member.id])
+    def test_download_card_triggers_task(self):
+        """Test that the membership card download triggers async processing."""
+        url = reverse('download_card', args=[self.member.uuid])
         response = self.client.get(url)
-        
-        # If libraries handle it, we get 200 and PDF
-        # If libraries missing, we get 500 (per view logic)
-        if response.status_code == 200:
-            self.assertEqual(response['Content-Type'], 'application/pdf')
-            self.assertTrue(response.content.startswith(b'%PDF'))
-        else:
-            # If 500, it might be due to missing libraries, which is 'acceptable' environment state 
-            # but we want to know.
-            print("PDF Test returned status:", response.status_code)
-            if response.status_code == 500:
-                self.assertIn(b"QR code library not installed", response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/card_processing.html')
+        self.assertContains(response, "Printing member card")

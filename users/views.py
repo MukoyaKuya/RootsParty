@@ -174,18 +174,20 @@ def join_success(request):
 
 
 def download_card(request, uuid):
-    """Generate membership card PDF (delegates to service layer)."""
+    """Trigger async generation of membership card, or serve if ready."""
     member = get_object_or_404(Member, uuid=uuid)
-    try:
-        from .services import build_member_card_pdf
-        buffer = build_member_card_pdf(member)
-    except ImportError:
-        return HttpResponse(
-            "QR code library not installed. Please install 'qrcode[pil]' and 'reportlab' to use this feature.",
-            status=500,
-        )
-    except Exception as e:
-        return HttpResponse(f"Error generating card: {str(e)}", status=500)
-    return HttpResponse(buffer, content_type='application/pdf', headers={
-        'Content-Disposition': f'attachment; filename="roots_party_card_{member.id_number}.pdf"',
-    })
+    
+    if member.membership_card:
+        return FileResponse(member.membership_card, as_attachment=True)
+        
+    # Trigger the task
+    from users.tasks import generate_member_card_task
+    generate_member_card_task.delay(member.uuid)
+    
+    return render(request, 'users/card_processing.html', {'member': member})
+
+def check_card_status(request, uuid):
+    member = get_object_or_404(Member, uuid=uuid)
+    if member.membership_card:
+        return render(request, 'users/partials/card_ready.html', {'member': member})
+    return render(request, 'users/partials/card_status.html', {'member': member})

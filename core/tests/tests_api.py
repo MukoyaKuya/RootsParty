@@ -3,9 +3,10 @@ API endpoint tests.
 """
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework.test import APIClient
 from rest_framework import status
-from .models import Leader, Event, ManifestoItem
+from core.models import Leader, Event, ManifestoItem
 
 
 class LeaderAPITest(TestCase):
@@ -63,7 +64,8 @@ class EventAPITest(TestCase):
             title="Test Event",
             location="Test Location",
             slug="test-event",
-            description="Test description"
+            description="Test description",
+            date=timezone.now()
         )
     
     def test_list_events(self):
@@ -79,7 +81,8 @@ class EventAPITest(TestCase):
             title="Completed Event",
             location="Location",
             slug="completed-event",
-            is_completed=True
+            is_completed=True,
+            date=timezone.now()
         )
         
         url = '/api/v1/events/?is_completed=true'
@@ -129,6 +132,9 @@ class ManifestoItemAPITest(TestCase):
             description="Description",
             order=1
         )
+        
+        # Clear default item to test ordering specifically
+        ManifestoItem.objects.all().exclude(slug__in=['item-1', 'item-2']).delete()
         
         url = '/api/v1/manifesto/'
         response = self.client.get(url)

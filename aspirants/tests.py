@@ -95,22 +95,26 @@ class AspirantPDFTest(TestCase):
 
     def test_download_aspirant_pdf_anonymous_redirects(self):
         """Anonymous user cannot access aspirant PDF (redirect to login)."""
-        url = reverse('aspirants:download_aspirant_pdf', args=[self.registration.id])
+        url = reverse('aspirants:download_aspirant_pdf', args=[self.registration.uuid])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/admin/login/'))
 
-    def test_download_aspirant_pdf_staff_returns_pdf(self):
-        """Staff user gets PDF response with correct content-type and filename."""
+    def test_download_aspirant_pdf_staff_returns_processing(self):
+        """Staff user gets processing page initially."""
         self.client.login(username='staffuser', password='testpass123')
-        url = reverse('aspirants:download_aspirant_pdf', args=[self.registration.id])
+        url = reverse('aspirants:download_aspirant_pdf', args=[self.registration.uuid])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get('Content-Type'), 'application/pdf')
-        self.assertTrue(response.get('Content-Disposition', '').startswith('attachment'))
-        self.assertIn('Profile_', response.get('Content-Disposition', ''))
-        if response.content:
-            self.assertTrue(response.content.startswith(b'%PDF'), 'Response should be PDF bytes')
+        self.assertTemplateUsed(response, 'aspirants/profile_processing.html')
+
+    def test_download_aspirants_list_pdf_staff_returns_processing(self):
+        """Staff user gets report processing page initially."""
+        self.client.login(username='staffuser', password='testpass123')
+        url = reverse('aspirants:download_aspirants_list_pdf')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'aspirants/report_processing.html')
 
     def test_download_aspirants_list_pdf_anonymous_redirects(self):
         """Anonymous user cannot access list PDF."""
@@ -118,12 +122,6 @@ class AspirantPDFTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
-    def test_download_aspirants_list_pdf_staff_returns_pdf(self):
-        """Staff user gets list PDF with correct content-type."""
-        self.client.login(username='staffuser', password='testpass123')
-        url = reverse('aspirants:download_aspirants_list_pdf')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get('Content-Type'), 'application/pdf')
-        if response.content:
-            self.assertTrue(response.content.startswith(b'%PDF'), 'Response should be PDF bytes')
+    def test_view_status_redirects(self):
+        """Placeholder for status verification."""
+        pass

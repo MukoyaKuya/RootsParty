@@ -1,21 +1,19 @@
-Creating test database for alias 'default'...
-
-.......E.
+E
 ======================================================================
-ERROR: test_media_ops_find_floating (core.tests.test_management_commands.ManagementCommandTests.test_media_ops_find_floating)
-Test media_ops find-floating.
+ERROR: tests_core_legacy (unittest.loader._FailedTest.tests_core_legacy)
 ----------------------------------------------------------------------
+ImportError: Failed to import test module: tests_core_legacy
 Traceback (most recent call last):
-  File "C:\Users\Little Human\Desktop\RootsParty\core\tests\test_management_commands.py", line 80, in test_media_ops_find_floating
-    f.image.save('george.png', ContentFile(image_data))
-                                           ^^^^^^^^^^
-NameError: name 'image_data' is not defined
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3312.0_x64__qbz5n2kfra8p0\Lib\unittest\loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "C:\Users\Little Human\Desktop\RootsParty\core\tests\tests_core_legacy.py", line 4, in <module>
+    from core.models import Product, Event, Leader, ManifestoItem, BlogPost, ContactMessage, NewsletterSubscriber
+ImportError: cannot import name 'Product' from 'core.models' (C:\Users\Little Human\Desktop\RootsParty\core\models.py)
+
 
 ----------------------------------------------------------------------
-Ran 9 tests in 2.117s
+Ran 1 test in 0.000s
 
 FAILED (errors=1)
-Destroying test database for alias 'default'...
-
-Found 9 test(s).
+Found 1 test(s).
 System check identified no issues (2 silenced).

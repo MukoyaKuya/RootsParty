@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.core.files.base import ContentFile
 import random
 from users.models import Member
 
@@ -36,12 +37,15 @@ def seed_members_task(target_count=75000):
 
 @shared_task
 def generate_member_card_task(member_uuid):
-    """Background task to generate a member card."""
+    """Background task to generate and save a member card."""
     try:
         member = Member.objects.get(uuid=member_uuid)
         from .services import build_member_card_pdf
         buffer = build_member_card_pdf(member)
-        # In a real app, we'd save this to a FileField or Cloud Storage
-        return f"Card generated for {member.full_name}"
+        
+        filename = f"roots_party_card_{member.id_number}.pdf"
+        member.membership_card.save(filename, ContentFile(buffer.read()), save=True)
+        
+        return f"Card generated and saved for {member.full_name}"
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"Error generating member card: {str(e)}"

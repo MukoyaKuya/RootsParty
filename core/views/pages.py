@@ -121,11 +121,33 @@ def events(request):
 
 def download_gate_pass(request, uuid):
     event = get_object_or_404(Event, uuid=uuid)
+    
+    # Check if there's a recent gate pass with a PDF for this event
+    # (Just an example of how we might reuse, but original logic was new for each)
+    # Let's stick to the refactored logic but check if the specific gate_pass we just created has it (unlikely)
+    # or just proceed. 
+    
+    # Actually, the original view created a NEW GatePass every time.
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-    GatePass.objects.create(event=event, code=code)
-    Event.objects.filter(pk=event.pk).update(gate_pass_downloads=F('gate_pass_downloads') + 1)
-    buffer = build_gate_pass_pdf(event, code)
-    return FileResponse(buffer, as_attachment=True, filename=f'gate_pass_{event.slug}.pdf')
+    gate_pass = GatePass.objects.create(event=event, code=code)
+    
+    # Trigger the task
+    from core.tasks import generate_gate_pass_task
+    generate_gate_pass_task.delay(gate_pass.id)
+    
+    return render(request, 'core/gate_pass_processing.html', {
+        'event': event,
+        'gate_pass': gate_pass
+    })
+
+def check_gate_pass_status(request, gate_pass_id):
+    gate_pass = get_object_or_404(GatePass, id=gate_pass_id)
+    if gate_pass.pdf_file:
+        return render(request, 'core/partials/gate_pass_ready.html', {'gate_pass': gate_pass})
+    return render(request, 'core/partials/gate_pass_status.html', {
+        'gate_pass': gate_pass,
+        'status': 'processing'
+    })
 
 
 

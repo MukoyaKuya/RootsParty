@@ -21,6 +21,7 @@ class Member(models.Model):
     constituency = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     ward = models.CharField(max_length=100, blank=True, null=True)
     polling_center = models.CharField(max_length=100, blank=True, null=True)
+    membership_card = models.FileField(upload_to='member_cards/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     
     def __str__(self):

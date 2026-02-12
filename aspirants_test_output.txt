@@ -1,0 +1,58 @@
+Creating test database for alias 'default'...
+
+C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\handlers\base.py:61: UserWarning: No directory at: C:\Users\Little Human\Desktop\RootsParty\staticfiles\
+  mw_instance = middleware(adapted_handler)
+.......E..
+======================================================================
+ERROR: test_registration_save_draft (aspirants.tests.AspirantRegistrationFlowTest.test_registration_save_draft)
+POST with save_draft creates draft and shows draft_saved page.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Little Human\Desktop\RootsParty\aspirants\tests.py", line 56, in test_registration_save_draft
+    response = self.client.post(self.register_url, data)
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\test\client.py", line 1153, in post
+    response = super().post(
+        path,
+    ...<5 lines>...
+        **extra,
+    )
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\test\client.py", line 499, in post
+    return self.generic(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<6 lines>...
+        **extra,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\test\client.py", line 671, in generic
+    return self.request(**r)
+           ~~~~~~~~~~~~^^^^^
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\test\client.py", line 1087, in request
+    self.check_exception(response)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\test\client.py", line 802, in check_exception
+    raise exc_value
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django_ratelimit\decorators.py", line 27, in _wrapped
+    return fn(request, *args, **kw)
+  File "C:\Users\Little Human\Desktop\RootsParty\aspirants\views.py", line 45, in aspirant_registration
+    aspirant_reg = form.save(commit=False)
+  File "C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\forms\models.py", line 545, in save
+    raise ValueError(
+    ...<5 lines>...
+    )
+ValueError: The AspirantRegistration could not be created because the data didn't validate.
+
+----------------------------------------------------------------------
+Ran 10 tests in 14.485s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+
+Found 10 test(s).
+System check identified no issues (2 silenced).

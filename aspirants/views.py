@@ -40,13 +40,29 @@ def aspirant_registration(request, draft_token=None):
         is_draft = 'save_draft' in request.POST
         
         if is_draft:
-            # Save as draft - only validate basic fields
-            if form.is_valid() or True:  # Allow partial save
-                aspirant_reg = form.save(commit=False)
-                aspirant_reg.status = 'draft'
-                aspirant_reg.save()
-                messages.success(request, "Draft saved! Use the link below to continue later.")
-                return render(request, 'aspirants/aspirant_draft_saved.html', {'aspirant': aspirant_reg})
+            # Save as draft - allow partial save by bypassing strict form validation
+            aspirant_reg = instance or AspirantRegistration()
+            
+            # Manually update fields from POST data
+            for field_name in form.fields:
+                if field_name in request.POST:
+                    value = request.POST.get(field_name)
+                    # For ForeignKeys, we need the actual object
+                    if field_name == 'county' and value:
+                        try:
+                            value = County.objects.get(id=value)
+                        except (County.DoesNotExist, ValueError):
+                            value = None
+                    setattr(aspirant_reg, field_name, value)
+            
+            # Handle files
+            for file_name in request.FILES:
+                setattr(aspirant_reg, file_name, request.FILES[file_name])
+            
+            aspirant_reg.status = 'draft'
+            aspirant_reg.save()
+            messages.success(request, "Draft saved! Use the link below to continue later.")
+            return render(request, 'aspirants/aspirant_draft_saved.html', {'aspirant': aspirant_reg})
         else:
             if form.is_valid():
                 aspirant_reg = form.save(commit=False)
@@ -163,18 +179,44 @@ def mp_candidate_detail(request, constituency_slug):
 
 @staff_member_required
 def download_aspirant_pdf(request, uuid):
-    """Generate PDF profile for an aspirant (delegates to service layer)."""
+    """Trigger async generation of aspirant profile PDF, or serve if ready."""
     aspirant = get_object_or_404(AspirantRegistration, uuid=uuid)
-    buffer = build_aspirant_profile_pdf(aspirant)
-    filename = f"Profile_{aspirant.surname}_{aspirant.id_number}.pdf"
-    return FileResponse(buffer, as_attachment=True, filename=filename)
+    
+    if aspirant.profile_pdf:
+        return FileResponse(aspirant.profile_pdf, as_attachment=True)
+        
+    from aspirants.tasks import generate_aspirant_profile_pdf_task
+    generate_aspirant_profile_pdf_task.delay(aspirant.uuid)
+    
+    return render(request, 'aspirants/profile_processing.html', {'aspirant': aspirant})
+
+def check_aspirant_profile_status(request, uuid):
+    aspirant = get_object_or_404(AspirantRegistration, uuid=uuid)
+    if aspirant.profile_pdf:
+        return render(request, 'aspirants/partials/profile_ready.html', {'aspirant': aspirant})
+    return render(request, 'aspirants/partials/profile_status.html', {'aspirant': aspirant})
 
 @staff_member_required
 def download_aspirants_list_pdf(request):
-    """Generate a full PDF report of all aspirants (delegates to service layer)."""
-    buffer = build_aspirants_report_pdf()
-    filename = f"Roots_Aspirants_Report_{timezone.now().strftime('%Y%m%d')}.pdf"
-    return FileResponse(buffer, as_attachment=True, filename=filename)
+    """Trigger async generation of full aspirants report."""
+    from core.models import PartyReport
+    from .tasks import generate_aspirants_report_pdf_task
+    
+    report = PartyReport.objects.create(
+        report_type='aspirants_list',
+        created_by=request.user
+    )
+    
+    generate_aspirants_report_pdf_task.delay(report.id)
+    
+    return render(request, 'aspirants/report_processing.html', {'report': report})
+
+def check_aspirant_report_status(request, report_id):
+    from core.models import PartyReport
+    report = get_object_or_404(PartyReport, id=report_id)
+    if report.pdf_file:
+        return render(request, 'aspirants/partials/report_ready.html', {'report': report})
+    return render(request, 'aspirants/partials/report_status.html', {'report': report})
 
 def role_detail(request, slug):
     """Detail view for leadership roles"""

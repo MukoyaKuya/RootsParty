@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-roots-black text-white flex flex-col items-center justify-center p-6 font-mono">
+    <div class="max-w-xl w-full border-4 border-roots-red p-8 bg-white text-roots-black shadow-[10px_10px_0px_0px_rgba(230,0,0,1)]">
+        <h1 class="text-4xl font-black uppercase mb-4 italic">
+            DIGITIZING YOUR <span class="bg-roots-red text-white px-1">IDENTITY</span>
+        </h1>
+        
+        <div id="status-container" 
+             hx-get="{% url 'check_card_status' member.uuid %}" 
+             hx-trigger="load, every 2s" 
+             hx-swap="innerHTML">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 border-4 border-t-roots-red border-roots-black rounded-full animate-spin"></div>
+                <p class="font-bold uppercase tracking-tight">Printing member card for {{ member.full_name }}...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

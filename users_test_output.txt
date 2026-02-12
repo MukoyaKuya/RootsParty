@@ -1,0 +1,13 @@
+Creating test database for alias 'default'...
+
+C:\Users\Little Human\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\handlers\base.py:61: UserWarning: No directory at: C:\Users\Little Human\Desktop\RootsParty\staticfiles\
+  mw_instance = middleware(adapted_handler)
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.738s
+
+OK
+Destroying test database for alias 'default'...
+
+Found 5 test(s).
+System check identified no issues (2 silenced).
