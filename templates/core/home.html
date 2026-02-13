@@ -298,6 +298,8 @@
         </a>
     </div>
 
+{% load cropping cropping_extras %}
+
     <!-- News Grid -->
     <div class="p-6 md:p-8">
         {% if latest_posts %}
@@ -308,7 +310,7 @@
                 <!-- Image Placeholder -->
                 <div class="aspect-video bg-black border-b-4 border-roots-black overflow-hidden relative">
                     {% if post.image %}
-                    <img src="{% cropped_thumbnail post "cropping" scale=1 %}" alt="{{ post.title }}" loading="lazy"
+                    <img src="{% safe_cropped_thumbnail post "cropping" scale=1 %}" alt="{{ post.title }}" loading="lazy"
                         class="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-500">
                     {% else %}
                     <div
