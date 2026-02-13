@@ -8,7 +8,13 @@ echo "Environment: Cloud Run"
 echo "Configuring Nginx..."
 envsubst '$PORT' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
-# 2. Check Django
+# 2. Run Migrations if enabled
+if [ "$RUN_MIGRATIONS" = "True" ] || [ "$RUN_MIGRATIONS" = "true" ]; then
+    echo "Running database migrations..."
+    python manage.py migrate --noinput || echo "WARNING: Migrations failed, continuing..."
+fi
+
+# 3. Check Django
 echo "Running Django Check..."
 python manage.py check || exit 1
 

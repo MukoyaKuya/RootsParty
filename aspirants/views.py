@@ -110,29 +110,42 @@ from django.db.models import Case, When, Value, IntegerField
 
 def aspirant_list(request):
     """List all aspirants with filtering"""
-    role = request.GET.get('role', 'all')
-    aspirants = Aspirant.objects.filter(is_active=True)
+    import logging
+    logger = logging.getLogger(__name__)
     
-    if role != 'all':
-        aspirants = aspirants.filter(role=role)
-    else:
-        # Define priority for roles
-        role_priority = Case(
-            When(role='president', then=Value(1)),
-            When(role='governor', then=Value(2)),
-            When(role='senator', then=Value(3)),
-            When(role='woman_rep', then=Value(4)),
-            When(role='mp', then=Value(5)),
-            When(role='mca', then=Value(6)),
-            default=Value(7),
-            output_field=IntegerField(),
-        )
-        aspirants = aspirants.order_by(role_priority, 'name')
+    try:
+        role = request.GET.get('role', 'all')
+        aspirants = Aspirant.objects.filter(is_active=True)
         
-    return render(request, 'aspirants/aspirant_list.html', {
-        'aspirants': aspirants,
-        'current_role': role
-    })
+        if role != 'all':
+            aspirants = aspirants.filter(role=role)
+        else:
+            # Define priority for roles
+            role_priority = Case(
+                When(role='president', then=Value(1)),
+                When(role='governor', then=Value(2)),
+                When(role='senator', then=Value(3)),
+                When(role='woman_rep', then=Value(4)),
+                When(role='mp', then=Value(5)),
+                When(role='mca', then=Value(6)),
+                default=Value(7),
+                output_field=IntegerField(),
+            )
+            aspirants = aspirants.order_by(role_priority, 'name')
+        
+        return render(request, 'aspirants/aspirant_list.html', {
+            'aspirants': aspirants,
+            'current_role': role
+        })
+    except Exception as e:
+        logger.error(f"Error in aspirant_list view: {str(e)}", exc_info=True)
+        # Return empty queryset to prevent 500 error
+        aspirants = Aspirant.objects.none()
+        
+        return render(request, 'aspirants/aspirant_list.html', {
+            'aspirants': aspirants,
+            'current_role': role
+        })
 
 def aspirant_detail(request, uuid):
     """Generic detail view for any aspirant"""
@@ -198,18 +211,30 @@ def check_aspirant_profile_status(request, uuid):
 
 @staff_member_required
 def download_aspirants_list_pdf(request):
-    """Trigger async generation of full aspirants report."""
-    from core.models import PartyReport
-    from .tasks import generate_aspirants_report_pdf_task
+    """Download PDF report of all aspirants"""
+    role = request.GET.get('role', 'all')
+    aspirants = Aspirant.objects.filter(is_active=True)
     
-    report = PartyReport.objects.create(
-        report_type='aspirants_list',
-        created_by=request.user
-    )
+    if role != 'all':
+        aspirants = aspirants.filter(role=role)
+    else:
+        # Define priority for roles
+        role_priority = Case(
+            When(role='president', then=Value(1)),
+            When(role='governor', then=Value(2)),
+            When(role='senator', then=Value(3)),
+            When(role='woman_rep', then=Value(4)),
+            When(role='mp', then=Value(5)),
+            When(role='mca', then=Value(6)),
+            default=Value(7),
+            output_field=IntegerField(),
+        )
+        aspirants = aspirants.order_by(role_priority, 'name')
+        
+    buffer = build_aspirants_report_pdf(aspirants, role)
     
-    generate_aspirants_report_pdf_task.delay(report.id)
-    
-    return render(request, 'aspirants/report_processing.html', {'report': report})
+    filename = f'aspirants_list_{role}_{timezone.now().strftime("%Y%m%d")}.pdf'
+    return FileResponse(buffer, as_attachment=True, filename=filename)
 
 def check_aspirant_report_status(request, report_id):
     from core.models import PartyReport
