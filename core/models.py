@@ -228,7 +228,7 @@ class BlogPost(models.Model):
     
     # Image Cropping - allows admin to crop the uploaded image
     from image_cropping import ImageRatioField
-    cropping = ImageRatioField('image', '800x450', help_text="Crop for optimal display (16:9 ratio)")
+    cropping = ImageRatioField('image', '800x450', free_crop=True, help_text="Crop for optimal display (default 16:9, but flexible)")
     video_url = models.URLField(blank=True, null=True, help_text="YouTube or Vimeo URL")
     video_file = models.FileField(upload_to='blog/videos/', blank=True, null=True, help_text="Upload video file (MP4, etc.)")
     author = models.CharField(max_length=100, default="Roots Party Media")

@@ -209,82 +209,21 @@ class BlogPostAdmin(ImageCroppingMixin, ModelAdmin):
             'fields': ('title', 'slug', 'category', 'author')
         }),
         ('Content', {
-            'fields': ('excerpt', 'content', 'image', 'video_url', 'video_file')
+            'fields': ('excerpt', 'content', 'image', 'cropping', 'video_url', 'video_file')
         }),
         ('Publishing', {
             'fields': ('is_featured', 'is_published')
         }),
     )
     
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        """Use custom ImageCropFieldWidget for image fields"""
-        from django.db import models
-        
-        # Call parent's parent to skip ImageCroppingMixin's override
-        if isinstance(db_field, models.ImageField) and db_field.name == 'image':
-            # Skip ImageCroppingMixin and go directly to ModelAdmin
-            formfield = ModelAdmin.formfield_for_dbfield(self, db_field, request, **kwargs)
-            # Override with our custom widget
-            formfield.widget = ImageCropFieldWidget(
-                crop_ratio='16/9',
-                crop_width=800,
-                crop_height=450
-            )
-            return formfield
-        
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
-    
-    def save_model(self, request, obj, form, change):
-        """Crop the image if crop coordinates are provided"""
-        # Get crop coordinates from form data
-        crop_x = request.POST.get('image_crop_x')
-        crop_y = request.POST.get('image_crop_y')
-        crop_w = request.POST.get('image_crop_w')
-        crop_h = request.POST.get('image_crop_h')
-        
-        # Save first to get the image file
-        super().save_model(request, obj, form, change)
-        
-        # If we have crop coordinates and an image file, crop it
-        if crop_x and crop_y and crop_w and crop_h:
-            # Check if there's a new image file being uploaded
-            if 'image' in request.FILES:
-                image_file = request.FILES['image']
-            elif obj.image and hasattr(obj.image, 'file'):
-                image_file = obj.image.file
-                if hasattr(image_file, 'seek'):
-                    image_file.seek(0)
-            else:
-                image_file = None
-            
-            if image_file:
-                try:
-                    # Crop the image
-                    cropped_file = crop_image(
-                        image_file,
-                        float(crop_x),
-                        float(crop_y),
-                        float(crop_w),
-                        float(crop_h),
-                        output_size=(800, 450)  # Target size for blog posts
-                    )
-                    
-                    # Replace the original image with cropped version
-                    obj.image.save(obj.image.name, cropped_file, save=True)
-                except Exception as e:
-                    # Log error but don't fail the save
-                    import logging
-                    logger = logging.getLogger(__name__)
-                    logger.error(f"Error cropping image: {e}")
-    
+    # Custom cropping removed to use django-image-cropping non-destructive flow
+    # formfield_for_dbfield removed
+    # save_model removed (except for cache invalidation which is now in model)
+
     class Media:
-        js = (
-            'image_cropping/js/src/jquery.Jcrop.min.js',
-            'js/admin_image_crop.js',
-        )
-        css = {
-            'all': ('image_cropping/css/jquery.Jcrop.min.css',)
-        }
+        pass
+        # image_cropping automatically adds necessary assets via the widget
+        # We remove the custom admin_image_crop.js as it conflicts with the library
 
 
 @admin.register(County)
