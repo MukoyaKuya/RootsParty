@@ -162,6 +162,30 @@ from .models_site_settings import SiteSettings
 
 @admin.register(BlogPost)
 class BlogPostAdmin(ImageCroppingMixin, ModelAdmin):
+    actions = ['delete_selected']
+
+    def delete_queryset(self, request, queryset):
+        """
+        Override bulk delete to ensure cache is invalidated.
+        """
+        # We can either iterate and call delete() on each instance
+        # or use delete() on queryset and then invalidate manually.
+        # Given we want to ensure any custom logic in delete() runs, iteration is safer
+        # though slower. But for blogs, volume is low enough.
+        # However, standard Django delete_selected actually uses delete() on queryset by default
+        # unless we override this.
+        # Let's do bulk delete then invalidate for performance, matching User expectation
+        # unless there truly is critical logic in model.delete(). 
+        # The only logic in model.delete() is cache invalidation.
+        # So manual invalidation here is fine.
+        
+        count, _ = queryset.delete()
+        
+        from .cache_utils import invalidate_home_cache, invalidate_content_cache
+        invalidate_home_cache()
+        invalidate_content_cache()
+        
+        self.message_user(request, f"Successfully deleted {count} blog posts.")
     @display(
         description="Published",
         ordering="is_published",

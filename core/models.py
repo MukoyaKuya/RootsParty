@@ -250,6 +250,15 @@ class BlogPost(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache, invalidate_content_cache
+        invalidate_home_cache()
+        invalidate_content_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from .cache_utils import invalidate_home_cache, invalidate_content_cache
+        invalidate_home_cache()
+        invalidate_content_cache()
         
     def get_embed_url(self):
         """Convert standard YouTube URLs to embed URLs"""
