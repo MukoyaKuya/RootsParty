@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Roots Party - Labour{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 md:py-20">
+    <div class="max-w-4xl mx-auto bg-white border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] p-8 md:p-12 relative overflow-hidden">
+        
+        <!-- Decorative bg -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-roots-red/10 rounded-bl-full -mr-16 -mt-16"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-roots-black/10 rounded-tr-full -ml-16 -mb-16"></div>
+
+        <div class="relative z-10 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-roots-red text-white rounded-full border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+                </svg>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-black uppercase leading-none mb-6">
+                Dignity in <span class="text-roots-red">Labour</span>
+            </h1>
+            
+            <div class="w-24 h-2 bg-roots-black mx-auto mb-8"></div>
+
+            <p class="text-xl md:text-2xl font-bold text-gray-800 mb-6 leading-relaxed">
+                "Fair wages and safe working conditions are non-negotiable rights."
+            </p>
+
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
+                Every Kenyan worker deserves to live with dignity. We advocate for a 4-day work week to increase productivity and family time. 
+                We fight for better wages, safer environments, and the recognition that labor is the backbone of our economy.
+            </p>
+
+            <a href="{% url 'join' %}" class="inline-block bg-roots-black text-white font-black uppercase px-8 py-4 border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+                Stand With Us
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

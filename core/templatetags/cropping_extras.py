@@ -15,7 +15,7 @@ def safe_cropped_thumbnail(context, instance, ratio_fieldname, scale=1):
     """
     try:
         # Try the standard cropped_thumbnail tag logic
-        return cropped_thumbnail(context, instance, ratio_fieldname, scale)
+        return cropped_thumbnail(context, instance, ratio_fieldname, scale=scale)
     except (ValueError, AttributeError, TypeError) as e:
         # Log the error for debugging
         logger.warning(f"Invalid cropping data for {instance}: {e}")

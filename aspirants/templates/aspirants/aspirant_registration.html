@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<style>
+    .img-container img {
+        display: block;
+        max-width: 100%;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-5xl mx-auto">
@@ -8,7 +18,7 @@
         <div class="text-center mb-8">
             <span class="inline-block bg-roots-red text-white px-4 py-1 text-sm font-black uppercase tracking-wider mb-3">2027 Elections</span>
             <h1 class="text-3xl md:text-4xl font-black uppercase text-roots-black mb-3 tracking-tight">
-                Aspirant Registration
+                KARIBU BOMA
             </h1>
             <p class="text-base text-gray-600 font-medium max-w-xl mx-auto">
                 Register to contest for a leadership position under Roots Party of Kenya
@@ -121,15 +131,21 @@
                                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                         <div class="flex text-sm text-gray-600 justify-center">
-                                            <label for="{{ form.photo.id_for_label }}" class="relative cursor-pointer bg-white rounded-md font-bold text-roots-red hover:text-roots-black focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-roots-red">
+                                            <label for="id_photo" class="relative cursor-pointer bg-white rounded-md font-bold text-roots-red hover:text-roots-black focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-roots-red">
                                                 <span>Upload a file</span>
-                                                {{ form.photo }}
+
                                             </label>
                                             <p class="pl-1">or drag and drop</p>
                                         </div>
                                         <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 2MB</p>
                                     </div>
+                                    <div id="image-preview-container" class="hidden text-center">
+                                        <img id="image-preview" src="" alt="Preview" class="mx-auto h-32 w-32 object-cover rounded-md border-2 border-roots-black mb-2">
+                                        <p class="text-sm text-green-600 font-bold">Image Cropped & Ready!</p>
+                                        <button type="button" id="btn-change-photo" class="text-xs text-roots-red underline mt-1">Change Photo</button>
+                                    </div>
                                 </div>
+                                <input type="file" name="photo" accept="image/*" class="sr-only" id="id_photo">
                                 {% if form.photo.errors %}
                                 <p class="text-roots-red text-xs font-medium">{{ form.photo.errors.0 }}</p>
                                 {% endif %}
@@ -383,6 +399,34 @@
 </div>
 {% endblock %}
 
+<!-- Cropper Modal -->
+<div id="cropper-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border-4 border-roots-black">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-black text-roots-black uppercase" id="modal-title">Crop Photo</h3>
+                        <div class="mt-4 img-container" style="height: 400px;">
+                            <img id="image-to-crop" src="" alt="Picture">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t-2 border-gray-200">
+                <button type="button" id="btn-crop" class="w-full inline-flex justify-center border-2 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] px-4 py-2 bg-roots-red text-base font-bold text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm uppercase">
+                    Crop & Save
+                </button>
+                <button type="button" id="btn-cancel" class="mt-3 w-full inline-flex justify-center border-2 border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm uppercase">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block extra_js %}
 <script>
     const API_KEY = "keyPub1569gsvndc123kg9sjhg";
@@ -580,5 +624,90 @@
              wardSelect.classList.remove('hidden');
         }
     }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let cropper;
+        const image = document.getElementById('image-to-crop');
+        const input = document.getElementById('id_photo');
+        const modal = document.getElementById('cropper-modal');
+        const uploadPlaceholder = input.closest('.border-dashed').querySelector('.space-y-1');
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImage = document.getElementById('image-preview');
+        const changeBtn = document.getElementById('btn-change-photo');
+
+        // Handle File Selection
+        input.addEventListener('change', function (e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                
+                if (/^image\/\w+/.test(file.type)) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        image.src = reader.result;
+                        modal.classList.remove('hidden');
+                        
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        
+                        cropper = new Cropper(image, {
+                            aspectRatio: 1, // Square crop for profile
+                            viewMode: 1,
+                            background: false,
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Cancel
+        document.getElementById('btn-cancel').addEventListener('click', function() {
+            modal.classList.add('hidden');
+            if (cropper) cropper.destroy();
+            input.value = ''; // Reset input
+        });
+
+        // Crop & Save
+        document.getElementById('btn-crop').addEventListener('click', function() {
+            if (!cropper) return;
+            
+            cropper.getCroppedCanvas({
+                width: 400,
+                height: 400, // Force reasonable size
+            }).toBlob(function(blob) {
+                // Create a new file from the blob
+                const file = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
+                
+                // Update the file input
+                const container = new DataTransfer();
+                container.items.add(file);
+                input.files = container.files;
+                
+                // Show Preview
+                previewImage.src = URL.createObjectURL(blob);
+                uploadPlaceholder.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                
+                // Close Modal
+                modal.classList.add('hidden');
+                if (cropper) cropper.destroy();
+                
+            }, 'image/jpeg');
+        });
+        
+        // Change Photo Button
+        if(changeBtn) {
+            changeBtn.addEventListener('click', function() {
+               previewContainer.classList.add('hidden');
+               uploadPlaceholder.classList.remove('hidden');
+               input.value = ''; // Clear input to allow re-selection
+               input.click(); // Trigger file dialog
+            });
+        }
+    });
 </script>
 {% endblock %}

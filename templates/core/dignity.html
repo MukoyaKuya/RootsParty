@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Roots Party - Dignity{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 md:py-20">
+    <div class="max-w-4xl mx-auto bg-white border-4 border-roots-black shadow-[8px_8px_0px_0px_#1a1a1a] p-8 md:p-12 relative overflow-hidden">
+        
+        <!-- Decorative bg -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-bl-full -mr-16 -mt-16"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-roots-black/10 rounded-tr-full -ml-16 -mb-16"></div>
+
+        <div class="relative z-10 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-roots-black text-white rounded-full border-4 border-roots-red shadow-[4px_4px_0px_0px_#E60000] mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                </svg>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-black uppercase leading-none mb-6">
+                Human <span class="text-roots-red">Dignity</span>
+            </h1>
+            
+            <div class="w-24 h-2 bg-roots-black mx-auto mb-8"></div>
+
+            <p class="text-xl md:text-2xl font-bold text-gray-800 mb-6 leading-relaxed">
+                "No Kenyan should beg to survive. A wealthy nation must care for its people."
+            </p>
+
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
+                Dignity means access to food, shelter, and healthcare. It means freedom from the oppression of poverty. 
+                We are building an economy that works for the many, not the few. When we produce, we restore our dignity.
+            </p>
+
+            <a href="{% url 'join' %}" class="inline-block bg-roots-red text-white font-black uppercase px-8 py-4 border-4 border-roots-black shadow-[4px_4px_0px_0px_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+                Fight For Dignity
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

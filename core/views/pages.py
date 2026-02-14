@@ -248,3 +248,15 @@ def terms_of_service(request):
 
 def cookie_policy(request):
     return render(request, 'core/cookie_policy.html')
+
+
+def land(request):
+    return render(request, 'core/land.html')
+
+
+def labour(request):
+    return render(request, 'core/labour.html')
+
+
+def dignity(request):
+    return render(request, 'core/dignity.html')

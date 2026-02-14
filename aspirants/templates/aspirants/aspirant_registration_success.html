@@ -31,9 +31,13 @@
                 <!-- Applicant Info -->
                 <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
                     <div class="w-16 h-16 rounded-full bg-roots-red/10 flex items-center justify-center flex-shrink-0">
+                        {% if aspirant.photo %}
+                        <img src="{{ aspirant.photo.url }}" alt="Applicant Photo" class="w-full h-full object-cover">
+                        {% else %}
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-roots-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
+                        {% endif %}
                     </div>
                     <div class="text-left">
                         <p class="text-xs text-gray-500 uppercase tracking-wider">Applicant Name</p>

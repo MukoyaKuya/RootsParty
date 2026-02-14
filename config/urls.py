@@ -88,6 +88,9 @@ urlpatterns += [
     path('privacy-policy/', core_views.privacy_policy, name='privacy_policy'),
     path('terms-of-service/', core_views.terms_of_service, name='terms_of_service'),
     path('cookie-policy/', core_views.cookie_policy, name='cookie_policy'),
+    path('land/', core_views.land, name='land'),
+    path('labour/', core_views.labour, name='labour'),
+    path('dignity/', core_views.dignity, name='dignity'),
     # API with versioning
     path('api/v1/', include('core.api.urls')),
 ]
