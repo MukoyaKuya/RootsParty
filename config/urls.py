@@ -18,6 +18,7 @@ import os
 from django.contrib import admin
 
 from django.urls import path, re_path, include
+from django.http import HttpResponse
 from django.views.static import serve
 from django.views.generic import TemplateView
 
@@ -41,6 +42,7 @@ urlpatterns += [
     
     # Core
     path('', core_views.home, name='home'),
+    path('ping/', lambda request: HttpResponse('pong')),
     path('about/', core_views.about, name='about'),
     path('manifesto-list/', core_views.manifesto_list, name='manifesto_list'),
     
