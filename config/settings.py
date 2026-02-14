@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'image_cropping',
     'django_ckeditor_5',
+    'django_summernote',
 
     # Local
     'core',
@@ -383,6 +384,9 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 }
+
+# Compatibility for libraries still using DEFAULT_FILE_STORAGE (e.g., django-ckeditor-5)
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # Use standard static storage in development/tests to avoid manifest errors
 if DEBUG:

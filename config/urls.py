@@ -91,6 +91,13 @@ urlpatterns += [
     path('land/', core_views.land, name='land'),
     path('labour/', core_views.labour, name='labour'),
     path('dignity/', core_views.dignity, name='dignity'),
+    path('tribes/', core_views.tribes, name='tribes'),
+    path('tribes/<str:slug>/', core_views.tribe_detail, name='tribe_detail'),
+    
+    # 3rd Party
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
+    path('summernote/', include('django_summernote.urls')),
+    
     # API with versioning
     path('api/v1/', include('core.api.urls')),
 ]

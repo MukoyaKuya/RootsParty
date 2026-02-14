@@ -110,13 +110,13 @@
                             class="w-full h-full object-contain drop-shadow-2xl">
                         {% endif %}
                     </div>
-                    <div
-                        class="absolute bottom-16 left-8 bg-roots-black text-white p-3 max-w-[220px] border-2 border-roots-red rounded-lg shadow-[2px_2px_0px_0px_#E60000] transform -rotate-2">
-                        <p class="text-xs font-bold italic leading-snug">
-                            "Letters to every tribe"
+                    <a href="{% url 'tribes' %}"
+                        class="absolute bottom-16 left-8 bg-roots-black text-white p-3 max-w-[220px] border-2 border-roots-red rounded-lg shadow-[2px_2px_0px_0px_#E60000] transform -rotate-2 hover:scale-105 hover:rotate-0 hover:shadow-[4px_4px_0px_0px_#E60000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer block group">
+                        <p class="text-xs font-bold italic leading-snug group-hover:text-roots-red transition-colors">
+                            "Letters to your tribe"
                         </p>
-                        <p class="text-[10px] font-black uppercase mt-1 text-roots-red">— Tingiza Mti</p>
-                    </div>
+                        <p class="text-[10px] font-black uppercase mt-1 text-roots-red group-hover:text-white transition-colors">— From Prof. George Wajackoyah</p>
+                    </a>
                 </div>
                 {% else %}
                 <div

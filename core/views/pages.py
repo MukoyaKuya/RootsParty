@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 from ..models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent,
     HomeVideo, GatePass, CarouselImage, FloatingImage,
-    GalleryPost, Event, Resource,
+    GalleryPost, Event, Resource, Tribe,
 )
 
 from ..services.pdf import build_gate_pass_pdf
@@ -260,3 +260,14 @@ def labour(request):
 
 def dignity(request):
     return render(request, 'core/dignity.html')
+
+
+
+def tribes(request):
+    tribes = Tribe.objects.all().order_by('order')
+    return render(request, 'core/tribes.html', {'tribes': tribes})
+
+
+def tribe_detail(request, slug):
+    tribe = get_object_or_404(Tribe, slug=slug)
+    return render(request, 'core/tribe_detail.html', {'tribe': tribe})

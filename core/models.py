@@ -472,3 +472,35 @@ class FloatingImage(models.Model):
         return f"{self.name} ({self.get_position_display()})"
 
 
+
+class Tribe(models.Model):
+    """Model for dynamic Tribe content (Letters from Wajackoyah)"""
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    intro = models.TextField(help_text="Short drop-cap introduction")
+    content = models.TextField(help_text="Full letter content")
+    image = models.ImageField(upload_to='tribes/', blank=True, null=True, help_text="Featured image for the tribe page")
+    cropping = ImageRatioField('image', '800x450', free_crop=True, help_text="Crop for optimal display")
+    color_class = models.CharField(max_length=50, help_text="Tailwind class e.g. text-roots-green")
+    icon = models.TextField(help_text="SVG code for the icon")
+    order = models.IntegerField(default=0, help_text="Display order")
+    
+    class Meta:
+        ordering = ['order', 'title']
+        verbose_name = 'Tribe'
+        verbose_name_plural = 'Tribes'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('tribe_detail', kwargs={'slug': self.slug})
+
+

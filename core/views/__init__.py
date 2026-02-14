@@ -26,6 +26,8 @@ from .pages import (
     land,
     labour,
     dignity,
+    tribes,
+    tribe_detail,
 )
 from .dashboard_views import dashboard, dashboard_callback
 from .contact_views import contact, subscribe
@@ -58,4 +60,6 @@ __all__ = [
     'land',
     'labour',
     'dignity',
+    'tribes',
+    'tribe_detail',
 ]

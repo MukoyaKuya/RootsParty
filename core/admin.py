@@ -3,7 +3,7 @@ from django.utils.html import mark_safe
 from django.urls import reverse
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
-from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, NewsletterSubscriber, CarouselImage, Constituency, FloatingImage, Splash
+from .models import Leader, LeaderImage, ManifestoItem, ManifestoEvidence, GalleryPost, PostImage, Event, Resource, ContactMessage, BlogPost, County, PageContent, HomeVideo, GatePass, NewsletterSubscriber, CarouselImage, Constituency, FloatingImage, Splash, Tribe
 from .models_site_settings import SiteSettings
 
 class LeaderImageInline(TabularInline):
@@ -381,3 +381,29 @@ class SplashAdmin(ModelAdmin):
     list_display = ('title', 'is_active', 'updated_at')
     list_filter = ('is_active',)
     search_fields = ('title',)
+
+
+from django_summernote.admin import SummernoteModelAdmin
+
+@admin.register(Tribe)
+class TribeAdmin(SummernoteModelAdmin, ImageCroppingMixin, ModelAdmin):
+    summernote_fields = ('content',)
+    list_display = ('title', 'slug', 'color_class', 'order')
+    search_fields = ('title', 'intro', 'content')
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ('order',)
+    
+    fieldsets = (
+        ('Identity', {
+            'fields': ('title', 'slug', 'order'),
+            'classes': ('tab-identity',)
+        }),
+        ('Appearance', {
+            'fields': ('color_class', 'icon', 'image', 'cropping'),
+            'description': 'Customize the visual style of the tribe letter.',
+        }),
+        ('Letter Content', {
+            'fields': ('intro', 'content'),
+            'classes': ('tab-content',)
+        }),
+    )

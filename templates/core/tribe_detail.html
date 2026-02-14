@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static cropping thumbnail %}
+
+{% block title %}{{ tribe.title }} - Letters from Wajackoyah{% endblock %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Dancing+Script:wght@700&family=Courier+Prime:wght@400;700&family=Oswald:wght@500;700&display=swap');
+
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-signature { font-family: 'Dancing Script', cursive; }
+    .font-typewriter { font-family: 'Courier Prime', monospace; }
+    .font-oswald { font-family: 'Oswald', sans-serif; }
+
+    .paper-texture {
+        background-color: #fdfbf7;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    }
+    
+    .stamp-mask {
+        mask-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+</style>
+
+<div class="relative bg-gray-200 min-h-screen font-sans py-8 px-4 md:py-16 md:px-8">
+    
+    <!-- Navigation Back (Floating) -->
+    <a href="{% url 'tribes' %}" class="fixed top-24 left-4 md:left-8 z-50 bg-white/90 backdrop-blur shadow-lg rounded-full p-3 text-gray-600 hover:text-roots-red transition-all hover:scale-105 group hidden md:flex items-center gap-2 pr-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 group-hover:-translate-x-1 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        <span class="font-bold text-sm">Back</span>
+    </a>
+
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start relative">
+        
+        <!-- Main Letter Paper -->
+        <div class="flex-1 w-full relative group perspective-1000">
+             <div class="absolute -inset-1 bg-gray-900/5 blur-xl transform rotate-1 rounded-[2px]"></div>
+             <div class="absolute -inset-1 bg-gray-900/5 blur-xl transform -rotate-1 rounded-[2px]"></div>
+            
+            <div class="relative paper-texture shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] ring-1 ring-gray-900/5 px-8 py-10 md:px-12 md:py-14 min-h-[800px]">
+                
+                <!-- Watermark -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
+                    <img src="/static/images/logo.png" class="w-96 h-96 object-contain grayscale" alt="Watermark">
+                </div>
+
+                <!-- Letterhead Header -->
+                <header class="border-b-2 border-roots-black pb-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative">
+                    <div class="flex-1">
+                        <h2 class="font-oswald font-bold text-3xl md:text-4xl text-gray-900 uppercase tracking-tight leading-none mb-1">
+                            Office of The Party Leader
+                        </h2>
+                        <h3 class="font-playfair font-bold text-xl md:text-2xl {{ tribe.color_class }} italic">
+                            Roots Party of Kenya
+                        </h3>
+                    </div>
+                    
+                    <div class="text-right font-typewriter text-xs text-gray-500 leading-relaxed md:w-48">
+                        <p>REF: RP/{{ tribe.title|upper|slice:":3" }}/27/L</p>
+                        <p>DATE: {% now "d M. Y" %}</p>
+                        <p>LOC: NAIROBI, KE</p>
+                    </div>
+
+                    <!-- Decorative accent -->
+                    <div class="absolute -bottom-[5px] left-0 w-full h-[1px] bg-roots-red"></div>
+                </header>
+
+                <!-- Subject Line -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-2">
+                         <span class="px-2 py-0.5 bg-gray-900 text-white text-[10px] uppercase font-bold tracking-widest rounded-sm font-oswald">Open Letter</span>
+                         <span class="font-typewriter text-xs text-gray-400 uppercase tracking-widest">Confidential / Public Record</span>
+                    </div>
+                    <h1 class="font-playfair font-black text-3xl md:text-[2.75rem] leading-[1.1] text-gray-900">
+                        {{ tribe.intro }}
+                    </h1>
+                </div>
+
+                <!-- Body Text -->
+                <article class="prose prose-lg md:prose-xl max-w-none prose-headings:font-playfair prose-headings:font-bold prose-headings:text-gray-900 prose-p:font-typewriter prose-p:text-gray-900 prose-p:leading-loose prose-blockquote:font-playfair prose-blockquote:not-italic prose-blockquote:border-roots-red prose-strong:text-roots-black">
+                    {{ tribe.content|safe }}
+                </article>
+
+                <!-- Signature Footer -->
+                <footer class="mt-16 pt-8 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="relative">
+                        <div class="font-signature text-5xl md:text-6xl text-blue-900 transform -rotate-6 relative z-10" style="text-shadow: 2px 2px 0px rgba(0,0,0,0.05);">
+                            George W.
+                        </div>
+                         <!-- Pen stroke underline decoration -->
+                        <svg class="absolute -bottom-2 -left-2 w-48 text-blue-900/40 transform -rotate-2" viewBox="0 0 200 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.00025 6.99997C2.00025 6.99997 106.5 -2.49997 197.5 3.49998" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                        
+                        <div class="mt-4 font-typewriter text-xs text-gray-600 uppercase tracking-widest">
+                            <p class="font-bold text-gray-900">Prof. George Luchiri Wajackoyah</p>
+                            <p>Party Leader</p>
+                            <p>Roots Party of Kenya</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center md:justify-end">
+                        <div class="w-32 h-32 rounded-full border-[3px] border-roots-red/70 flex items-center justify-center transform rotate-12 relative overflow-hidden group">
+                           <div class="absolute inset-0 border-[1px] border-roots-red/40 rounded-full m-1"></div>
+                            <div class="text-center transform rotate-0">
+                                <span class="block font-oswald font-bold text-[0.65rem] text-roots-red uppercase tracking-[0.2em] mb-0.5">Approved</span>
+                                <span class="block font-black text-xl text-roots-red leading-none font-playfair italic">Roots</span>
+                                <span class="block font-black text-xl text-roots-red leading-none font-playfair italic -mt-1">Party</span>
+                                <span class="block font-typewriter font-bold text-[0.6rem] text-roots-red mt-1">NO: 8291-K</span>
+                            </div>
+                            <!-- Grunge texture overlay just for stamp -->
+                            <div class="absolute inset-0 bg-white mix-blend-screen opacity-60 stamp-mask pointer-events-none"></div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            
+            <!-- Paper Crease Shadow -->
+            <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-gray-200/50 via-gray-100/20 to-transparent pointer-events-none"></div>
+        </div>
+
+        <!-- Sticky Sidebar / Mobile Bottom Bar -->
+        <div class="w-full md:w-80 md:sticky md:top-8 shrink-0 space-y-6">
+            
+            <!-- Context Card -->
+            <div class="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 relative overflow-hidden group">
+                {% if tribe.image %}
+                    <div class="w-full h-48 overflow-hidden relative">
+                        <img src="{% cropped_thumbnail tribe 'cropping' %}" alt="{{ tribe.title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                {% endif %}
+                
+                <div class="p-6 relative">
+                    {% if not tribe.image %}
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-{{ tribe.color_class|slice:'5:' }}/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <h3 class="font-oswald font-bold text-lg text-gray-900 uppercase mb-4 flex items-center gap-2 relative z-10">
+                            <span class="w-1.5 h-1.5 rounded-full bg-roots-red"></span>
+                            About The {{ tribe.title }}
+                        </h3>
+                                
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6 relative z-10">
+                            You are reading a tailored manifesto for the {{ tribe.title }}. This document outlines the specific commitments the Roots Party has made to your profession.
+                        </p>
+
+                        <div class="border-t border-gray-100 my-4"></div>
+                    {% endif %}
+
+                    <div class="flex items-center gap-4 relative z-10 {% if tribe.image %}pt-2{% endif %}">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
+                            {{ tribe.icon|safe }}
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Tribe</p>
+                            <p class="font-bold text-gray-900 text-lg leading-none">{{ tribe.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Card -->
+            <div class="bg-roots-black text-white rounded-xl shadow-xl p-6 relative overflow-hidden group hover:shadow-2xl hover:shadow-roots-red/20 transition-all duration-500">
+                <!-- Animated Background -->
+                <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black z-0"></div>
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-roots-red blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                
+                <div class="relative z-10">
+                    <h3 class="font-playfair font-bold text-2xl italic mb-2">Join The Tribe</h3>
+                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                        Don't just read history—write it. Register today to become an official member of the movement.
+                    </p>
+                    
+                    <a href="{% url 'aspirants:aspirant_registration' %}" class="flex items-center justify-between w-full bg-white text-roots-black font-bold py-4 px-5 rounded-lg hover:bg-roots-red hover:text-white transition-all duration-300 group/btn">
+                        <span>Register Now</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                    
+                    <p class="text-[10px] text-gray-500 mt-4 text-center">
+                        Official Registration Portal • Secure & Private
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <!-- Mobile Back Button (Bottom) -->
+    <div class="md:hidden mt-12 text-center pb-8">
+        <a href="{% url 'tribes' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-roots-black font-bold text-sm uppercase tracking-wider">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Return to Tribes
+        </a>
+    </div>
+
+</div>
+{% endblock %}
