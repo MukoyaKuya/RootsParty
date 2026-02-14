@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libjpeg-dev \
     zlib1g-dev \
+    libcairo2-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
@@ -37,4 +39,4 @@ USER appuser
 RUN SECRET_KEY=dummy-key-for-build ALLOWED_HOSTS=127.0.0.1 python manage.py collectstatic --noinput
 
 # Run gunicorn
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 --preload config.wsgi:application
+CMD python manage.py migrate --noinput && exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 --preload config.wsgi:application
