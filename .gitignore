@@ -10,6 +10,7 @@ env.yaml
 .DS_Store
 staticfiles/
 media/
+node_modules/
 
 # Secret files
 secrets/
