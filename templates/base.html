@@ -197,21 +197,37 @@
     </div>
 
     <script>
-        // Ensure splash screen disappears even if some assets fail
-        window.addEventListener('load', function() {
-            const splash = document.getElementById('splash-screen');
-            setTimeout(() => {
-                splash.classList.add('fade-out');
-            }, 300); // Small buffer for visual comfort
-        });
+        // CRITICAL: Instant Splash Removal Logic
+        // We want the splash to go away AS SOON AS the main content is ready.
+        // But we also want a fail-safe.
 
-        // Backup safety timeout (8 seconds max)
-        setTimeout(() => {
+        (function() {
             const splash = document.getElementById('splash-screen');
-            if (splash && !splash.classList.contains('fade-out')) {
-                splash.classList.add('fade-out');
+            if (!splash) return;
+
+            // 1. Minimum display time (optional, set to 0 for instant)
+            const MIN_TIME = 500; 
+            const startTime = Date.now();
+
+            function hideSplash() {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, MIN_TIME - elapsed);
+
+                setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        splash.classList.add('fade-out');
+                        // Remove from DOM after transition to free memory
+                        setTimeout(() => splash.remove(), 500);
+                    });
+                }, remaining);
             }
-        }, 8000);
+
+            // 2. Hide on load
+            window.addEventListener('load', hideSplash);
+
+            // 3. Ultra-safe backup (4s max)
+            setTimeout(hideSplash, 4000);
+        })();
     </script>
     {% endif %}
 
