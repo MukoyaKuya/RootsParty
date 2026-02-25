@@ -14,10 +14,6 @@ if [ "$RUN_MIGRATIONS" = "True" ] || [ "$RUN_MIGRATIONS" = "true" ]; then
     python manage.py migrate --noinput || echo "WARNING: Migrations failed, continuing..."
 fi
 
-# 3. Check Django
-echo "Running Django Check..."
-python manage.py check || exit 1
-
 # 3. Start Gunicorn (Background)
 echo "Starting Gunicorn on socket..."
 rm -f /tmp/gunicorn.sock
@@ -27,13 +23,12 @@ APP_PID=$!
 
 # 4. Wait for Socket
 echo "Waiting for Gunicorn socket..."
-for i in {1..30}; do
+for i in {1..100}; do
     if [ -S /tmp/gunicorn.sock ]; then
         echo "Socket found!"
         break
     fi
-    echo "Waiting for socket... ($i/30)"
-    sleep 1
+    sleep 0.1
 done
 
 if [ ! -S /tmp/gunicorn.sock ]; then

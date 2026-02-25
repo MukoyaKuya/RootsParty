@@ -37,9 +37,163 @@
                     .animate-palpate-slow {
                         animation: palpate-slow 6s infinite ease-in-out;
                     }
+                    /* Shake Animation (Tingiza Mti) */
+                    @keyframes tingiza {
+                        0% { transform: translate(1px, 1px) rotate(0deg); }
+                        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                        20% { transform: translate(-3px, 0px) rotate(1deg); }
+                        30% { transform: translate(3px, 2px) rotate(0deg); }
+                        40% { transform: translate(1px, -1px) rotate(1deg); }
+                        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                        60% { transform: translate(-3px, 1px) rotate(0deg); }
+                        70% { transform: translate(3px, 1px) rotate(-1deg); }
+                        80% { transform: translate(-1px, -1px) rotate(1deg); }
+                        90% { transform: translate(1px, 2px) rotate(0deg); }
+                        100% { transform: translate(1px, -2px) rotate(-1deg); }
+                    }
+                    .animate-tingiza {
+                        animation: tingiza 0.5s;
+                    }
+
+                    /* Uiverse Button Styles */
+                    .uiverse {
+                        --duration: 12s; /* Slower, more hypnotic */
+                        --easing: ease-in-out; /* More organic */
+                        
+                        --c-color-1: rgba(230, 0, 0, 0.9); /* Roots Red (Dominant) */
+                        --c-color-2: rgba(34, 197, 94, 0.8); /* Green (Visible/Vibrant) */
+                        --c-color-3: rgba(180, 0, 0, 0.6); /* Dark Red (Depth) */
+                        --c-color-4: rgba(255, 255, 255, 0.7); /* White (Highlight) */
+                        
+                        --c-shadow: rgba(230, 0, 0, 0.8); /* Strong Red Outer Glow */
+                        --c-shadow-inset-top: rgba(100, 0, 0, 0.9); /* Deep Red Inset */
+                        --c-shadow-inset-bottom: rgba(200, 0, 0, 0.5); /* Red Inset Bottom */
+                        
+                        --c-radial-inner: #3a0000; /* Deep Red Core */
+                        --c-radial-outer: #000000; /* Black Edge */
+                        --c-color: #fff;
+                        
+                        -webkit-tap-highlight-color: transparent;
+                        -webkit-appearance: none;
+                        outline: none;
+                        position: relative;
+                        cursor: pointer;
+                        border: none;
+                        display: table;
+                        border-radius: 50%; /* Changed to 50% for circle */
+                        padding: 0;
+                        margin: 0;
+                        text-align: center;
+                        font-weight: 600;
+                        font-size: 16px;
+                        letter-spacing: 0.02em;
+                        line-height: 1.5;
+                        color: var(--c-color);
+                        background: radial-gradient(circle, var(--c-radial-inner), var(--c-radial-outer) 80%);
+                        box-shadow: 0 0 14px var(--c-shadow);
+                        width: 100%; /* Fill container */
+                        height: 100%; /* Fill container */
+                    }
+
+                    .uiverse:before {
+                        content: '';
+                        pointer-events: none;
+                        position: absolute;
+                        z-index: 3;
+                        left: 0;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        border-radius: 50%; /* Changed to 50% for circle */
+                        box-shadow: inset 0 3px 12px var(--c-shadow-inset-top), inset 0 -3px 4px var(--c-shadow-inset-bottom);
+                    }
+
+                    .uiverse .wrapper {
+                        -webkit-mask-image: -webkit-radial-gradient(white, black);
+                        overflow: hidden;
+                        border-radius: 50%; /* Changed to 50% for circle */
+                        min-width: 100%;
+                        height: 100%;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .uiverse .wrapper span {
+                        display: inline-block;
+                        position: relative;
+                        z-index: 10;
+                        font-family: inherit; /* Inherit font from parent */
+                    }
+
+                    .uiverse .circle-container {
+                        position: absolute;
+                        top: 0; left: 0; right: 0; bottom: 0;
+                        z-index: 0;
+                        animation: spin 20s linear infinite; /* Slow rotation for whole color cloud */
+                    }
+
+                    .uiverse .wrapper .circle {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        filter: blur(var(--blur, 8px));
+                        background: var(--background, transparent);
+                        transform: translate(var(--x, 0), var(--y, 0)) translateZ(0);
+                        animation: var(--animation, none) var(--duration) var(--easing) infinite;
+                    }
+
+                    .uiverse .wrapper .circle.circle-1, .uiverse .wrapper .circle.circle-9, .uiverse .wrapper .circle.circle-10 {
+                        --background: var(--c-color-4);
+                    }
+
+                    .uiverse .wrapper .circle.circle-3, .uiverse .wrapper .circle.circle-4 {
+                        --background: var(--c-color-2);
+                        --blur: 14px;
+                    }
+
+                    .uiverse .wrapper .circle.circle-5, .uiverse .wrapper .circle.circle-6 {
+                        --background: var(--c-color-3);
+                        --blur: 16px;
+                    }
+
+                    .uiverse .wrapper .circle.circle-2, .uiverse .wrapper .circle.circle-7, .uiverse .wrapper .circle.circle-8, .uiverse .wrapper .circle.circle-11, .uiverse .wrapper .circle.circle-12 {
+                        --background: var(--c-color-1);
+                        --blur: 12px;
+                    }
+
+                    .uiverse .wrapper .circle.circle-1 { --x: 0; --y: -40px; --animation: circle-1; }
+                    .uiverse .wrapper .circle.circle-2 { --x: 92px; --y: 8px; --animation: circle-2; }
+                    .uiverse .wrapper .circle.circle-3 { --x: -12px; --y: -12px; --animation: circle-3; }
+                    .uiverse .wrapper .circle.circle-4 { --x: 80px; --y: -12px; --animation: circle-4; }
+                    .uiverse .wrapper .circle.circle-5 { --x: 12px; --y: -4px; --animation: circle-5; }
+                    .uiverse .wrapper .circle.circle-6 { --x: 56px; --y: 16px; --animation: circle-6; }
+                    .uiverse .wrapper .circle.circle-7 { --x: 8px; --y: 28px; --animation: circle-7; }
+                    .uiverse .wrapper .circle.circle-8 { --x: 28px; --y: -4px; --animation: circle-8; }
+                    .uiverse .wrapper .circle.circle-9 { --x: 20px; --y: -12px; --animation: circle-9; }
+                    .uiverse .wrapper .circle.circle-10 { --x: 64px; --y: 16px; --animation: circle-10; }
+                    .uiverse .wrapper .circle.circle-11 { --x: 4px; --y: 4px; --animation: circle-11; }
+                    .uiverse .wrapper .circle.circle-12 { --blur: 14px; --x: 52px; --y: 4px; --animation: circle-12; }
+
+                    @keyframes circle-1 { 33% { transform: translate(0px, 16px) translateZ(0); } 66% { transform: translate(12px, 64px) translateZ(0); } }
+                    @keyframes circle-2 { 33% { transform: translate(80px, -10px) translateZ(0); } 66% { transform: translate(72px, -48px) translateZ(0); } }
+                    @keyframes circle-3 { 33% { transform: translate(20px, 12px) translateZ(0); } 66% { transform: translate(12px, 4px) translateZ(0); } }
+                    @keyframes circle-4 { 33% { transform: translate(76px, -12px) translateZ(0); } 66% { transform: translate(112px, -8px) translateZ(0); } }
+                    @keyframes circle-5 { 33% { transform: translate(84px, 28px) translateZ(0); } 66% { transform: translate(40px, -32px) translateZ(0); } }
+                    @keyframes circle-6 { 33% { transform: translate(28px, -16px) translateZ(0); } 66% { transform: translate(76px, -56px) translateZ(0); } }
+                    @keyframes circle-7 { 33% { transform: translate(8px, 28px) translateZ(0); } 66% { transform: translate(20px, -60px) translateZ(0); } }
+                    @keyframes circle-8 { 33% { transform: translate(32px, -4px) translateZ(0); } 66% { transform: translate(56px, -20px) translateZ(0); } }
+                    @keyframes circle-9 { 33% { transform: translate(20px, -12px) translateZ(0); } 66% { transform: translate(80px, -8px) translateZ(0); } }
+                    @keyframes circle-10 { 33% { transform: translate(68px, 20px) translateZ(0); } 66% { transform: translate(100px, 28px) translateZ(0); } }
+                    @keyframes circle-11 { 33% { transform: translate(4px, 4px) translateZ(0); } 66% { transform: translate(68px, 20px) translateZ(0); } }
+                    @keyframes circle-12 { 33% { transform: translate(56px, 0px) translateZ(0); } 66% { transform: translate(60px, -32px) translateZ(0); } }
                 </style>
                 <div class="flex items-center justify-center xl:justify-start gap-4 mb-6">
-                    <div class="flip-card-perspective w-32 h-32 md:w-44 md:h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div id="hero-logo-flip" class="flip-card-perspective w-32 h-32 md:w-44 md:h-44 cursor-pointer">
                         <div class="flip-card-inner relative w-full h-full">
                             <!-- Front -->
                             <div class="flip-card-front flex items-center justify-center">
@@ -52,12 +206,47 @@
                                 {% endif %}
                             </div>
                             <!-- Back -->
-                            <div class="flip-card-back bg-roots-black rounded-full flex items-center justify-center border-4 border-white shadow-[0_0_15px_rgba(0,0,0,0.3)]">
-                                <span class="text-white font-black text-xl md:text-3xl uppercase tracking-widest">KARIBU</span>
+                            <div class="flip-card-back bg-white rounded-full flex items-center justify-center border-4 border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden">
+                                <button class="uiverse h-full w-full">
+                                    <div class="wrapper h-full w-full flex items-center justify-center">
+                                        <div class="circle-container">
+                                            <div class="circle circle-12"></div>
+                                            <div class="circle circle-11"></div>
+                                            <div class="circle circle-10"></div>
+                                            <div class="circle circle-9"></div>
+                                            <div class="circle circle-8"></div>
+                                            <div class="circle circle-7"></div>
+                                            <div class="circle circle-6"></div>
+                                            <div class="circle circle-5"></div>
+                                            <div class="circle circle-4"></div>
+                                            <div class="circle circle-3"></div>
+                                            <div class="circle circle-2"></div>
+                                            <div class="circle circle-1"></div>
+                                        </div>
+                                        <span class="text-white font-black text-xl md:text-3xl uppercase tracking-widest relative z-20 mix-blend-overlay">KARIBU</span>
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const flipCard = document.getElementById('hero-logo-flip');
+                        if(flipCard) {
+                            setInterval(() => {
+                                // 1. Shake it first (add class)
+                                flipCard.classList.add('animate-tingiza');
+                                
+                                // 2. Wait for shake to end (500ms), then remove shake and flip
+                                setTimeout(() => {
+                                    flipCard.classList.remove('animate-tingiza');
+                                    flipCard.classList.toggle('flipped');
+                                }, 500); 
+                            }, 8000);
+                        }
+                    });
+                </script>
                 <h1
                     class="text-[clamp(2.5rem,8vw,4.5rem)] lg:text-7xl font-black uppercase leading-[0.9] mb-4 flex items-center justify-center xl:justify-start flex-wrap gap-2 text-center xl:text-left">
                     <span class="text-roots-black">Roots</span>
@@ -75,9 +264,9 @@
                 </p>
                 <div class="text-lg md:text-xl text-gray-700 font-bold leading-relaxed mb-8 max-w-xl mx-auto md:mx-0">
                     Join us as we build a people-powered economy rooted in 
-                    <a href="{% url 'land' %}" class="text-roots-red hover:text-roots-black transition-colors underline decoration-2 underline-offset-4">land</a>,
-                    <a href="{% url 'labour' %}" class="text-roots-red hover:text-roots-black transition-colors underline decoration-2 underline-offset-4">labour</a>, and 
-                    <a href="{% url 'dignity' %}" class="text-roots-red hover:text-roots-black transition-colors underline decoration-2 underline-offset-4">dignity</a>.
+                    <a href="{% url 'land' %}" class="text-roots-red hover:text-roots-black transition-colors">land</a>,
+                    <a href="{% url 'labour' %}" class="text-roots-red hover:text-roots-black transition-colors">labour</a>, and 
+                    <a href="{% url 'dignity' %}" class="text-roots-red hover:text-roots-black transition-colors">dignity</a>.
                     Kenyans must produce, not beg.
                 </div>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
