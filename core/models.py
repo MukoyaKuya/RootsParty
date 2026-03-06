@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
 from image_cropping import ImageRatioField
 from .models_splash import Splash
 
@@ -478,7 +479,7 @@ class Tribe(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     intro = models.TextField(help_text="Short drop-cap introduction")
-    content = models.TextField(help_text="Full letter content")
+    content = CKEditor5Field(help_text='Full letter content', config_name='extends')
     image = models.ImageField(upload_to='tribes/', blank=True, null=True, help_text="Featured image for the tribe page")
     cropping = ImageRatioField('image', '800x450', free_crop=True, help_text="Crop for optimal display")
     color_class = models.CharField(max_length=50, help_text="Tailwind class e.g. text-roots-green")

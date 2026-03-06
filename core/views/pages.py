@@ -1,12 +1,12 @@
 """
-Public page views: home, about, manifesto, gallery, shop, blog, counties, legal, etc.
+Public page views: home, about, manifesto, gallery, blog, resources, events, etc.
+County, legal, and tribe views are in separate modules.
 """
 import random
 import string
 
 from django.core.cache import cache
-from django.db.models import Case, When, Value, IntegerField, F
-from django.http import FileResponse
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
@@ -14,10 +14,9 @@ from django.views.decorators.cache import cache_page
 from ..models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent,
     HomeVideo, GatePass, CarouselImage, FloatingImage,
-    GalleryPost, Event, Resource, Tribe,
+    GalleryPost, Event, Resource,
 )
 
-from ..services.pdf import build_gate_pass_pdf
 from users.models import Member
 
 
@@ -191,83 +190,3 @@ def blog_detail(request, slug):
     })
 
 
-@cache_page(60 * 30)
-def counties(request):
-    all_counties = County.objects.annotate(
-        status_order=Case(
-            When(presence_status='active', then=Value(1)),
-            When(presence_status='growing', then=Value(2)),
-            When(presence_status='starting', then=Value(3)),
-            When(presence_status='planned', then=Value(4)),
-            default=Value(5),
-            output_field=IntegerField(),
-        )
-    ).order_by('status_order', '-members_count', 'name')
-
-    try:
-        page_content = PageContent.objects.get(page_name='counties')
-    except PageContent.DoesNotExist:
-        page_content = None
-
-    stats = cache.get('counties:page_stats:v1')
-    if not stats:
-        stats = {
-            'total': all_counties.count(),
-            'active': all_counties.filter(presence_status='active').count(),
-            'growing': all_counties.filter(presence_status='growing').count(),
-            'starting': all_counties.filter(presence_status='starting').count(),
-            'planned': all_counties.filter(presence_status='planned').count(),
-            'total_members': Member.objects.count(),
-        }
-        cache.set('counties:page_stats:v1', stats, 300)
-
-    return render(request, 'core/counties.html', {
-        'counties': all_counties,
-        'stats': stats,
-        'page_content': page_content,
-    })
-
-
-def county_map(request):
-    counties_data = list(County.objects.all().values('name', 'presence_status', 'members_count', 'slug'))
-    return render(request, 'core/county_map.html', {'counties_json': counties_data})
-
-
-def county_detail(request, slug):
-    county = get_object_or_404(County, slug=slug)
-    return render(request, 'core/county_detail.html', {'county': county})
-
-
-def privacy_policy(request):
-    return render(request, 'core/privacy_policy.html')
-
-
-def terms_of_service(request):
-    return render(request, 'core/terms_of_service.html')
-
-
-def cookie_policy(request):
-    return render(request, 'core/cookie_policy.html')
-
-
-def land(request):
-    return render(request, 'core/land.html')
-
-
-def labour(request):
-    return render(request, 'core/labour.html')
-
-
-def dignity(request):
-    return render(request, 'core/dignity.html')
-
-
-
-def tribes(request):
-    tribes = Tribe.objects.all().order_by('order')
-    return render(request, 'core/tribes.html', {'tribes': tribes})
-
-
-def tribe_detail(request, slug):
-    tribe = get_object_or_404(Tribe, slug=slug)
-    return render(request, 'core/tribe_detail.html', {'tribe': tribe})

@@ -383,11 +383,8 @@ class SplashAdmin(ModelAdmin):
     search_fields = ('title',)
 
 
-from django_summernote.admin import SummernoteModelAdmin
-
 @admin.register(Tribe)
-class TribeAdmin(SummernoteModelAdmin, ImageCroppingMixin, ModelAdmin):
-    summernote_fields = ('content',)
+class TribeAdmin(ImageCroppingMixin, ModelAdmin):
     list_display = ('title', 'slug', 'color_class', 'order')
     search_fields = ('title', 'intro', 'content')
     prepopulated_fields = {'slug': ('title',)}

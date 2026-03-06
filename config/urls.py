@@ -53,7 +53,6 @@ urlpatterns += [
     path('member/<uuid:uuid>/card/', user_views.download_card, name='download_card'),
     path('member/<uuid:uuid>/card/status/', user_views.check_card_status, name='check_card_status'),
     path('check-id/', user_views.check_id_number, name='check_id'),
-    path('seed-members-cloud/', user_views.seed_members_view, name='seed_members_cloud'),
     
     # Finance
     path('donate/', finance_views.donate, name='donate'),
@@ -98,7 +97,6 @@ urlpatterns += [
     
     # 3rd Party
     path("ckeditor5/", include('django_ckeditor_5.urls')),
-    path('summernote/', include('django_summernote.urls')),
     
     # API with versioning
     path('api/v1/', include('core.api.urls')),
@@ -106,8 +104,9 @@ urlpatterns += [
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
 
-# API Documentation
+# API Documentation (staff-only to avoid exposing API structure)
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -115,15 +114,18 @@ from drf_spectacular.views import (
 )
 
 urlpatterns += [
-    # API Documentation
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    # API Documentation - staff-only to reduce information disclosure
+    path('api/schema/', staff_member_required(SpectacularAPIView.as_view()), name='schema'),
+    path('api/docs/', staff_member_required(SpectacularSwaggerView.as_view(url_name='schema')), name='swagger-ui'),
+    path('api/redoc/', staff_member_required(SpectacularRedocView.as_view(url_name='schema')), name='redoc'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [
+        path('seed-members-cloud/', user_views.seed_members_view, name='seed_members_cloud'),
+    ]
 elif not os.environ.get('GS_BUCKET_NAME'):
     # Serve media files on Cloud Run manually ONLY if not using GCS
     urlpatterns += [

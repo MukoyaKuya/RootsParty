@@ -98,6 +98,14 @@ python manage.py createsuperuser
 
 Follow the prompts to set a username, email, and password.
 
+### 7.1 Running Tests (Optional)
+
+For CI or scripted test runs:
+
+- **SQLite (default):** `python manage.py test` uses an in-memory SQLite database.
+- **PostgreSQL (Neon/Cloud):** Use `--keepdb` to reuse the existing database and avoid "database already exists" prompts: `python manage.py test --keepdb`
+- To force SQLite for tests when `DATABASE_URL` is set, use `DATABASE_URL=` (empty) in the test environment.
+
 ### 8. Run the Server
 
 ```bash

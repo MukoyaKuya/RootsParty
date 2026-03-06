@@ -108,13 +108,14 @@ class AspirantPDFTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'aspirants/profile_processing.html')
 
-    def test_download_aspirants_list_pdf_staff_returns_processing(self):
-        """Staff user gets report processing page initially."""
+    def test_download_aspirants_list_pdf_staff_returns_pdf(self):
+        """Staff user gets PDF report directly (sync generation)."""
         self.client.login(username='staffuser', password='testpass123')
         url = reverse('aspirants:download_aspirants_list_pdf')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'aspirants/report_processing.html')
+        self.assertEqual(response.get('Content-Type', ''), 'application/pdf')
+        self.assertIn('attachment', response.get('Content-Disposition', ''))
 
     def test_download_aspirants_list_pdf_anonymous_redirects(self):
         """Anonymous user cannot access list PDF."""

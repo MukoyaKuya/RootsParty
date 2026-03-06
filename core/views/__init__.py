@@ -17,18 +17,17 @@ from .pages import (
     cannabis_country_detail,
     blog_list,
     blog_detail,
-    counties,
-    county_map,
-    county_detail,
+)
+from .county_views import counties, county_map, county_detail
+from .legal_views import (
     privacy_policy,
     terms_of_service,
     cookie_policy,
     land,
     labour,
     dignity,
-    tribes,
-    tribe_detail,
 )
+from .tribe_views import tribes, tribe_detail
 from .dashboard_views import dashboard, dashboard_callback
 from .contact_views import contact, subscribe
 

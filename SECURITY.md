@@ -45,11 +45,19 @@ This document describes how to keep the Roots Party app secure in development an
 
 - Used in production for media/file storage.
 - Set via environment or Secret Manager; keep the bucket name and any associated credentials out of the repo.
+- **When `GS_BUCKET_NAME` is set:** Media files are stored in and served from GCS. `MEDIA_URL` is set to the bucket URL (e.g. `https://storage.googleapis.com/<bucket>/`). The app does **not** serve `/media/` paths in this mode—all media links must use `{{ object.photo.url }}` or the full `MEDIA_URL`. Do not use hardcoded `/media/` paths in templates when using GCS.
 
-### REDIS_URL (optional)
+### REDIS_URL (optional but recommended for production)
 
-- Used for cache and sessions in production.
+- Used for cache, sessions, and **rate limiting** in production.
 - Set via environment (e.g. Cloud Memorystore, Upstash). Leave unset for local dev (in-memory cache is used).
+- **Rate limiting requires Redis.** Without Redis, `RATELIMIT_ENABLE` is disabled (DummyCache does not support atomic operations). Set `REDIS_URL` in production so rate limits on join, donate, aspirant registration, contact, and newsletter are enforced.
+
+### Silenced system checks (django-ratelimit)
+
+- `E003`: Silenced when using DummyCache (no Redis)—rate limiting is disabled in that case.
+- `W001`: Silenced for flexible cache configuration; rate limiting works when Redis is configured.
+- Ensure `REDIS_URL` is set in production for rate limiting to function.
 
 ---
 

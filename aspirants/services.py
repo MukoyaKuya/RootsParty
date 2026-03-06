@@ -220,9 +220,12 @@ def _report_jurisdiction(asp):
     return ""
 
 
-def build_aspirants_report_pdf():
+def build_aspirants_report_pdf(role='all'):
     """
-    Build the full aspirants registration report PDF (all applications grouped by position).
+    Build the aspirants registration report PDF.
+
+    Args:
+        role: Filter by position (e.g. 'mp', 'governor'). Use 'all' for full report.
 
     Returns:
         io.BytesIO buffer containing the PDF (positioned at 0).
@@ -282,6 +285,8 @@ def build_aspirants_report_pdf():
     elements.append(PageBreak())
 
     position_order = ['president', 'governor', 'senator', 'woman_rep', 'mp', 'mca']
+    if role != 'all' and role in position_order:
+        position_order = [role]
     position_labels = dict(AspirantRegistration.POSITION_CHOICES)
 
     for pos_key in position_order:

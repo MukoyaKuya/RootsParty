@@ -30,21 +30,10 @@ def dashboard(request):
 
 def dashboard_callback(request, context):
     """Callback to provide custom context to the Unfold admin dashboard."""
-    from ..models import ContactMessage
-    
-    # Use unified stats from cache_utils
-    stats = get_dashboard_stats()
-    
-    # Unread messages (not currently in get_dashboard_stats)
-    unread_messages = ContactMessage.objects.filter(is_read=False).count()
+    from ..cache_utils import get_dashboard_kpi_for_admin
 
     context.update({
         "custom_title": "Roots Party Control Panel",
-        "kpi": [
-            {"title": "Total Members", "metric": f"{stats['total_members'] + stats['total_coordinators']:,}", "footer": "Registered members", "icon": "groups"},
-            {"title": "Total Donations", "metric": f"KES {stats['total_donations_amount']:,.0f}", "footer": "Completed transactions", "icon": "payments"},
-            {"title": "Upcoming Events", "metric": stats['upcoming_events_count'], "footer": "Scheduled rallies & meetings", "icon": "event"},
-            {"title": "Unread Messages", "metric": unread_messages, "footer": "Inbox", "icon": "mark_email_unread"},
-        ]
+        "kpi": get_dashboard_kpi_for_admin(),
     })
     return context

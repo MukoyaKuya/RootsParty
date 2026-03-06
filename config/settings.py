@@ -90,7 +90,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'image_cropping',
     'django_ckeditor_5',
-    'django_summernote',
+    'django_recaptcha',
 
     # Local
     'core',
@@ -192,6 +192,11 @@ else:
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
+
+# Ratelimit: DummyCache does not support atomic operations required for rate limiting.
+# Disable rate limiting when using DummyCache to avoid misleading behavior.
+if CACHES['default']['BACKEND'] == 'django.core.cache.backends.dummy.DummyCache':
+    RATELIMIT_ENABLE = False
 
 # Celery Configuration
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
@@ -431,6 +436,11 @@ CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'info@rootsparty.co.ke')
 
 # Location APIs
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
+
+# reCAPTCHA (optional - set RECAPTCHA_PUBLIC_KEY and RECAPTCHA_PRIVATE_KEY for join/coordinator forms)
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
+RECAPTCHA_TESTING = os.environ.get('RECAPTCHA_TESTING', 'False') == 'True'
 
 # Unfold Admin Configuration
 from django.urls import reverse_lazy

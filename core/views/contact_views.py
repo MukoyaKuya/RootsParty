@@ -7,11 +7,13 @@ from django.core.mail import send_mail
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import render
 from django.utils import timezone
+from django_ratelimit.decorators import ratelimit
 
 from ..forms import ContactForm, NewsletterForm
 from ..models import ContactMessage, NewsletterSubscriber
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def contact(request):
     """Contact form view."""
     success = False
@@ -79,6 +81,7 @@ View all messages at: /admin/core/contactmessage/
     return render(request, 'core/contact.html', {'form': form, 'success': success})
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def subscribe(request):
     """Newsletter subscription view (HTMX)."""
     if request.method == 'POST':

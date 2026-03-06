@@ -13,17 +13,9 @@ from .forms import AspirantRegistrationForm
 from .services import build_aspirant_profile_pdf, build_aspirants_report_pdf
 from core.models import County, Constituency
 
-@ratelimit(key='ip', rate='5/h', method='POST', block=False)
+@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def aspirant_registration(request, draft_token=None):
     """View for aspirant registration with rate limiting and draft support"""
-    # Check if rate limited
-    was_limited = getattr(request, 'limited', False)
-    if was_limited:
-        messages.error(request, "Too many submission attempts. Please try again later.")
-        return render(request, 'aspirants/aspirant_registration.html', {
-            'form': AspirantRegistrationForm(),
-            'rate_limited': True
-        })
     
     # Check if resuming a draft
     instance = None
@@ -211,27 +203,9 @@ def check_aspirant_profile_status(request, uuid):
 
 @staff_member_required
 def download_aspirants_list_pdf(request):
-    """Download PDF report of all aspirants"""
+    """Download PDF report of aspirant applications (AspirantRegistration) filtered by position."""
     role = request.GET.get('role', 'all')
-    aspirants = Aspirant.objects.filter(is_active=True)
-    
-    if role != 'all':
-        aspirants = aspirants.filter(role=role)
-    else:
-        # Define priority for roles
-        role_priority = Case(
-            When(role='president', then=Value(1)),
-            When(role='governor', then=Value(2)),
-            When(role='senator', then=Value(3)),
-            When(role='woman_rep', then=Value(4)),
-            When(role='mp', then=Value(5)),
-            When(role='mca', then=Value(6)),
-            default=Value(7),
-            output_field=IntegerField(),
-        )
-        aspirants = aspirants.order_by(role_priority, 'name')
-        
-    buffer = build_aspirants_report_pdf(aspirants, role)
+    buffer = build_aspirants_report_pdf(role=role)
     
     filename = f'aspirants_list_{role}_{timezone.now().strftime("%Y%m%d")}.pdf'
     return FileResponse(buffer, as_attachment=True, filename=filename)

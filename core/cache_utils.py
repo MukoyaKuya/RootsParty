@@ -88,10 +88,10 @@ def get_cached_county_stats(timeout: int = 600) -> List[Dict[str, Any]]:
         from core.models import County
         result = list(
             County.objects.annotate(
-                aspirant_count=Count('aspirantregistration_set'),
-                verified_count=Count('aspirantregistration_set', filter=Q(aspirantregistration_set__is_verified=True))
+                aspirant_count=Count('aspirantregistration'),
+                verified_count=Count('aspirantregistration', filter=Q(aspirantregistration__is_verified=True))
             ).values(
-                'id', 'name', 'slug', 'capital',
+                'id', 'name', 'slug',
                 'aspirant_count', 'verified_count'
             ).order_by('name')
         )
@@ -232,7 +232,7 @@ def get_cached_leaders(timeout: int = 1800) -> List[Dict[str, Any]]:
         from core.models import Leader
         result = list(
             Leader.objects.values(
-                'id', 'name', 'slug', 'position', 'bio',
+                'id', 'name', 'slug', 'role', 'bio',
                 'image', 'twitter_handle', 'order'
             ).order_by('-order')
         )
@@ -241,64 +241,112 @@ def get_cached_leaders(timeout: int = 1800) -> List[Dict[str, Any]]:
     return result
 
 
+# Concrete cache keys for granular invalidation when delete_pattern is unavailable
+# (e.g. LocMemCache, DummyCache). Redis backends use delete_pattern instead.
+_ASPIRANT_CACHE_KEYS = [
+    'aspirants:all:v1',
+    'aspirants:verified:v1',
+    'counties:stats:v1',
+    'counties:page_stats:v1',
+    'dashboard:stats:v1',
+    'home:stats:v1',
+]
+_CONTENT_CACHE_KEYS = [
+    'manifesto:items:v1',
+    'leaders:all:v1',
+    'blog:posts:latest:10:v1',
+    'blog:posts:latest:5:v1',
+    'blog:posts:latest:3:v1',
+]
+_HOME_CACHE_KEYS = ['home:stats:v1']
+_COUNTY_CACHE_KEYS = [
+    'counties:stats:v1',
+    'counties:page_stats:v1',
+    'dashboard:stats:v1',
+    'home:stats:v1',
+]
+
+
+def _delete_by_pattern_or_keys(patterns: list, fallback_keys: list) -> None:
+    """
+    Delete cache entries by pattern (Redis) or by concrete keys (fallback).
+    Avoids full cache.clear() which would wipe session/other app data.
+    """
+    try:
+        for pattern in patterns:
+            cache.delete_pattern(pattern)
+    except AttributeError:
+        for key in fallback_keys:
+            cache.delete(key)
+
+
 def invalidate_aspirant_cache():
     """Clear all aspirant-related caches when data changes."""
-    patterns = [
-        'aspirants:*',
-        'counties:stats:*',
-        'counties:page_stats:*',
-        'dashboard:stats:*',
-        'home:stats:*',
-    ]
-    for pattern in patterns:
-        try:
-            cache.delete_pattern(pattern)
-        except AttributeError:
-            # Fallback for non-Redis cache backends
-            cache.clear()
-            break
+    _delete_by_pattern_or_keys(
+        [
+            'aspirants:*',
+            'counties:stats:*',
+            'counties:page_stats:*',
+            'dashboard:stats:*',
+            'home:stats:*',
+        ],
+        _ASPIRANT_CACHE_KEYS,
+    )
 
 
 def invalidate_content_cache():
     """Clear content-related caches (blog, manifesto, etc.)."""
-    patterns = [
-        'blog:*',
-        'manifesto:*',
-        'leaders:*',
-    ]
-    for pattern in patterns:
-        try:
-            cache.delete_pattern(pattern)
-        except AttributeError:
-            cache.clear()
-            break
+    _delete_by_pattern_or_keys(
+        ['blog:*', 'manifesto:*', 'leaders:*'],
+        _CONTENT_CACHE_KEYS,
+    )
 
 
 def invalidate_home_cache():
     """Clear homepage and stats-related caches."""
     try:
-        # Clear specific stats
         cache.delete('home:stats:v1')
-        
-        # Clear the cached homepage if using cache_page
-        # Note: In production we use roots_party:* prefix
         cache.delete_pattern('*views.decorators.cache.cache_page*')
         cache.delete_pattern('*views.decorators.cache.cache_header*')
-        
     except AttributeError:
-        cache.clear()
+        for key in _HOME_CACHE_KEYS:
+            cache.delete(key)
 
 
 def invalidate_county_cache():
     """Clear county-related caches."""
-    try:
-        cache.delete_pattern('counties:*')
-        cache.delete_pattern('dashboard:stats:*')
-        cache.delete_pattern('home:stats:*')
-    except AttributeError:
-        cache.clear()
+    _delete_by_pattern_or_keys(
+        ['counties:*', 'dashboard:stats:*', 'home:stats:*'],
+        _COUNTY_CACHE_KEYS,
+    )
 
 
+
+
+def get_dashboard_kpi_for_admin(stats: Optional[Dict[str, Any]] = None, unread_messages: Optional[int] = None) -> List[Dict[str, Any]]:
+    """
+    Build the KPI list for Unfold admin dashboard.
+    Centralizes the KPI formatting used by dashboard_callback.
+
+    Args:
+        stats: Result from get_dashboard_stats(); fetched if None
+        unread_messages: Count of unread ContactMessage; fetched if None
+
+    Returns:
+        List of KPI dicts with keys: title, metric, footer, icon
+    """
+    if stats is None:
+        stats = get_dashboard_stats()
+    if unread_messages is None:
+        from core.models import ContactMessage
+        unread_messages = ContactMessage.objects.filter(is_read=False).count()
+
+    return [
+        {"title": "Total Members", "metric": f"{stats['total_members'] + stats['total_coordinators']:,}", "footer": "Registered members", "icon": "groups"},
+        {"title": "Total Donations", "metric": f"KES {stats['total_donations_amount']:,.0f}", "footer": "Completed transactions", "icon": "payments"},
+        {"title": "Upcoming Events", "metric": stats['upcoming_events_count'], "footer": "Scheduled rallies & meetings", "icon": "event"},
+        {"title": "Unread Messages", "metric": unread_messages, "footer": "Inbox", "icon": "mark_email_unread"},
+    ]
 
 
 def get_cache_stats() -> Dict[str, Any]:

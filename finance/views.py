@@ -1,8 +1,20 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django_ratelimit.decorators import ratelimit
+
 from .services import MpesaService
 from .models import Donation
 
+
+def _get_client_ip(group, request):
+    """Extract client IP (Cloud Run uses X-Forwarded-For)."""
+    xff = request.META.get('HTTP_X_FORWARDED_FOR')
+    if xff:
+        return xff.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR', '127.0.0.1')
+
+
+@ratelimit(key=_get_client_ip, rate='10/m', block=True)
 def donate(request):
     if request.method == "POST":
         phone = request.POST.get('phone')

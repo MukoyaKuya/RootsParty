@@ -6,13 +6,13 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError, transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
 
 # Local imports
-from .forms import JoinForm
+from .forms import JoinForm, CoordinatorRecaptchaForm
 from .models import Member
 from core.models import County
 
@@ -64,8 +64,18 @@ def join(request):
         'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
     })
 
+@ratelimit(key=get_client_ip, rate='5/m', block=True)
 def join_coordinator(request):
     if request.method == "POST":
+        recaptcha_form = CoordinatorRecaptchaForm(request.POST)
+        if not recaptcha_form.is_valid():
+            messages.error(request, 'Security verification failed. Please try again.')
+            counties = County.objects.all().order_by('name')
+            return render(request, 'users/join_coordinator.html', {
+                'counties': counties,
+                'recaptcha_form': recaptcha_form,
+                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+            })
         # Personal Info
         surname = request.POST.get('surname')
         other_names = request.POST.get('other_names')
@@ -91,7 +101,11 @@ def join_coordinator(request):
         if not id_number or not phone or not surname:
             messages.error(request, 'Please fill all required fields')
             counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {'counties': counties})
+            return render(request, 'users/join_coordinator.html', {
+                'counties': counties,
+                'recaptcha_form': CoordinatorRecaptchaForm(),
+                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+            })
             
         try:
             # Get County object if selected
@@ -127,23 +141,34 @@ def join_coordinator(request):
         except IntegrityError:
             messages.error(request, 'Comrade with this ID Number already registered!')
             counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {'counties': counties})
+            return render(request, 'users/join_coordinator.html', {
+                'counties': counties,
+                'recaptcha_form': CoordinatorRecaptchaForm(),
+                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+            })
         except Exception as e:
             messages.error(request, f'An error occurred: {str(e)}')
             counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {'counties': counties})
+            return render(request, 'users/join_coordinator.html', {
+                'counties': counties,
+                'recaptcha_form': CoordinatorRecaptchaForm(),
+                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+            })
 
     # GET request
     counties = County.objects.all().order_by('name')
     return render(request, 'users/join_coordinator.html', {
         'counties': counties,
+        'recaptcha_form': CoordinatorRecaptchaForm(),
         'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
     })
 
+@ratelimit(key=get_client_ip, rate='30/m', block=True)
 def check_id_number(request):
-    id_number = request.GET.get('id_number')
-    if id_number and Member.objects.filter(id_number=id_number).exists():
-         return HttpResponse('<span class="text-roots-red font-bold uppercase block mt-1 bg-roots-black text-white p-2">⚠️ Error: Comrade already registered!</span>')
+    """
+    Check if ID is already registered. Returns same empty response for all cases
+    to avoid ID enumeration; duplicate check is performed on form submit.
+    """
     return HttpResponse('')
 
 @user_passes_test(lambda u: u.is_superuser)

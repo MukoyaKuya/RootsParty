@@ -50,7 +50,6 @@ django-recaptcha==4.1.0
 django-redis==5.4.0
 django-silk==5.4.3
 django-storages==1.14.6
-django-summernote==0.8.20.0
 django-tailwind==4.4.2
 django-unfold==0.76.0
 django_compressor==4.6.0

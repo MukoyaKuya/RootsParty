@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from .models import Member
 from core.models import County
@@ -8,9 +9,30 @@ from core.utils.validators import (
     validate_email
 )
 
+
+def get_recaptcha_field():
+    """Return ReCaptchaField when keys are configured; bypass when testing or keys missing."""
+    # Use bypass in tests (RECAPTCHA_TESTING) or when keys not configured
+    if getattr(settings, 'RECAPTCHA_TESTING', False):
+        return forms.CharField(required=False, widget=forms.HiddenInput(), initial='bypass')
+    if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None):
+        try:
+            from django_recaptcha.fields import ReCaptchaField
+            return ReCaptchaField()
+        except ImportError:
+            pass
+    return forms.CharField(required=False, widget=forms.HiddenInput(), initial='bypass')
+
+
+class CoordinatorRecaptchaForm(forms.Form):
+    """Minimal form for coordinator reCAPTCHA validation."""
+    recaptcha = get_recaptcha_field()
+
+
 class JoinForm(forms.ModelForm):
     # Security Fields
-    confirm_email_hidden = forms.CharField(required=False, widget=forms.HiddenInput, label="Confirm Email") # Honeypot
+    confirm_email_hidden = forms.CharField(required=False, widget=forms.HiddenInput, label="Confirm Email")  # Honeypot
+    recaptcha = get_recaptcha_field()
 
     # Validation Fields
     surname = forms.CharField(required=True, error_messages={'required': 'Surname is required'})
