@@ -8,27 +8,7 @@
         <div class="grid xl:grid-cols-2 gap-8 md:gap-12 items-start">
             <div class="text-center xl:text-left order-1 md:order-1">
                 <style>
-                    /* Flip Card Utils */
-                    .flip-card-perspective {
-                        perspective: 1000px;
-                    }
-                    .flip-card-inner {
-                        transition: transform 0.8s;
-                        transform-style: preserve-3d;
-                    }
-                    .flip-card-perspective.flipped .flip-card-inner {
-                        transform: rotateY(180deg);
-                    }
-                    .flip-card-front, .flip-card-back {
-                        position: absolute;
-                        width: 100%;
-                        height: 100%;
-                        -webkit-backface-visibility: hidden; /* Safari */
-                        backface-visibility: hidden;
-                    }
-                    .flip-card-back {
-                        transform: rotateY(180deg);
-                    }
+
                     /* Slow Palpate Animation */
                     @keyframes palpate-slow {
                         0%, 100% { transform: scale(1); }
@@ -193,60 +173,17 @@
                     @keyframes circle-12 { 33% { transform: translate(56px, 0px) translateZ(0); } 66% { transform: translate(60px, -32px) translateZ(0); } }
                 </style>
                 <div class="flex items-center justify-center xl:justify-start gap-4 mb-6">
-                    <div id="hero-logo-flip" class="flip-card-perspective w-32 h-32 md:w-44 md:h-44 cursor-pointer">
-                        <div class="flip-card-inner relative w-full h-full">
-                            <!-- Front -->
-                            <div class="flip-card-front flex items-center justify-center">
-                                {% if site_settings.logo %}
-                                <img src="{{ site_settings.logo.url }}" alt="Roots Party Logo"
-                                    class="w-full h-full object-contain drop-shadow-lg animate-palpate-slow">
-                                {% else %}
-                                <img src="/static/images/logo.png" alt="Roots Party Logo"
-                                    class="w-full h-full object-contain drop-shadow-lg animate-palpate-slow">
-                                {% endif %}
-                            </div>
-                            <!-- Back -->
-                            <div class="flip-card-back bg-white rounded-full flex items-center justify-center border-4 border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden">
-                                <button class="uiverse h-full w-full">
-                                    <div class="wrapper h-full w-full flex items-center justify-center">
-                                        <div class="circle-container">
-                                            <div class="circle circle-12"></div>
-                                            <div class="circle circle-11"></div>
-                                            <div class="circle circle-10"></div>
-                                            <div class="circle circle-9"></div>
-                                            <div class="circle circle-8"></div>
-                                            <div class="circle circle-7"></div>
-                                            <div class="circle circle-6"></div>
-                                            <div class="circle circle-5"></div>
-                                            <div class="circle circle-4"></div>
-                                            <div class="circle circle-3"></div>
-                                            <div class="circle circle-2"></div>
-                                            <div class="circle circle-1"></div>
-                                        </div>
-                                        <span class="text-white font-black text-xl md:text-3xl uppercase tracking-widest relative z-20 mix-blend-overlay">KARIBU</span>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
+                    <div class="w-32 h-32 md:w-44 md:h-44">
+                        {% if site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="Roots Party Logo"
+                            class="w-full h-full object-contain drop-shadow-lg animate-palpate-slow">
+                        {% else %}
+                        <img src="/static/images/logo.png" alt="Roots Party Logo"
+                            class="w-full h-full object-contain drop-shadow-lg animate-palpate-slow">
+                        {% endif %}
                     </div>
                 </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const flipCard = document.getElementById('hero-logo-flip');
-                        if(flipCard) {
-                            setInterval(() => {
-                                // 1. Shake it first (add class)
-                                flipCard.classList.add('animate-tingiza');
-                                
-                                // 2. Wait for shake to end (500ms), then remove shake and flip
-                                setTimeout(() => {
-                                    flipCard.classList.remove('animate-tingiza');
-                                    flipCard.classList.toggle('flipped');
-                                }, 500); 
-                            }, 8000);
-                        }
-                    });
-                </script>
+
                 <h1
                     class="text-[clamp(2.5rem,8vw,4.5rem)] lg:text-7xl font-black uppercase leading-[0.9] mb-4 flex items-center justify-center xl:justify-start flex-wrap gap-2 text-center xl:text-left">
                     <span class="text-roots-black">Roots</span>
