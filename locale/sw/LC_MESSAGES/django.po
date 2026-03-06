@@ -90,7 +90,7 @@ msgstr ""
 msgid "Mobile Number"
 msgstr ""
 
-msgid "Our 11 Point Manifesto"
+msgid "Our 10 Point Manifesto"
 msgstr ""
 
 msgid "The Revolution Is Here"
