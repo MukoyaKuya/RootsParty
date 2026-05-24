@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load sanitize_extras %}
 {% load static cropping thumbnail %}
 
 {% block title %}{{ tribe.title }} - Letters from Wajackoyah{% endblock %}
@@ -80,7 +81,7 @@
 
                 <!-- Body Text -->
                 <article class="prose prose-lg md:prose-xl max-w-none prose-headings:font-playfair prose-headings:font-bold prose-headings:text-gray-900 prose-p:font-typewriter prose-p:text-gray-900 prose-p:leading-loose prose-blockquote:font-playfair prose-blockquote:not-italic prose-blockquote:border-roots-red prose-strong:text-roots-black">
-                    {{ tribe.content|safe }}
+                    {{ tribe.content|sanitize_html }}
                 </article>
 
                 <!-- Signature Footer -->

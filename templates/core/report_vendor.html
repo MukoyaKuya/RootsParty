@@ -27,6 +27,7 @@
 
             <form method="post" class="space-y-8">
                 {% csrf_token %}
+                {{ form.website }}
                 
                 <div class="space-y-2">
                     <label class="font-black uppercase tracking-widest text-sm text-gray-500">Issue Type</label>

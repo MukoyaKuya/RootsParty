@@ -1,5 +1,6 @@
 # Standard library imports
 import random
+import logging
 from datetime import datetime
 
 # Django imports
@@ -12,9 +13,11 @@ from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
 
 # Local imports
-from .forms import JoinForm, CoordinatorRecaptchaForm
+from .forms import JoinForm, CoordinatorRecaptchaForm, CoordinatorApplicationForm
 from .models import Member
 from core.models import County
+
+logger = logging.getLogger(__name__)
 
 def get_client_ip(group, request):
     """
@@ -46,9 +49,10 @@ def join(request):
                 
                 request.session['new_member_id'] = member.id
                 return redirect('join_success')
-            except Exception as e:
+            except Exception:
                 # Should rarely happen given form validation check for uniqueness
-                messages.error(request, f'An error occurred: {str(e)}')
+                logger.exception("Member registration failed")
+                messages.error(request, 'An error occurred while saving your registration. Please try again.')
         else:
              # Form errors will be in form.errors
              for field, errors in form.errors.items():
@@ -67,99 +71,30 @@ def join(request):
 @ratelimit(key=get_client_ip, rate='5/m', block=True)
 def join_coordinator(request):
     if request.method == "POST":
-        recaptcha_form = CoordinatorRecaptchaForm(request.POST)
-        if not recaptcha_form.is_valid():
-            messages.error(request, 'Security verification failed. Please try again.')
-            counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {
-                'counties': counties,
-                'recaptcha_form': recaptcha_form,
-                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
-            })
-        # Personal Info
-        surname = request.POST.get('surname')
-        other_names = request.POST.get('other_names')
-        full_name = f"{surname} {other_names}".strip()
-        id_number = request.POST.get('id_number')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        date_of_birth = request.POST.get('date_of_birth')
-        
-        # Demographics
-        occupation = request.POST.get('occupation')
-        ethnicity = request.POST.get('ethnicity')
-        sex = request.POST.get('sex')
-        special_interest = request.POST.get('special_interest')
-        
-        # Location
-        county_id = request.POST.get('county')
-        constituency = request.POST.get('constituency')
-        ward = request.POST.get('ward')
-        polling_center = request.POST.get('polling_center')
+        form = CoordinatorApplicationForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    member = form.save()
+                request.session['new_member_id'] = member.id
+                return redirect('join_success')
+            except IntegrityError:
+                messages.error(request, 'Comrade with this ID Number already registered!')
+            except Exception:
+                logger.exception("Coordinator application failed")
+                messages.error(request, 'An error occurred while saving your application. Please try again.')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = CoordinatorApplicationForm()
 
-        # Basic validation
-        if not id_number or not phone or not surname:
-            messages.error(request, 'Please fill all required fields')
-            counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {
-                'counties': counties,
-                'recaptcha_form': CoordinatorRecaptchaForm(),
-                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
-            })
-            
-        try:
-            # Get County object if selected
-            county_obj = None
-            if county_id:
-                try:
-                    county_obj = County.objects.get(id=county_id)
-                except County.DoesNotExist:
-                    pass
-
-            with transaction.atomic():
-                member = Member.objects.create(
-                    full_name=full_name,
-                    surname=surname,
-                    other_names=other_names,
-                    id_number=id_number,
-                    phone_number=phone,
-                    email=email,
-                    date_of_birth=date_of_birth if date_of_birth else None,
-                    occupation=occupation,
-                    ethnicity=ethnicity,
-                    sex=sex,
-                    special_interest=special_interest,
-                    county=county_obj,
-                    constituency=constituency,
-                    ward=ward,
-                    polling_center=polling_center,
-                    is_coordinator_applicant=True  # Mark as coordinator applicant
-                )
-            # Store member ID in session for the success page
-            request.session['new_member_id'] = member.id
-            return redirect('join_success')
-        except IntegrityError:
-            messages.error(request, 'Comrade with this ID Number already registered!')
-            counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {
-                'counties': counties,
-                'recaptcha_form': CoordinatorRecaptchaForm(),
-                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
-            })
-        except Exception as e:
-            messages.error(request, f'An error occurred: {str(e)}')
-            counties = County.objects.all().order_by('name')
-            return render(request, 'users/join_coordinator.html', {
-                'counties': counties,
-                'recaptcha_form': CoordinatorRecaptchaForm(),
-                'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
-            })
-
-    # GET request
     counties = County.objects.all().order_by('name')
     return render(request, 'users/join_coordinator.html', {
         'counties': counties,
-        'recaptcha_form': CoordinatorRecaptchaForm(),
+        'form': form,
+        'recaptcha_form': form,
         'google_maps_api_key': getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
     })
 
@@ -184,8 +119,9 @@ def seed_members_view(request):
             <p>Check the admin panel or your Celery worker logs for progress.</p>
             <a href="/">Back to HQ</a>
         """)
-    except Exception as e:
-        return HttpResponse(f"Error triggering seeding: {str(e)}")
+    except Exception:
+        logger.exception("Member seeding failed to start")
+        return HttpResponse("Error triggering seeding.", status=500)
 
 def join_success(request):
     member_id = request.session.get('new_member_id')

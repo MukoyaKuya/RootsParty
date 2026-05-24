@@ -36,6 +36,7 @@
 
                 <form method="post" class="space-y-12">
                     {% csrf_token %}
+                    {{ form.website }}
                     
                     <!-- Section 1: Contact Information -->
                     <div class="relative group">
@@ -270,7 +271,7 @@
 <script>
     // Initialize Lucide
     document.addEventListener('DOMContentLoaded', () => {
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     });
 
     const MAX_CATEGORIES = 4;

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Roots Party</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20260523-2">
+</head>
+<body class="min-h-screen bg-roots-white text-roots-black grid-bg flex items-center justify-center p-6">
+    <main class="max-w-xl w-full border-8 border-roots-black bg-white p-8 shadow-[12px_12px_0px_0px_#E60000]">
+        <p class="text-sm font-black uppercase tracking-[0.3em] text-roots-red mb-4">Offline Mode</p>
+        <h1 class="text-5xl md:text-7xl font-black uppercase leading-none mb-6">You are offline</h1>
+        <p class="text-xl font-bold leading-tight mb-8">
+            The app shell is cached, but this page or one of its live services needs an internet connection.
+        </p>
+        <a href="/" class="inline-flex items-center justify-center bg-roots-black text-white px-6 py-4 border-4 border-roots-black font-black uppercase hover:bg-roots-red transition-colors">
+            Back Home
+        </a>
+    </main>
+</body>
+</html>

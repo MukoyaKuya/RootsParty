@@ -74,9 +74,9 @@ class SiteSettings(models.Model):
     
     # Carousel Settings
     carousel_duration = models.IntegerField(
-        default=8000,
+        default=3000,
         validators=[MinValueValidator(2000)],
-        help_text="Carousel image duration in milliseconds (default: 8000 = 8 seconds). Minimum: 2000ms (2 seconds)"
+        help_text="Carousel image duration in milliseconds (default: 3000 = 3 seconds). Minimum: 2000ms (2 seconds)"
     )
     
     # Meta Information

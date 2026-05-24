@@ -1,7 +1,19 @@
 from django import forms
 from .models import VendorReport, VendorApplication
+from core.utils.validators import validate_email, validate_kenyan_phone_number
+
+
+def _clean_short_text(value, field_name, max_words=20):
+    value = (value or '').strip()
+    if any(token in value.lower() for token in ('http://', 'https://', 'www.', '<script')):
+        raise forms.ValidationError(f'{field_name} contains unsupported content.')
+    if len(value.split()) > max_words:
+        raise forms.ValidationError(f'{field_name} is too long.')
+    return value
 
 class VendorReportForm(forms.ModelForm):
+    website = forms.CharField(required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = VendorReport
         fields = ['issue_type', 'description', 'email']
@@ -20,8 +32,29 @@ class VendorReportForm(forms.ModelForm):
             }),
         }
 
+    def clean_website(self):
+        if self.cleaned_data.get('website'):
+            raise forms.ValidationError('Spam detected.')
+        return ''
+
+    def clean_description(self):
+        description = (self.cleaned_data.get('description') or '').strip()
+        if len(description) < 20:
+            raise forms.ValidationError('Please provide at least 20 characters.')
+        if len(description) > 2000:
+            raise forms.ValidationError('Description cannot exceed 2000 characters.')
+        return description
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            return validate_email(email)
+        return email
+
 
 class VendorApplicationForm(forms.ModelForm):
+    website = forms.CharField(required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = VendorApplication
         fields = [
@@ -77,3 +110,36 @@ class VendorApplicationForm(forms.ModelForm):
                 'placeholder': 'INSTAGRAM, TWITTER, OR WEBSITE LINKS'
             }),
         }
+
+    def clean_website(self):
+        if self.cleaned_data.get('website'):
+            raise forms.ValidationError('Spam detected.')
+        return ''
+
+    def clean_full_name(self):
+        return _clean_short_text(self.cleaned_data.get('full_name'), 'Full name', max_words=6).title()
+
+    def clean_business_name(self):
+        return _clean_short_text(self.cleaned_data.get('business_name'), 'Business name', max_words=8)
+
+    def clean_email(self):
+        return validate_email(self.cleaned_data.get('email'))
+
+    def clean_phone_number(self):
+        return validate_kenyan_phone_number(self.cleaned_data.get('phone_number'))
+
+    def clean_product_categories(self):
+        categories = [item.strip() for item in (self.cleaned_data.get('product_categories') or '').split(',') if item.strip()]
+        if not categories:
+            raise forms.ValidationError('Select at least one product category.')
+        if len(categories) > 4:
+            raise forms.ValidationError('Select no more than 4 product categories.')
+        return ', '.join(categories)
+
+    def clean_business_description(self):
+        description = (self.cleaned_data.get('business_description') or '').strip()
+        if len(description) < 30:
+            raise forms.ValidationError('Business description must be at least 30 characters.')
+        if len(description) > 2000:
+            raise forms.ValidationError('Business description cannot exceed 2000 characters.')
+        return description

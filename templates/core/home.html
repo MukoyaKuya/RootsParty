@@ -16,7 +16,7 @@
                 We believe that
             </h2>
             <p class="text-center font-bold text-xl uppercase tracking-widest text-black">
-                Bangi ya hemp will unlock glorius potential
+                Bangi ya hemp will unlock glorious potential
             </p>
         </div>
 
@@ -26,10 +26,10 @@
             <div class="carousel-container relative h-64 md:h-[500px]">
                 <!-- Carousel Slides -->
                 {% for image in carousel_images %}
-                <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000 overflow-hidden"
-                    data-slide="{{ forloop.counter0 }}">
+                <div class="carousel-slide absolute inset-0 transition-opacity duration-300 overflow-hidden {% if forloop.first %}opacity-100 is-active{% else %}opacity-0{% endif %}"
+                    data-slide="{{ forloop.counter0 }}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
                     {% if image.image %}
-                    <img src="{% thumbnail image.image 1200x520 crop %}" alt="{{ image.title }}" class="w-full h-full object-cover" loading="lazy"
+                    <img src="{% thumbnail image.image 1200x520 crop %}" alt="{{ image.title }}" class="w-full h-full object-cover" loading="eager" decoding="async" {% if forloop.first %}fetchpriority="high"{% endif %}
                         onerror="this.src='{% if site_settings.logo %}{{ site_settings.logo.url }}{% else %}/static/images/logo.png{% endif %}'; this.classList.add('object-contain', 'p-8');">
                     {% endif %}
                 </div>
@@ -54,7 +54,7 @@
             <!-- Our Mission -->
             <!-- Executive Mission Statement -->
             <div class="bg-gray-50 border-l-8 border-roots-red p-8 md:p-12 mb-16 shadow-sm">
-                <h3 class="text-sm font-black uppercase text-gray-500 tracking-widest mb-6">We want a </h3>
+                <h3 class="text-sm font-black uppercase text-gray-500 tracking-widest mb-6">We want</h3>
                 <div>
                     <p class="text-2xl md:text-4xl text-gray-800 leading-relaxed font-bold">
                         To <span class="text-roots-red">liberate Kenya's economy</span> from the burden of debt by legalizing and regulating the multi-billion shilling cannabis and hemp industries. We will diversify our agricultural exports through state-regulated snake farming and niche game meat markets.
@@ -487,23 +487,35 @@
         animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
     }
 
-    /* Carousel Zoom Animation */
-    @keyframes carouselZoom {
+    @keyframes carouselKenBurns {
         0% {
-            transform: scale(1);
+            transform: scale(1) translate3d(0, 0, 0);
         }
+
         100% {
-            transform: scale(1.15);
+            transform: scale(1.1) translate3d(-1.5%, -1%, 0);
         }
     }
 
     .carousel-slide {
         z-index: 1;
+        will-change: opacity;
     }
 
     .carousel-slide img {
-        will-change: transform;
+        transform: scale(1);
         transform-origin: center center;
+    }
+
+    .carousel-slide.is-active img {
+        animation: carouselKenBurns var(--carousel-duration, 3000ms) linear both;
+        will-change: transform;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .carousel-slide.is-active img {
+            animation: none;
+        }
     }
 </style>
 <!-- Welcome Modal -->
@@ -599,16 +611,16 @@
         let currentSlide = 0;
         let slides = [];
         let dots = [];
+        let activeSlide = null;
         let autoRotateInterval;
         
-        // Get carousel duration from site settings (default to 8000ms if not set)
-        const carouselDuration = {{ site_settings.carousel_duration|default:8000 }};
+        // Get carousel duration from site settings (default to 3000ms if not set)
+        const carouselDuration = {{ site_settings.carousel_duration|default:3000 }};
         // Ensure minimum duration of 2000ms (2 seconds)
         const duration = Math.max(carouselDuration, 2000);
-        
-        // Set CSS variable for zoom animation duration
-        document.documentElement.style.setProperty('--carousel-duration', duration + 'ms');
 
+        document.documentElement.style.setProperty('--carousel-duration', duration + 'ms');
+        
         // Initialize carousel elements
         function initCarousel() {
             slides = Array.from(document.querySelectorAll('.carousel-slide'));
@@ -620,6 +632,7 @@
             console.log('Carousel initialized with', slides.length, 'slides');
             
             if (slides.length > 0) {
+                preloadSlideImages();
                 showSlide(0);
                 
                 // Only auto-rotate if there are multiple slides
@@ -636,25 +649,37 @@
             }
         }
 
+        function preloadSlideImages() {
+            slides.forEach(slide => {
+                const img = slide.querySelector('img');
+                if (!img || img.dataset.preloaded === 'true') return;
+
+                const preload = new Image();
+                preload.decoding = 'async';
+                preload.src = img.currentSrc || img.src;
+
+                if (img.decode) {
+                    img.decode().catch(() => {});
+                }
+
+                img.dataset.preloaded = 'true';
+            });
+        }
+
         function showSlide(index) {
             // Ensure index is within bounds
             if (slides.length === 0) return;
             
             const safeIndex = ((index % slides.length) + slides.length) % slides.length;
+            const nextSlide = slides[safeIndex];
+            if (!nextSlide) return;
             
-            // Hide all slides and reset their images
-            slides.forEach((slide, i) => {
-                slide.style.opacity = '0';
-                slide.style.zIndex = '1';
-                const img = slide.querySelector('img');
-                if (img) {
-                    // Reset animation for hidden slides
-                    img.style.animation = 'none';
-                    img.style.transform = 'scale(1)';
-                    // Force reflow to reset animation
-                    void img.offsetWidth;
-                }
-            });
+            if (activeSlide && activeSlide !== nextSlide) {
+                activeSlide.style.opacity = '0';
+                activeSlide.style.zIndex = '5';
+                activeSlide.setAttribute('aria-hidden', 'true');
+                activeSlide.classList.remove('is-active');
+            }
 
             // Remove active state from all dots
             dots.forEach(dot => {
@@ -663,15 +688,13 @@
             });
 
             // Show current slide
-            if (slides[safeIndex]) {
-                slides[safeIndex].style.opacity = '1';
-                slides[safeIndex].style.zIndex = '10';
-                const img = slides[safeIndex].querySelector('img');
-                if (img) {
-                    // Restart zoom animation for the new slide
-                    img.style.animation = `carouselZoom ${duration}ms linear forwards`;
-                }
-            }
+            nextSlide.style.opacity = '1';
+            nextSlide.style.zIndex = '10';
+            nextSlide.setAttribute('aria-hidden', 'false');
+            nextSlide.classList.remove('is-active');
+            requestAnimationFrame(() => {
+                nextSlide.classList.add('is-active');
+            });
 
             // Highlight current dot
             if (dots[safeIndex]) {
@@ -679,6 +702,7 @@
                 dots[safeIndex].classList.add('bg-roots-red');
             }
             
+            activeSlide = nextSlide;
             currentSlide = safeIndex;
         }
 

@@ -72,6 +72,7 @@ def aspirant_registration(request, draft_token=None):
         'counties': counties
     })
 
+@ratelimit(key='ip', rate='10/m', method='POST', block=True)
 def aspirant_status(request):
     """View for checking application status"""
     aspirant = None
@@ -91,11 +92,9 @@ def aspirant_status(request):
     })
 
 @require_http_methods(["GET"])
+@ratelimit(key='ip', rate='30/m', block=True)
 def check_aspirant_id(request):
-    """Ajax check for duplicate ID number in aspirants"""
-    id_number = request.GET.get('id_number')
-    if id_number and AspirantRegistration.objects.filter(id_number=id_number).exists():
-        return HttpResponse('<span class="text-roots-red font-bold uppercase block mt-1 bg-roots-black text-white p-2">⚠️ Error: Comrade already has an application!</span>')
+    """Avoid ID enumeration; duplicate validation happens on final submit."""
     return HttpResponse('')
 
 from django.db.models import Case, When, Value, IntegerField

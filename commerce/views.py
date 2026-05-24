@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django_ratelimit.decorators import ratelimit
 from .models import Vendor, Product, VendorApplication
 from .forms import VendorReportForm, VendorApplicationForm
 
@@ -32,6 +33,7 @@ def product_detail(request, vendor_slug, product_slug):
         'next_product': next_product
     })
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def report_vendor(request, vendor_slug):
     vendor = get_object_or_404(Vendor, slug=vendor_slug, is_active=True)
     if request.method == 'POST':
@@ -42,6 +44,7 @@ def report_vendor(request, vendor_slug):
             report.save()
             messages.success(request, f"Your report for {vendor.name} has been sent. Please wait for a response in a few minutes.")
             return redirect('vendor_detail', vendor_slug=vendor.slug)
+        messages.error(request, "Please correct the highlighted report fields.")
     else:
         form = VendorReportForm()
     
@@ -52,6 +55,7 @@ def report_vendor(request, vendor_slug):
 
 from core.models import County
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def vendor_application(request):
     """View for handling new vendor registration applications."""
     if request.method == 'POST':
@@ -60,6 +64,7 @@ def vendor_application(request):
             form.save()
             messages.success(request, "Your application has been received! Our team will review your business and get in touch with you soon.")
             return redirect('shop')
+        messages.error(request, "Please correct the highlighted application fields.")
     else:
         form = VendorApplicationForm()
     

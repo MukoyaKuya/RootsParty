@@ -1,16 +1,21 @@
-from celery import shared_task
+import logging
 from django.core.files.base import ContentFile
 from django.db.models import F
+from core.utils.tasking import shared_task
 from .models import Event, GatePass
 from .services.pdf import build_gate_pass_pdf
 import random
 import string
 
-@shared_task
+logger = logging.getLogger(__name__)
+
+@shared_task(autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={'max_retries': 3})
 def generate_gate_pass_task(gate_pass_id):
     """Background task to generate and save a gate pass PDF for an existing GatePass."""
     try:
         gate_pass = GatePass.objects.get(id=gate_pass_id)
+        if gate_pass.pdf_file:
+            return f"Gate pass {gate_pass.code} already exists"
         event = gate_pass.event
         code = gate_pass.code
         
@@ -26,4 +31,5 @@ def generate_gate_pass_task(gate_pass_id):
         
         return f"Gate pass {code} generated and saved for event {event.title}"
     except Exception as e:
-        return f"Error generating gate pass: {str(e)}"
+        logger.exception("Error generating gate pass %s", gate_pass_id)
+        raise

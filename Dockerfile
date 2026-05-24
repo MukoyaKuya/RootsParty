@@ -38,5 +38,12 @@ USER appuser
 # Need dummy secret key for collectstatic
 RUN SECRET_KEY=dummy-key-for-build ALLOWED_HOSTS=127.0.0.1 python manage.py collectstatic --noinput
 
-# Run gunicorn
-CMD python manage.py migrate --noinput && exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 --preload config.wsgi:application
+# Run migrations only when RUN_MIGRATIONS=true (set in Cloud Build or deploy job, not on every cold start)
+# Use: docker run -e RUN_MIGRATIONS=true ... to run migrations; otherwise start app directly
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+USER root
+RUN chmod +x /app/docker-entrypoint.sh
+USER appuser
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["sh", "-c", "exec gunicorn --bind :${PORT:-8080} --workers 1 --threads 8 --timeout 0 --preload config.wsgi:application"]

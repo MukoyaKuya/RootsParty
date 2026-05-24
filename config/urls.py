@@ -35,6 +35,7 @@ urlpatterns = [
     # PWA (Keep outside i18n)
     path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
     path('manifest.json', TemplateView.as_view(template_name='manifest.json', content_type='application/manifest+json'), name='manifest.json'),
+    path('offline/', TemplateView.as_view(template_name='offline.html'), name='offline'),
 ]
 
 urlpatterns += [
@@ -56,6 +57,7 @@ urlpatterns += [
     
     # Finance
     path('donate/', finance_views.donate, name='donate'),
+    path('donate/mpesa/callback/', finance_views.mpesa_callback, name='mpesa_callback'),
     
     # Navigation
     path('manifesto/', core_views.manifesto, name='manifesto'),

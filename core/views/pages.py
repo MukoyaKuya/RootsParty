@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.db.models import F
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from django.views.decorators.cache import cache_page
+from ..cache_utils import cache_page_unless_debug
 
 from ..models import (
     Leader, ManifestoItem, ManifestoEvidence, BlogPost, County, PageContent,
@@ -20,7 +20,7 @@ from ..models import (
 from users.models import Member
 
 
-@cache_page(60 * 15)
+@cache_page_unless_debug(60 * 15)
 def home(request):
     stats = cache.get('home:stats:v1')
     if not stats:
@@ -32,11 +32,17 @@ def home(request):
         }
         cache.set('home:stats:v1', stats, 300)
 
-    featured_posts = BlogPost.objects.filter(is_published=True, is_featured=True)[:3]
-    latest_posts = BlogPost.objects.filter(is_published=True)[:3]
-    video = HomeVideo.objects.filter(is_active=True).order_by('-created_at').first()
-    carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order', '-created_at')
-    floating_image = FloatingImage.objects.filter(is_active=True, position='hero_right').first()
+    featured_posts = (
+        BlogPost.objects.filter(is_published=True, is_featured=True)
+        .only('id', 'title', 'slug', 'excerpt', 'image', 'cropping', 'created_at', 'category')[:3]
+    )
+    latest_posts = (
+        BlogPost.objects.filter(is_published=True)
+        .only('id', 'title', 'slug', 'excerpt', 'image', 'cropping', 'created_at', 'category')[:3]
+    )
+    video = HomeVideo.objects.filter(is_active=True).order_by('-created_at').only('title', 'description', 'video_url', 'video_file', 'thumbnail', 'button_text', 'button_url').first()
+    carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order', '-created_at').only('id', 'title', 'image', 'cropping')
+    floating_image = FloatingImage.objects.filter(is_active=True, position='hero_right').only('id', 'name', 'image').first()
 
     context = {
         'featured_posts': featured_posts,
@@ -50,7 +56,7 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 
-@cache_page(60 * 15)
+@cache_page_unless_debug(60 * 15)
 def about(request):
     leaders = Leader.objects.all()
     try:
@@ -72,7 +78,7 @@ def about(request):
     })
 
 
-@cache_page(60 * 60)
+@cache_page_unless_debug(60 * 60)
 def manifesto(request):
     items = ManifestoItem.objects.all()
     return render(request, 'core/manifesto.html', {'items': items})
@@ -83,7 +89,7 @@ def manifesto_detail(request, slug):
     return render(request, 'core/manifesto_detail.html', {'item': item})
 
 
-@cache_page(60 * 20)
+@cache_page_unless_debug(60 * 20)
 def gallery(request):
     posts = GalleryPost.objects.prefetch_related('images').all()
     return render(request, 'core/gallery.html', {'posts': posts})
@@ -166,7 +172,7 @@ def cannabis_country_detail(request, country_slug):
     })
 
 
-@cache_page(60 * 10)
+@cache_page_unless_debug(60 * 10)
 def blog_list(request):
     category = request.GET.get('category')
     posts = BlogPost.objects.filter(is_published=True)
@@ -188,5 +194,3 @@ def blog_detail(request, slug):
         'post': post,
         'related_posts': related_posts,
     })
-
-

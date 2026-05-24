@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load sanitize_extras %}
 {% load thumbnail cropping %}
 
 {% block content %}
@@ -116,7 +117,7 @@
                         <h3 class="text-3xl font-black uppercase">The Manifesto</h3>
                     </div>
                     <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-strong:text-roots-red prose-strong:font-black">
-                        {{ aspirant.manifesto|safe }}
+                        {{ aspirant.manifesto|sanitize_html }}
                     </div>
                 </div>
                 {% endif %}

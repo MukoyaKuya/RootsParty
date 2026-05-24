@@ -365,7 +365,7 @@ class SiteSettingsAdmin(ImageCroppingMixin, ModelAdmin):
         }),
         ('Carousel Settings', {
             'fields': ('carousel_duration',),
-            'description': 'Set how long each carousel image is displayed (in milliseconds). Default is 8000ms (8 seconds). Minimum is 2000ms (2 seconds).'
+            'description': 'Set how long each carousel image is displayed (in milliseconds). Default is 3000ms (3 seconds). Minimum is 2000ms (2 seconds).'
         }),
     )
     

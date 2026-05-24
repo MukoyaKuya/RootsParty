@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
+@source "../../templates/**/*.html";
+@source "../../core/templates/**/*.html";
+@source "../../users/templates/**/*.html";
+@source "../../finance/templates/**/*.html";
+@source "../../commerce/templates/**/*.html";
+@source "../../aspirants/templates/**/*.html";
 
 /* Custom Tailwind Configuration */
 @layer utilities {

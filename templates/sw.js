@@ -1,70 +1,85 @@
-const CACHE_NAME = 'roots-party-v1';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'roots-party-v3';
+const OFFLINE_URL = '/offline/';
+const CORE_ASSETS = [
   '/',
+  OFFLINE_URL,
   '/manifest.json',
+  '/static/css/output.css?v=20260523-2',
+  '/static/js/app.js',
+  '/static/images/favicon.png',
   '/static/images/logo-192.png',
-  '/static/images/logo-512.png',
-  // Add other critical static assets here
-  'https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap',
-  'https://cdn.tailwindcss.com',
-  'https://unpkg.com/htmx.org@1.9.10',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+  '/static/images/logo-512.png'
 ];
 
-// Install Event
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
+      .then(cache => Promise.allSettled(
+        CORE_ASSETS.map(asset => cache.add(new Request(asset, { cache: 'reload' })))
+      ))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate Event (Cleanup old caches)
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then(cacheNames => Promise.all(
+        cacheNames
+          .filter(cacheName => cacheName !== CACHE_NAME)
+          .map(cacheName => caches.delete(cacheName))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
-// Fetch Event (Stale-While-Revalidate for App Shell)
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
 
-  // App Shell strategy: Stale-While-Revalidate
-  event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        const fetchPromise = fetch(event.request)
-          .then(networkResponse => {
-            if (networkResponse && networkResponse.status === 200) {
-              const responseToCache = networkResponse.clone();
-              caches.open(CACHE_NAME).then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-            }
-            return networkResponse;
-          })
-          .catch(() => {
-            // Fallback for failed network if no cache
-            return cachedResponse;
-          });
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+          return response;
+        })
+        .catch(() => caches.match(event.request)
+          .then(cached => cached || caches.match('/') || caches.match(OFFLINE_URL)))
+    );
+    return;
+  }
 
-        return cachedResponse || fetchPromise;
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        const networkFetch = fetch(event.request)
+          .then(response => {
+            if (response && response.status === 200) {
+              const responseToCache = response.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+            }
+            return response;
+          })
+          .catch(() => cached || Response.error());
+
+        return cached || networkFetch;
       })
+    );
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (response && (response.ok || response.type === 'opaque')) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request).then(cached => cached || Response.error()))
   );
 });

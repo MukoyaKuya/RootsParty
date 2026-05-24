@@ -1,4 +1,4 @@
-{% load thumbnail cropping %}
+{% load thumbnail cropping sanitize_extras %}
 
 {% block content %}
 <div class="border-b-4 border-roots-black bg-zinc-50 dark:bg-zinc-900 border-t-4">
@@ -104,7 +104,7 @@
                             <h3 class="text-3xl font-black uppercase">The Manifesto</h3>
                         </div>
                         <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-strong:text-roots-red prose-strong:font-black">
-                            {{ candidate.manifesto|safe }}
+                            {{ candidate.manifesto|sanitize_html }}
                         </div>
                     </div>
                     {% endif %}

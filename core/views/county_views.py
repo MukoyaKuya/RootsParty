@@ -2,16 +2,16 @@
 County-related views: counties list, map, and county detail.
 """
 from django.core.cache import cache
-from django.views.decorators.cache import cache_page
 from django.db.models import Case, When, Value, IntegerField
 from django.shortcuts import render, get_object_or_404
 
 from users.models import Member
 
+from ..cache_utils import cache_page_unless_debug
 from ..models import County, PageContent
 
 
-@cache_page(60 * 30)
+@cache_page_unless_debug(60 * 30)
 def counties(request):
     all_counties = County.objects.annotate(
         status_order=Case(

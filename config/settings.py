@@ -9,7 +9,7 @@ load_dotenv()
 import mimetypes
 mimetypes.add_type("image/jpeg", ".jfif", True)
 
-# Google Cloud Logging (Production Only)
+# Google Cloud Logging (Production Only) - deferred to avoid blocking cold start
 def setup_cloud_logging():
     if os.environ.get('GOOGLE_CLOUD_PROJECT') and not os.environ.get('DEBUG', 'False') == 'True':
         try:
@@ -20,7 +20,17 @@ def setup_cloud_logging():
         except Exception as e:
             print(f"⚠️ Google Cloud Logging setup failed: {e}")
 
-setup_cloud_logging()
+
+def _defer_cloud_logging():
+    """Run in background to avoid blocking cold start."""
+    import threading
+    def _run():
+        setup_cloud_logging()
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+
+
+_defer_cloud_logging()
 
 
 
@@ -106,6 +116,13 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
@@ -163,7 +180,7 @@ if os.environ.get('REDIS_URL'):
                 'SOCKET_CONNECT_TIMEOUT': 5,
                 'SOCKET_TIMEOUT': 5,
                 'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
-                'IGNORE_EXCEPTIONS': True,  # Don't crash if Redis is down
+                'IGNORE_EXCEPTIONS': True,  # Will not crash if Redis is down
             },
             'KEY_PREFIX': 'roots_party',
             'VERSION': 2,
@@ -441,6 +458,19 @@ GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
 RECAPTCHA_TESTING = os.environ.get('RECAPTCHA_TESTING', 'False') == 'True'
+
+# M-PESA callback protection. Set a long random token in production.
+MPESA_CALLBACK_TOKEN = os.environ.get('MPESA_CALLBACK_TOKEN', '')
+
+# Error monitoring
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+if SENTRY_DSN:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        send_default_pii=False,
+        traces_sample_rate=float(os.environ.get('SENTRY_TRACES_SAMPLE_RATE', '0')),
+    )
 
 # Unfold Admin Configuration
 from django.urls import reverse_lazy

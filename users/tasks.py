@@ -1,9 +1,12 @@
-from celery import shared_task
+import logging
 from django.core.files.base import ContentFile
 import random
+from core.utils.tasking import shared_task
 from users.models import Member
 
-@shared_task
+logger = logging.getLogger(__name__)
+
+@shared_task(autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={'max_retries': 3})
 def seed_members_task(target_count=75000):
     """Background task to seed members up to target_count."""
     current_count = Member.objects.count()
@@ -35,11 +38,13 @@ def seed_members_task(target_count=75000):
         
     return f"Seeding complete. Added approx {total_added} members. Total: {current_count}"
 
-@shared_task
+@shared_task(autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={'max_retries': 3})
 def generate_member_card_task(member_uuid):
     """Background task to generate and save a member card."""
     try:
         member = Member.objects.get(uuid=member_uuid)
+        if member.membership_card:
+            return f"Card already exists for {member.full_name}"
         from .services import build_member_card_pdf
         buffer = build_member_card_pdf(member)
         
@@ -48,4 +53,5 @@ def generate_member_card_task(member_uuid):
         
         return f"Card generated and saved for {member.full_name}"
     except Exception as e:
-        return f"Error generating member card: {str(e)}"
+        logger.exception("Error generating member card for %s", member_uuid)
+        raise

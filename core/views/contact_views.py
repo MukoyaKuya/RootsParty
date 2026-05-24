@@ -1,6 +1,8 @@
 """
 Contact form and newsletter subscription views.
 """
+import logging
+
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.core.mail import send_mail
@@ -11,6 +13,8 @@ from django_ratelimit.decorators import ratelimit
 
 from ..forms import ContactForm, NewsletterForm
 from ..models import ContactMessage, NewsletterSubscriber
+
+logger = logging.getLogger(__name__)
 
 
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
@@ -62,7 +66,7 @@ View all messages at: /admin/core/contactmessage/
                     fail_silently=True,
                 )
             except Exception:
-                pass
+                logger.exception("Contact notification email failed")
 
             if request.headers.get('HX-Request'):
                 return render(request, 'partials/contact_success.html')
@@ -101,7 +105,7 @@ def subscribe(request):
                         fail_silently=True,
                     )
                 except Exception:
-                    pass
+                    logger.exception("Newsletter notification email failed")
                 return render(request, 'partials/subscribe_success.html', {'message': 'Subscribed successfully!'})
             else:
                 return render(request, 'partials/subscribe_success.html', {'message': 'Already subscribed!'})

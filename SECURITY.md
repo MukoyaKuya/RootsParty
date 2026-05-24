@@ -59,6 +59,23 @@ This document describes how to keep the Roots Party app secure in development an
 - `W001`: Silenced for flexible cache configuration; rate limiting works when Redis is configured.
 - Ensure `REDIS_URL` is set in production for rate limiting to function.
 
+### MPESA_CALLBACK_TOKEN
+
+- Required before enabling the M-PESA callback endpoint.
+- Use a long random value stored in Secret Manager or platform env.
+- M-PESA callback requests must send this value in the `X-Roots-Callback-Token` header.
+
+### SENTRY_DSN
+
+- Optional but recommended for production error monitoring.
+- Store the DSN in Secret Manager or platform env. Do not commit it.
+
+### Rotating exposed credentials
+
+- If any secret, database URL, Redis URL, API key, or token is committed or shared in logs, rotate it immediately.
+- Removing a secret from the current file is not enough; treat git history and deployed revisions as exposed.
+- After rotation, redeploy with the new values injected from Secret Manager/platform env.
+
 ---
 
 ## Production checklist
@@ -68,7 +85,10 @@ This document describes how to keep the Roots Party app secure in development an
 - [ ] `ALLOWED_HOSTS` set to your domain(s)
 - [ ] `CSRF_TRUSTED_ORIGINS` set to your HTTPS origin(s)
 - [ ] `DATABASE_URL` (and DB credentials) from env/Secret Manager
+- [ ] Previously exposed credentials rotated
 - [ ] `GS_BUCKET_NAME` set if using Cloud Storage
+- [ ] `MPESA_CALLBACK_TOKEN` set before enabling callbacks
+- [ ] `SENTRY_DSN` set for production monitoring
 - [ ] `.env` not deployed; all secrets from platform env or Secret Manager
 
 ---

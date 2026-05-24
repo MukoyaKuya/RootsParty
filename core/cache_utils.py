@@ -6,9 +6,18 @@ and managing cache invalidation.
 """
 
 from django.core.cache import cache
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from typing import List, Dict, Any, Optional
+
+
+def cache_page_unless_debug(timeout: int):
+    """Keep production page caching, but avoid stale templates during local development."""
+    if settings.DEBUG:
+        return lambda view_func: view_func
+    return cache_page(timeout)
 
 
 def get_cached_aspirants(timeout: int = 300) -> List[Dict[str, Any]]:

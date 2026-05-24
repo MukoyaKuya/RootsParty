@@ -1,0 +1,14 @@
+commit 8be35ddca6c0cfea96292cb3738d7559b5ba92de
+Author: Delton Mukoya Kuya <deltonmukoyakuya@gmail.com>
+Date:   Fri Mar 6 19:49:28 2026 +0300
+
+    Update manifesto and other changes
+
+config/__pycache__/settings.cpython-313.pyc
+config/__pycache__/urls.cpython-313.pyc
+core/__pycache__/admin.cpython-313.pyc
+core/__pycache__/models.cpython-313.pyc
+db.sqlite3
+finance/__pycache__/views.cpython-313.pyc
+templates/partials/core/home_hero.html
+users/__pycache__/views.cpython-313.pyc
