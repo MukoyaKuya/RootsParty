@@ -3,7 +3,7 @@
 **Date:** February 2026  
 **Scope:** Full codebase review after Phases 1–3 of the enhancement plan.
 
----
+--- 
  
 ## 1. Executive Summary
 
