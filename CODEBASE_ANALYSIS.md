@@ -4,7 +4,7 @@
 **Scope:** Full codebase review after Phases 1–3 of the enhancement plan.
 
 ---
-
+ 
 ## 1. Executive Summary
 
 The Roots Party platform is a Django 6 application for political party management, content delivery, member/aspirant registration, donations, and events. Recent work has **refactored PDF generation into services**, **split core views into a package**, **introduced template partials**, **moved several root scripts into management commands**, **added integration tests** (aspirant flow + PDFs), and **documented security and environment configuration**. The codebase is in a maintainable state with clear separation of concerns and a documented path for production deployment.
