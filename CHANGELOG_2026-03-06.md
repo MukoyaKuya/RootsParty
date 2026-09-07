@@ -2,7 +2,7 @@
 
 Summary of changes made during this session.
  
----
+---  
 
 ## 1. Tribes List Page (`/tribes/`)
 
