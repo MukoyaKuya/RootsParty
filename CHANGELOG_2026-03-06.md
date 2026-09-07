@@ -7,7 +7,7 @@ Summary of changes made during this session.
 ## 1. Tribes List Page (`/tribes/`)
 
 ### UI Overhaul
-- **Header:** Added "Letters from Wajackoyah" label, bold title with black badge and roots-red shadow
+- **Header:** Added "Letters from Wajackoyah"  label, bold title with black badge and roots-red shadow
 - **Background:** Gradient plus subtle grid pattern
 - **Cards:** Brutalist layout with `border-4 border-roots-black` and offset shadows
 - **Hover:** Red shadow and slight lift on hover
