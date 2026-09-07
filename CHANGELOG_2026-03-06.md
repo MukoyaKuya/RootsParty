@@ -1,7 +1,7 @@
 # Changelog – 6 March 2026
 
 Summary of changes made during this session.
- 
+
 ---
 
 ## 1. Tribes List Page (`/tribes/`)
